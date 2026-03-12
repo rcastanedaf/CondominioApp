@@ -3,21 +3,21 @@ using Condominio.Repositories.Interfaces;
 
 namespace Condominio.Repositories
 {
-    public class MotivoVisitaRepository : IMotivoVisitaRepository
+    public class TipoContratoRepository : ITipoContratoRepository
     {
-        private static List<MotivoVisitaModel> list = new List<MotivoVisitaModel>();
+        private static List<TipoContratoModel> list = new List<TipoContratoModel>();
 
-        public async Task<List<MotivoVisitaModel>> GetAllAsync()
+        public async Task<List<TipoContratoModel>> GetAllAsync()
         {
             return list;
         }
 
-        public async Task<MotivoVisitaModel?> GetByIdAsync(int id)
+        public async Task<TipoContratoModel?> GetByIdAsync(int id)
         {
             return list.FirstOrDefault(x => x.Id == id);
         }
 
-        public async Task<MotivoVisitaModel> CreateAsync(MotivoVisitaModel model)
+        public async Task<TipoContratoModel> CreateAsync(TipoContratoModel model)
         {
             model.Id = list.Count == 0 ? 1 : list.Max(x => x.Id) + 1;
 
@@ -26,14 +26,14 @@ namespace Condominio.Repositories
             return model;
         }
 
-        public async Task<bool> UpdateAsync(MotivoVisitaModel model)
+        public async Task<bool> UpdateAsync(TipoContratoModel model)
         {
             var existing = list.FirstOrDefault(x => x.Id == model.Id);
 
             if (existing == null)
                 return false;
 
-            existing.Descripcion = model.Descripcion;
+            existing.Nombre = model.Nombre;
 
             return true;
         }

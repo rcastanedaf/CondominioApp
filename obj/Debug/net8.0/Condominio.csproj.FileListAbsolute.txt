@@ -34,3 +34,5 @@ C:\Users\gerso\Desktop\UMG\UMG_2026\primer_semestre\analisis_de_sistemas_1\Condo
 C:\Users\gerso\Desktop\UMG\UMG_2026\primer_semestre\analisis_de_sistemas_1\CondominioApp\CondominioApp\obj\Debug\net8.0\Condominio.pdb
 C:\Users\gerso\Desktop\UMG\UMG_2026\primer_semestre\analisis_de_sistemas_1\CondominioApp\CondominioApp\obj\Debug\net8.0\Condominio.genruntimeconfig.cache
 C:\Users\gerso\Desktop\UMG\UMG_2026\primer_semestre\analisis_de_sistemas_1\CondominioApp\CondominioApp\obj\Debug\net8.0\ref\Condominio.dll
+C:\Users\gerso\Desktop\UMG\UMG_2026\primer_semestre\analisis_de_sistemas_1\CondominioApp\CondominioApp\bin\Debug\net8.0\frontend\package-lock.json
+C:\Users\gerso\Desktop\UMG\UMG_2026\primer_semestre\analisis_de_sistemas_1\CondominioApp\CondominioApp\bin\Debug\net8.0\frontend\package.json

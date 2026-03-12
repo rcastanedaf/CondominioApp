@@ -30,6 +30,9 @@ builder.Services.AddScoped<ITestRepository, TestRepository>();
 builder.Services.AddScoped<IMotivoVisitaService, MotivoVisitaService>();
 builder.Services.AddScoped<IMotivoVisitaRepository, MotivoVisitaRepository>();
 
+builder.Services.AddScoped<ITipoContratoService, TipoContratoService>();
+builder.Services.AddScoped<ITipoContratoRepository, TipoContratoRepository>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
