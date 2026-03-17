@@ -16,6 +16,12 @@ builder.Services.AddScoped<ITestService, TestService>();
 
 builder.Services.AddScoped<ITestRepository, TestRepository>();
 
+builder.Services.AddScoped<IParentescoService, ParentescoService>();//Mi parte
+builder.Services.AddScoped<IParentescoRepository, ParentescoRepository>();
+
+builder.Services.AddScoped<IPaisService, PaisService>();//Mi parte
+builder.Services.AddScoped<IPaisRepository, PaisRepository>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
