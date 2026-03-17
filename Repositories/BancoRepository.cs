@@ -8,9 +8,9 @@ namespace Condominio.Repositories
         {
             var list = new List<Banco>
             {
-                new Banco { Id = 1, Nombre = "Test 1", Pais = "Guatemala", Activo = 1},
-                new Banco { Id = 2, Nombre = "Test 2", Pais = "Guatemala", Activo = 1},
-                new Banco { Id = 3, Nombre = "Test 3", Pais = "Guatemala", Activo = 1}
+                new Banco { Id = 1, Nombre = "Test 1", Pais = 1, Activo = 1},
+                new Banco { Id = 2, Nombre = "Test 2", Pais = 1, Activo = 1},
+                new Banco { Id = 3, Nombre = "Test 3", Pais = 1, Activo = 1}
             };
             return list;
         }
@@ -19,7 +19,7 @@ namespace Condominio.Repositories
         {
             var list = new List<Banco>
             {
-                new Banco { Id = 1, Nombre = "Test 1", Pais = "Guatemala", Activo = 1}
+                new Banco { Id = 1, Nombre = "Test 1", Pais = 1, Activo = 1}
             };
             return list;
         }
@@ -28,7 +28,7 @@ namespace Condominio.Repositories
         {
             var list = new List<Banco>
             {
-                new Banco { Id = 1, Nombre = "Test 1", Pais = "Guatemala", Activo = 1}
+                new Banco { Id = 1, Nombre = "Test 1", Pais = 1, Activo = 1}
             };
             return list;
         }
@@ -37,7 +37,7 @@ namespace Condominio.Repositories
         {
             var list = new List<Banco>
             {
-                new Banco { Id = 1, Nombre = "Test 1", Pais = "Guatemala", Activo = 1}
+                new Banco { Id = 1, Nombre = "Test 1", Pais = 1, Activo = 1}
             };
             return list;
         }
@@ -46,7 +46,7 @@ namespace Condominio.Repositories
         {
             var list = new List<Banco>
             {
-                new Banco { Id = 1, Nombre = "Test 1", Pais = "Guatemala", Activo = 1}
+                new Banco { Id = 1, Nombre = "Test 1", Pais = 1, Activo = 1}
             };
             return list;
         }
@@ -55,7 +55,7 @@ namespace Condominio.Repositories
         {
             var list = new List<Banco>
             {
-                new Banco { Id = 1, Nombre = "Test 1", Pais = "Guatemala", Activo = 1}
+                new Banco { Id = 1, Nombre = "Test 1", Pais = 1, Activo = 1}
             };
             return list;
         }

@@ -4,7 +4,7 @@
     {
         public int Id { get; set; }
         public required string Nombre { get; set; }
-        public required string Pais { get; set; }
+        public required int Pais { get; set; }
         public required int Activo { get; set; }
     }
 }

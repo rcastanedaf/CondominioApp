@@ -68,7 +68,7 @@ namespace Condominio.Controllers
                 Pais = request.Pais,
                 Activo = request.Activo,
             };
-            var result = await _bancoService.CreateBanco(editBanco);
+            var result = await _bancoService.UpdateBanco(editBanco);
             return Ok(result);
         }
 

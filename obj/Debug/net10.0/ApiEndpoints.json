@@ -105,6 +105,111 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "Condominio.Controllers.ConceptoDescuentoController",
+    "Method": "CreateBanco",
+    "RelativePath": "ConceptoDescuento/createConceptoDesc/{id}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "Condominio.DTOs.Request.ConceptoDescuentoRequest",
+        "IsRequired": true
+      },
+      {
+        "Name": "id",
+        "Type": "",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Condominio.Controllers.ConceptoDescuentoController",
+    "Method": "DeleteBanco",
+    "RelativePath": "ConceptoDescuento/deteleConceptoDesc/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "id",
+        "Type": "",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Condominio.Controllers.ConceptoDescuentoController",
+    "Method": "Get",
+    "RelativePath": "ConceptoDescuento/get-allConceptoDesc",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Condominio.Controllers.ConceptoDescuentoController",
+    "Method": "GetId",
+    "RelativePath": "ConceptoDescuento/get-idConceptoDesc",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Condominio.Controllers.ConceptoDescuentoController",
+    "Method": "GetNombre",
+    "RelativePath": "ConceptoDescuento/get-nombreConceptoDesc",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "nombre",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Condominio.Controllers.ConceptoDescuentoController",
+    "Method": "UpdateBanco",
+    "RelativePath": "ConceptoDescuento/updateConceptoDesc/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "Condominio.DTOs.Request.ConceptoDescuentoRequest",
+        "IsRequired": true
+      },
+      {
+        "Name": "id",
+        "Type": "",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "Condominio.Controllers.TestController",
     "Method": "Create",
     "RelativePath": "Test/create/{id}",
