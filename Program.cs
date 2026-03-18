@@ -7,17 +7,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowReact",
-        policy =>
-        {
-            policy.AllowAnyOrigin()
-                  .AllowAnyHeader()
-                  .AllowAnyMethod();
-        });
-});
-
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -27,8 +16,11 @@ builder.Services.AddScoped<ITestService, TestService>();
 
 builder.Services.AddScoped<ITestRepository, TestRepository>();
 
-builder.Services.AddScoped<IMotivoVisitaService, MotivoVisitaService>();
-builder.Services.AddScoped<IMotivoVisitaRepository, MotivoVisitaRepository>();
+builder.Services.AddScoped<IParentescoService, ParentescoService>();//Mi parte
+builder.Services.AddScoped<IParentescoRepository, ParentescoRepository>();
+
+builder.Services.AddScoped<IPaisService, PaisService>();//Mi parte
+builder.Services.AddScoped<IPaisRepository, PaisRepository>();
 
 var app = builder.Build();
 
@@ -40,8 +32,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
-app.UseCors("AllowReact");
 
 app.UseAuthorization();
 
