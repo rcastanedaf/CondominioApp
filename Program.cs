@@ -8,13 +8,34 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<ITestService, TestService>();
 
+// 🔹 CORS (AGREGAR ESTO)
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend",
+        policy =>
+        {
+            policy
+                .WithOrigins("http://localhost:5173")
+                .AllowAnyHeader()
+                .AllowAnyMethod();
+        });
+});
+
+
+// Services
+builder.Services.AddScoped<ITestService, TestService>();
 builder.Services.AddScoped<ITestRepository, TestRepository>();
+
+builder.Services.AddScoped<IMotivoVisitaService, MotivoVisitaService>();
+builder.Services.AddScoped<IMotivoVisitaRepository, MotivoVisitaRepository>();
+
+builder.Services.AddScoped<ITipoContratoService, TipoContratoService>();
+builder.Services.AddScoped<ITipoContratoRepository, TipoContratoRepository>();
 
 builder.Services.AddScoped<IParentescoService, ParentescoService>();
 builder.Services.AddScoped<IParentescoRepository, ParentescoRepository>();
@@ -28,7 +49,13 @@ builder.Services.AddScoped<IBancoRepository, BancoRepository>();
 builder.Services.AddScoped<ITipoMonedaService, TipoMonedaService>();
 builder.Services.AddScoped<ITipoMonedaRepository, TipoMonedaRepository>();
 
+
 var app = builder.Build();
+
+
+// 🔹 ACTIVAR CORS (AGREGAR ESTO)
+app.UseCors("AllowFrontend");
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
