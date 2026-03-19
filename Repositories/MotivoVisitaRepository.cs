@@ -5,7 +5,12 @@ namespace Condominio.Repositories
 {
     public class MotivoVisitaRepository : IMotivoVisitaRepository
     {
-        private static List<MotivoVisitaModel> list = new List<MotivoVisitaModel>();
+        private static List<MotivoVisitaModel> list = new List<MotivoVisitaModel>
+        {
+            new MotivoVisitaModel { Id = 1, Descripcion = "Entrega de paquete" },
+            new MotivoVisitaModel { Id = 2, Descripcion = "Visita familiar" },
+            new MotivoVisitaModel { Id = 3, Descripcion = "Servicio técnico" }
+        };
 
         public async Task<List<MotivoVisitaModel>> GetAllAsync()
         {
@@ -19,10 +24,8 @@ namespace Condominio.Repositories
 
         public async Task<MotivoVisitaModel> CreateAsync(MotivoVisitaModel model)
         {
-            model.Id = list.Count == 0 ? 1 : list.Max(x => x.Id) + 1;
-
+            model.Id = list.Max(x => x.Id) + 1;
             list.Add(model);
-
             return model;
         }
 

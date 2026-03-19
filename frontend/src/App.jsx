@@ -3,8 +3,6 @@ import { getMotivos, deleteMotivo, createMotivo, updateMotivo } from "./services
 
 import MotivoVisitaTable from "./components/MotivoVisitaTable";
 import MotivoVisitaForm from "./components/MotivoVisitaForm";
-import TipoContrato from "./components/TipoContrato";
-
 
 function App() {
 
@@ -56,10 +54,8 @@ function App() {
         onDelete={handleDelete}
         onEdit={handleEdit}
       />
-      <TipoContrato />
-      
+
     </div>
-    
   );
 }
 
