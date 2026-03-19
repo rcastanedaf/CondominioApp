@@ -1,8 +1,9 @@
 ﻿using Condominio.Models;
+using Condominio.Repositories.Interfaces;
 
 namespace Condominio.Repositories
 {
-    public class BancoRepository
+    public class BancoRepository : IBancoRepository
     {
         public async Task<List<Banco>> GetAllAsync()
         {

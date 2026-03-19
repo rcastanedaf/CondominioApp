@@ -1,4 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Condominio.DTOs.Request;
+using Condominio.DTOs.Response;
+using Condominio.Models;
+using Condominio.Services.Interfaces;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Condominio.Controllers
 {
@@ -6,11 +11,77 @@ namespace Condominio.Controllers
     [Route("[controller]")]
     public class TipoMonedaController : ControllerBase
     {
+        private readonly ITipoMonedaService _tipoMonedaService;
+
+        public TipoMonedaController(ITipoMonedaService tipoMonedaService)
+        {
+            _tipoMonedaService = tipoMonedaService;
+        }
+
         [HttpGet]
         [Route("get-all")]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> GetAll()
         {
-            return Ok();
+            var response = new List<TipoMonedaModel>();
+
+            try
+            {
+                response = await _tipoMonedaService.GetAllAsync();
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+        [HttpPost]
+        [Route("create")]
+        public async Task<IActionResult> Create([FromBody] TipoMonedaCreateRequest request)
+        {
+            try
+            {
+                var response = await _tipoMonedaService.CreateAsync(request);
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+        [HttpPut]
+        [Route("update/{id}")]
+        public async Task<IActionResult> Update([FromBody] TipoMonedaModel request, int id)
+        {
+            try
+            {
+                var response = await _tipoMonedaService.UpdateAsync(request, id);
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+        [HttpDelete]
+        [Route("delete/{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                var response = await _tipoMonedaService.DeleteAsync(id);
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
         }
     }
 }
