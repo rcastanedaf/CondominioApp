@@ -1,12 +1,7 @@
 ﻿using Condominio.DTOs.Request;
 using Condominio.Models;
-using Condominio.Services;
 using Condominio.Services.Interfaces;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using System.Drawing;
-using System.Net;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Condominio.Controllers
 {
