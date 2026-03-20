@@ -1,5 +1,6 @@
 ﻿using Condominio.DTOs.Request;
 using Condominio.Models;
+using Condominio.Services;
 using Condominio.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,66 +19,105 @@ namespace Condominio.Controllers
 
 
         [HttpGet]
-        [Route("get-allConceptoDesc")]
+        [Route("get-all-ConceptoDesc")]
         public async Task<IActionResult> Get()
         {
-            var result = await _conceptoDescuentoService.GetAllAsync();
-            return Ok(result);
+            var response = new List<Concepto_Descuento>();
+
+            try
+            {
+                response = await _conceptoDescuentoService.GetAllAsync();
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         [HttpGet]
-        [Route("get-idConceptoDesc")]
+        [Route("get-id-ConceptoDesc")]
         public async Task<IActionResult> GetId([FromBody] int id)
         {
-            var result = await _conceptoDescuentoService.GetId(id);
-            return Ok(result);
+            var response = new List<Concepto_Descuento>();
+
+            try
+            {
+                response = await _conceptoDescuentoService.GetId(id);
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         [HttpGet]
-        [Route("get-nombreConceptoDesc")]
+        [Route("get-nombre-ConceptoDesc")]
         public async Task<IActionResult> GetNombre([FromBody] string nombre)
         {
-            var result = await _conceptoDescuentoService.GetNombre(nombre);
-            return Ok(result);
+            var response = new List<Concepto_Descuento>();
+
+            try
+            {
+                response = await _conceptoDescuentoService.GetNombre(nombre);
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         [HttpPost]
-        [Route("createConceptoDesc/{id}")]
-        public async Task<IActionResult> CreateBanco([FromBody] ConceptoDescuentoRequest request)
+        [Route("create-ConceptoDesc")]
+        public async Task<IActionResult> CreateConceptoDesc([FromBody] ConceptoDescuentoCreateRequest request)
         {
-            Concepto_Descuento newConceptoDescuento = new Concepto_Descuento
+            try
             {
-                Nombre = request.Nombre,
-                Tipo = request.Tipo,
-                Valor = request.Valor,
-                Autorizacion = request.Autorizacion,
-            };
-            var result = await _conceptoDescuentoService.CreateConceptoDescuento(newConceptoDescuento);
-            return Ok(result);
+                var response = await _conceptoDescuentoService.CreateConceptoDescuento(request);
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         [HttpPut]
-        [Route("updateConceptoDesc/{id}")]
-        public async Task<IActionResult> UpdateBanco([FromBody] ConceptoDescuentoRequest request)
+        [Route("update-ConceptoDesc/{id}")]
+        public async Task<IActionResult> UpdateConceptoDes([FromBody] ConceptoDescuentoUpdateRequest request)
         {
-            Concepto_Descuento editConceptoDescuento = new Concepto_Descuento
+            try
             {
-                Id = request.Id,
-                Nombre = request.Nombre,
-                Tipo = request.Tipo,
-                Valor = request.Valor,
-                Autorizacion = request.Autorizacion,
-            };
-            var result = await _conceptoDescuentoService.UpdateConceptoDescuento(editConceptoDescuento);
-            return Ok(result);
+                var response = await _conceptoDescuentoService.UpdateConceptoDescuento(request);
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         [HttpDelete]
-        [Route("deteleConceptoDesc/{id}")]
-        public async Task<IActionResult> DeleteBanco([FromBody] int id)
+        [Route("detele-ConceptoDesc/{id}")]
+        public async Task<IActionResult> DeleteConceptoDesc([FromBody] int id)
         {
-            var result = await _conceptoDescuentoService.DeleteConceptoDescuento(id);
-            return Ok(result);
+            try
+            {
+                var response = await _conceptoDescuentoService.DeleteConceptoDescuento(id);
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message }); ;
+            }
         }
 
     }

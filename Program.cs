@@ -49,6 +49,9 @@ builder.Services.AddScoped<IBancoRepository, BancoRepository>();
 builder.Services.AddScoped<ITipoMonedaService, TipoMonedaService>();
 builder.Services.AddScoped<ITipoMonedaRepository, TipoMonedaRepository>();
 
+builder.Services.AddScoped<IConceptoDescuentoService, ConceptoDescuentoService>();
+builder.Services.AddScoped<IConceptoDescuentoRepository, ConceptoDescuentoRepository>();
+
 
 var app = builder.Build();
 
