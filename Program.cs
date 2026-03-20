@@ -37,11 +37,17 @@ builder.Services.AddScoped<IMotivoVisitaRepository, MotivoVisitaRepository>();
 builder.Services.AddScoped<ITipoContratoService, TipoContratoService>();
 builder.Services.AddScoped<ITipoContratoRepository, TipoContratoRepository>();
 
-builder.Services.AddScoped<IParentescoService, ParentescoService>(); //Mi parte
+builder.Services.AddScoped<IParentescoService, ParentescoService>();
 builder.Services.AddScoped<IParentescoRepository, ParentescoRepository>();
 
-builder.Services.AddScoped<IPaisService, PaisService>(); //Mi parte
+builder.Services.AddScoped<IPaisService, PaisService>();
 builder.Services.AddScoped<IPaisRepository, PaisRepository>();
+
+builder.Services.AddScoped<IBancoService, BancoService>();
+builder.Services.AddScoped<IBancoRepository, BancoRepository>();
+
+builder.Services.AddScoped<ITipoMonedaService, TipoMonedaService>();
+builder.Services.AddScoped<ITipoMonedaRepository, TipoMonedaRepository>();
 
 
 var app = builder.Build();
