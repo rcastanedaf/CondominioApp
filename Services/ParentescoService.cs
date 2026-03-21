@@ -1,6 +1,7 @@
 ﻿using Condominio.DTOs.Request;
 using Condominio.DTOs.Response;
 using Condominio.Models;
+using Condominio.Repositories;
 using Condominio.Repositories.Interfaces;
 using Condominio.Services.Interfaces;
 
@@ -18,37 +19,59 @@ namespace Condominio.Services
 
         public async Task<List<ParentescoModel>> GetAll()
         {
-            return await _repository.GetAll();
-        }
-
-        public async Task<ParentescoModel> Create(ParentescoRequest request)
-        {
-            var model = new ParentescoModel
+            try
             {
-                Nombre = request.Nombre
-            };
+                var parentesco = await _repository.GetAll();
 
-            return await _repository.Create(model);
-        }
+                return parentesco;
 
-        public async Task<ParentescoModel> GetById(int id)
-        {
-            return await _repository.GetById(id);
-        }
-
-        public async Task<ParentescoModel> Update(int id, ParentescoRequest request)
-        {
-            var model = new ParentescoModel
+            }
+            catch (Exception)
             {
-                Nombre = request.Nombre
-            };
-
-            return await _repository.Update(id, model);
+                throw;
+            }
         }
 
-        public async Task<ParentescoModel> Delete(int id)
+        public async Task<ParentescoRequest> Create(ParentescoRequest request)
         {
-            return await _repository.Delete(id);
+            try
+            {
+                var response = await _repository.Create(request);
+                return response;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<ParentescoModel> Update(ParentescoModel request, int id)
+        {
+            try
+            {
+                var parentesco = await _repository.Update(request, id);
+
+                return parentesco;
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public Task<bool> Delete(int id)
+        {
+            try
+            {
+                var response = _repository.Delete(id);
+
+                return response;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
 }

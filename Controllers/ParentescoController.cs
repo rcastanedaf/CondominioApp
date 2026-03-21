@@ -1,4 +1,6 @@
 ﻿using Condominio.DTOs.Request;
+using Condominio.Models;
+using Condominio.Services;
 using Condominio.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,52 +21,66 @@ namespace Condominio.Controllers
         [Route("get-all")]
         public async Task<IActionResult> Get()
         {
-            var result = await _testService.GetAll();
-            return Ok(result);
+            var response = new List<ParentescoModel>();
+
+            try
+            {
+                response = await _testService.GetAll();
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
+            }
         }
 
         [HttpPost]
         [Route("create")]
         public async Task<IActionResult> Create([FromBody] ParentescoRequest request)
         {
-            var result = await _testService.Create(request);
-            return Ok(result);
-        }
+            try
+            {
+                var response = await _testService.Create(request);
 
-        [HttpGet]
-        [Route("{id}")]
-        public async Task<IActionResult> GetById(int id)
-        {
-            var result = await _testService.GetById(id);
-
-            if (result == null)
-                return NotFound();
-
-            return Ok(result);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
+            }
         }
 
         [HttpPut]
         [Route("update/{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] ParentescoRequest request)
+        public async Task<IActionResult> Update([FromBody] ParentescoModel request, int id)
         {
-            var result = await _testService.Update(id, request);
+            try
+            {
+                var response = await _testService.Update(request, id);
 
-            if (result == null)
-                return NotFound();
-
-            return Ok(result);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
+            }
         }
 
         [HttpDelete]
         [Route("delete/{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var result = await _testService.Delete(id);
+            try
+            {
+                var response = await _testService.Delete(id);
 
-            if (result == null)
-                return NotFound();
-
-            return Ok("Eliminado correctamente");
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
+            }
         }
     }
 }
