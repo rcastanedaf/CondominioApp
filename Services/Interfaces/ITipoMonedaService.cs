@@ -7,10 +7,8 @@ namespace Condominio.Services.Interfaces
     {
         public Task<List<TipoMonedaModel>> GetAllAsync();
 
-        public Task<TipoMonedaModel> UpdateAsync(TipoMonedaModel request, int id);
-
         public Task<TipoMonedaCreateRequest> CreateAsync(TipoMonedaCreateRequest request);
-
+        public Task<TipoMonedaModel> UpdateAsync(TipoMonedaModel request, int id);
         public Task<bool> DeleteAsync(int id);
     }
 }
