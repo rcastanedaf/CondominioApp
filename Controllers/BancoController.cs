@@ -20,64 +20,105 @@ namespace Condominio.Controllers
 
 
         [HttpGet]
-        [Route("get-all")]
+        [Route("get-all-banco")]
         public async Task<IActionResult> Get()
         {
-            var result = await _bancoService.GetAllAsync();
-            return Ok(result);
+            var response = new List<Banco>();
+
+            try
+            {
+                response = await _bancoService.GetAllAsync();
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         [HttpGet]
-        [Route("get-id")]
+        [Route("get-id-banco")]
         public async Task<IActionResult> GetId([FromBody] int id)
         {
-            var result = await _bancoService.GetId(id);
-            return Ok(result);
+            var response = new List<Banco>();
+
+            try
+            {
+                response = await _bancoService.GetId(id);
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         [HttpGet]
-        [Route("get-nombre")]
+        [Route("get-nombre-banco")]
         public async Task<IActionResult> GetNombre([FromBody] string nombre)
         {
-            var result = await _bancoService.GetNombre(nombre);
-            return Ok(result);
+            var response = new List<Banco>();
+
+            try
+            {
+                response = await _bancoService.GetNombre(nombre);
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         [HttpPost]
-        [Route("create/{id}")]
-        public async Task<IActionResult> CreateBanco([FromBody] BancoRequest request)
+        [Route("create-banco")]
+        public async Task<IActionResult> CreateBanco([FromBody] BancoCreateRequest request)
         {
-            Banco newBanco = new Banco
+            try
             {
-                Nombre = request.Nombre,
-                Pais = request.Pais,
-                Activo = request.Activo,
-            };
-            var result = await _bancoService.CreateBanco(newBanco);
-            return Ok(result);
+                var response = await _bancoService.CreateBanco(request);
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         [HttpPut]
-        [Route("update/{id}")]
-        public async Task<IActionResult> UpdateBanco([FromBody] BancoRequest request) 
+        [Route("update-banco/{id}")]
+        public async Task<IActionResult> UpdateBanco([FromBody] BancoUpdateRequest request) 
         {
-            Banco editBanco = new Banco
+            try
             {
-                Id = request.Id,
-                Nombre = request.Nombre,
-                Pais = request.Pais,
-                Activo = request.Activo,
-            };
-            var result = await _bancoService.UpdateBanco(editBanco);
-            return Ok(result);
+                var response = await _bancoService.UpdateBanco(request);
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         [HttpDelete]
         [Route("detele/{id}")]
         public async Task<IActionResult> DeleteBanco([FromBody] int id)
         {
-            var result = await _bancoService.DeleteBanco(id);
-            return Ok(result);
+            try
+            {
+                var response = await _bancoService.DeleteBanco(id);
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message }); ;
+            }
         }
     }
 }

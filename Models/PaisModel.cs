@@ -2,8 +2,8 @@
 {
     public class PaisModel
     {
-        public int Id { get; set; }
-        public required string Codigo { get; set; }
-        public required string Nombre { get; set; }
+        public required int id { get; set; }
+        public required string codigo { get; set; }
+        public required string nombre { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Condominio.DTOs.Response;
+﻿using Condominio.DTOs.Request;
+using Condominio.DTOs.Response;
 using Condominio.Models;
 using Condominio.Repositories;
 using Condominio.Repositories.Interfaces;
@@ -15,94 +16,87 @@ namespace Condominio.Services
             _bancoRepository = bancoRepository;
         }
 
-        public async Task<ApiResponse<List<Banco>>> GetAllAsync()
+        public async Task<List<Banco>> GetAllAsync()
         {
-            try 
+            try
             {
                 var allBanco = await _bancoRepository.GetAllAsync();
 
-                return ApiResponse<List<Banco>>.Ok(allBanco);
+                return allBanco;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return ApiResponse<List<Banco>>.Fail(ex.Message);
+                throw;
             }
         }
 
-        public async Task<ApiResponse<List<Banco>>> GetId(int id)
+        public async Task<List<Banco>> GetId(int id)
         {
             try
             {
                 var idBanco = await _bancoRepository.GetId(id);
 
-                return ApiResponse<List<Banco>>.Ok(idBanco);
+                return idBanco;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return ApiResponse<List<Banco>>.Fail(ex.Message);
+                throw;
             }
         }
 
-        public async Task<ApiResponse<List<Banco>>> GetNombre(string nombre)
+        public async Task<List<Banco>> GetNombre(string nombre)
         {
             try
             {
                 var nombreBanco = await _bancoRepository.GetNombre(nombre);
 
-                return ApiResponse<List<Banco>>.Ok(nombreBanco);
+                return nombreBanco;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return ApiResponse<List<Banco>>.Fail(ex.Message);
+                throw;
             }
         }
 
-        public async Task<ApiResponse<List<Banco>>> UpdateBanco(Banco editBanco)
+        public async Task<BancoUpdateRequest> UpdateBanco(BancoUpdateRequest editBanco)
         {
             try
             {
                 var banco = await _bancoRepository.UpdateBanco(editBanco);
 
-                return ApiResponse<List<Banco>>.Ok(banco);
+                return banco;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return ApiResponse<List<Banco>>.Fail(ex.Message);
-            }
-        }
-
-        public async Task<ApiResponse<List<Banco>>> CreateBanco(Banco editBanco)
-        {
-            try
-            {
-                var bus = await _bancoRepository.GetNombre(editBanco.Nombre);
-                if (bus != null)
-                {
-                    var banco = await _bancoRepository.CreateBanco(editBanco);
-
-                    return ApiResponse<List<Banco>>.Ok(banco);
-                }
-                else
-                {
-                    return ApiResponse<List<Banco>>.Fail("Banco ya existente");
-                }
-            }
-            catch (Exception ex)
-            {
-                return ApiResponse<List<Banco>>.Fail(ex.Message);
+                throw;
             }
         }
 
-        public async Task<ApiResponse<List<Banco>>> DeleteBanco(int id)
+        public async Task<BancoCreateRequest> CreateBanco(BancoCreateRequest newBanco)
         {
             try
             {
-                var banco = await _bancoRepository.DeleteBanco(id);
-                return ApiResponse<List<Banco>>.Ok(banco);
+                var banco = await _bancoRepository.CreateBanco(newBanco);
+
+                return banco;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return ApiResponse<List<Banco>>.Fail(ex.Message);
+                throw;
+            }
+        }
+
+        public Task<bool> DeleteBanco(int id)
+        {
+            try
+            {
+                var response = _bancoRepository.DeleteBanco(id);
+
+                return response;
+            }
+            catch (Exception)
+            {
+                throw;
             }
         }
     }
