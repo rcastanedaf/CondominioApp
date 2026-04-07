@@ -1,5 +1,3 @@
-import Pais from "./components/Pais";
-import Parentesco from "./components/Parentesco";
 import Banco from "./components/Banco";
 import ConceptoDescuento from "./components/ConceptoDescuento";
 
