@@ -105,8 +105,8 @@ namespace Condominio.Controllers
         }
 
         [HttpDelete]
-        [Route("detele-ConceptoDesc/{id}")]
-        public async Task<IActionResult> DeleteConceptoDesc([FromBody] int id)
+        [Route("delete-ConceptoDesc/{id}")]
+        public async Task<IActionResult> DeleteConceptoDesc([FromRoute] int id)
         {
             try
             {
