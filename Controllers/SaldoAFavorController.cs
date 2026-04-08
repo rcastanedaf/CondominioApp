@@ -1,6 +1,5 @@
 ﻿using Condominio.DTOs.Request;
 using Condominio.Models;
-using Condominio.Services;
 using Condominio.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,25 +7,25 @@ namespace Condominio.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class ConceptoDescuentoController : ControllerBase
+    public class SaldoAFavorController : ControllerBase
     {
-        private readonly IConceptoDescuentoService _conceptoDescuentoService;
+        private readonly ISaldoAFavorService _saldoAFavorService;
 
-        public ConceptoDescuentoController(IConceptoDescuentoService conceptoDescuentoService)
+        public SaldoAFavorController(ISaldoAFavorService saldoAFavorService)
         {
-            _conceptoDescuentoService = conceptoDescuentoService;
+            _saldoAFavorService = saldoAFavorService;
         }
 
 
         [HttpGet]
-        [Route("get-all-ConceptoDesc")]
+        [Route("get-all-saldoAFavor")]
         public async Task<IActionResult> Get()
         {
-            var response = new List<Concepto_Descuento>();
+            var response = new List<SaldoAFavor>();
 
             try
             {
-                response = await _conceptoDescuentoService.GetAllAsync();
+                response = await _saldoAFavorService.GetAllAsync();
 
                 return Ok(response);
             }
@@ -37,14 +36,14 @@ namespace Condominio.Controllers
         }
 
         [HttpGet]
-        [Route("get-id-ConceptoDesc")]
-        public async Task<IActionResult> GetId(int id)
+        [Route("get-id-saldoAFavor")]
+        public async Task<IActionResult> GetId([FromBody] int id)
         {
-            var response = new List<Concepto_Descuento>();
+            var response = new List<SaldoAFavor>();
 
             try
             {
-                response = await _conceptoDescuentoService.GetId(id);
+                response = await _saldoAFavorService.GetId(id);
 
                 return Ok(response);
             }
@@ -55,14 +54,14 @@ namespace Condominio.Controllers
         }
 
         [HttpGet]
-        [Route("get-nombre-ConceptoDesc")]
-        public async Task<IActionResult> GetNombre(string nombre)
+        [Route("get-nombre-saldoAFavor")]
+        public async Task<IActionResult> GetNombre([FromBody] string nombre)
         {
-            var response = new List<Concepto_Descuento>();
+            var response = new List<SaldoAFavor>();
 
             try
             {
-                response = await _conceptoDescuentoService.GetNombre(nombre);
+                response = await _saldoAFavorService.GetNombre(nombre);
 
                 return Ok(response);
             }
@@ -73,12 +72,12 @@ namespace Condominio.Controllers
         }
 
         [HttpPost]
-        [Route("create-ConceptoDesc")]
-        public async Task<IActionResult> CreateConceptoDesc([FromBody] ConceptoDescuentoCreateRequest request)
+        [Route("create-saldoAFavor")]
+        public async Task<IActionResult> CreateSaldoAFavor([FromBody] SaldoAFavorCreateRequest request)
         {
             try
             {
-                var response = await _conceptoDescuentoService.CreateConceptoDescuento(request);
+                var response = await _saldoAFavorService.CreateSaldoAFavor(request);
 
                 return Ok(response);
             }
@@ -89,12 +88,12 @@ namespace Condominio.Controllers
         }
 
         [HttpPut]
-        [Route("update-ConceptoDesc/{id}")]
-        public async Task<IActionResult> UpdateConceptoDes([FromBody] ConceptoDescuentoUpdateRequest request)
+        [Route("update-saldoAFavor/{id}")]
+        public async Task<IActionResult> UpdateSaldoAFavor([FromBody] SaldoAFavorUpdateRequest request)
         {
             try
             {
-                var response = await _conceptoDescuentoService.UpdateConceptoDescuento(request);
+                var response = await _saldoAFavorService.UpdateSaldoAFavor(request);
 
                 return Ok(response);
             }
@@ -105,12 +104,12 @@ namespace Condominio.Controllers
         }
 
         [HttpDelete]
-        [Route("delete-ConceptoDesc/{id}")]
-        public async Task<IActionResult> DeleteConceptoDesc([FromRoute] int id)
+        [Route("detele-saldoAFavor/{id}")]
+        public async Task<IActionResult> DeleteSaldoAFavor([FromRoute] int id)
         {
             try
             {
-                var response = await _conceptoDescuentoService.DeleteConceptoDescuento(id);
+                var response = await _saldoAFavorService.DeleteSaldoAFavor(id);
 
                 return Ok(response);
             }
@@ -119,6 +118,5 @@ namespace Condominio.Controllers
                 return BadRequest(new { message = ex.Message }); ;
             }
         }
-
     }
 }
