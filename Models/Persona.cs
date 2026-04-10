@@ -8,7 +8,7 @@
         }
         public Persona(string tipo, string nombres, string apellidos, string dpi, string pasaporte, DateOnly fechaNacimiento,
             int idEstadoCivil, int nacionalidad, string telefonoPrincipal, string telefonoSecundario, string email, string nit,
-            int idRegimenFiscal, string observaciones, int estado, DateOnly fechaRegistro)
+            int idRegimenFiscal, string observaciones, int estado, DateTime fechaRegistro)
         {
             Tipo = tipo;
             Nombres = nombres;
@@ -44,7 +44,7 @@
         public int Id_Regimen_Fiscal { get; set; }
         public string Observaciones { get; set; }
         public int Estado { get; set; }
-        public DateOnly Fecha_Registro { get; set; }
+        public DateTime Fecha_Registro { get; set; }
 
     }
 }

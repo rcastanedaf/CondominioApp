@@ -22,6 +22,13 @@ namespace Condominio.Controllers
             return Ok(data);
         }
 
+        [HttpGet("get-by-incidencia")]
+        public async Task<IActionResult> GetByIncidencia(int idIncidencia) // ✅ antes era "id"
+        {
+            var data = await _service.GetByIncidenciaAsync(idIncidencia);
+            return Ok(data);
+        }
+
         [HttpPost("create")]
         public async Task<IActionResult> Create([FromBody] SeguimientoIncidenciaModel model)
         {

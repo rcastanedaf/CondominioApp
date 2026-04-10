@@ -8,7 +8,7 @@ namespace Condominio.Models
         {
 
         }
-        public Residente(int idPersona, int idPropiedad, string tipo_Residente, DateOnly fechaIngreso, DateOnly fechaSalida, int estado,
+        public Residente(int idPersona, int idPropiedad, string tipo_Residente, DateTime fechaIngreso, DateTime fechaSalida, int estado,
             string observaciones)
         {
             Id_Persona = idPersona;
@@ -23,8 +23,8 @@ namespace Condominio.Models
         public int Id_Persona { get; set; }
         public int Id_Propiedad { get; set; }
         public string Tipo_Residente { get; set; }
-        public DateOnly Fecha_Ingreso { get; set; }
-        public DateOnly Fecha_Salida { get; set; }
+        public DateTime Fecha_Ingreso { get; set; }
+        public DateTime Fecha_Salida { get; set; }
         public int Estado { get; set; }
         public string Observaciones { get; set; }
     }

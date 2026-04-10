@@ -82,5 +82,23 @@ namespace Condominio.Repositories
 
             await db.ExecuteAsync(query, new { id });
         }
+
+        public async Task<List<SeguimientoIncidenciaModel>> GetByIncidenciaAsync(int idIncidencia)
+        {
+            using IDbConnection db = new OracleConnection(_stringConnection);
+
+            // ✅ Alias explícitos para que Dapper mapee correctamente (antes usaba SELECT *)
+            // ✅ Parámetro nombrado en lugar de interpolación de string (evita SQL injection)
+            var query = @"SELECT 
+                            ID_SEGUIMIENTO IdSeguimiento,
+                            ID_INCIDENCIA IdIncidencia,
+                            COMENTARIO Comentario,
+                            ESTADO_NUEVO EstadoNuevo,
+                            FECHA Fecha
+                          FROM SEGUIMIENTO_INCIDENCIA
+                          WHERE ID_INCIDENCIA = :idIncidencia";
+
+            return (await db.QueryAsync<SeguimientoIncidenciaModel>(query, new { idIncidencia })).ToList();
+        }
     }
 }
