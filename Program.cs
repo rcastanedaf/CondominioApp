@@ -55,6 +55,25 @@ builder.Services.AddScoped<IMetodoPagoRepository, MetodoPagoRepository>();
 builder.Services.AddScoped<IConceptoDescuentoService, ConceptoDescuentoService>();
 builder.Services.AddScoped<IConceptoDescuentoRepository, ConceptoDescuentoRepository>();
 
+builder.Services.AddScoped<IgravamenPropiedadService, gravamenPropiedadService>();
+builder.Services.AddScoped<IgravamenPropiedadRepository, gravamenPropiedadRepository>();
+
+// tipoPropiedad
+builder.Services.AddScoped<ItipoPropiedadRepository, tipoPropiedadRepository>();
+builder.Services.AddScoped<ItipoPropiedadService, tipoPropiedadService>();
+
+// propiedad
+builder.Services.AddScoped<IpropiedadRepository, propiedadRepository>();
+builder.Services.AddScoped<IpropiedadService, propiedadService>();
+
+// contrato
+builder.Services.AddScoped<IcontratoRepository, contratoRepository>();
+builder.Services.AddScoped<IcontratoService, contratoService>();
+
+// renovacionContrato
+builder.Services.AddScoped<IrenovacionContratoRepository, renovacionContratoRepository>();
+builder.Services.AddScoped<IrenovacionContratoService, renovacionContratoService>();
+
 
 var app = builder.Build();
 
