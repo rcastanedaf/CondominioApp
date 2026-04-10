@@ -1,56 +1,81 @@
+using System.Data;
 using Condominio.Models;
 using Condominio.Repositories.Interfaces;
+using Dapper;
+using Oracle.ManagedDataAccess.Client;
 
 namespace Condominio.Repositories
 {
     public class MotivoVisitaRepository : IMotivoVisitaRepository
     {
-        private static List<MotivoVisitaModel> list = new List<MotivoVisitaModel>
+        private readonly IConfiguration _configuration;
+        private readonly string _connectionString;
+
+        public MotivoVisitaRepository(IConfiguration configuration)
         {
-            new MotivoVisitaModel { Id = 1, Descripcion = "Entrega de paquete" },
-            new MotivoVisitaModel { Id = 2, Descripcion = "Visita familiar" },
-            new MotivoVisitaModel { Id = 3, Descripcion = "Servicio técnico" }
-        };
+            _configuration = configuration;
+            _connectionString = configuration.GetConnectionString("DefaultConnection")!;
+        }
 
         public async Task<List<MotivoVisitaModel>> GetAllAsync()
         {
-            return list;
+            using IDbConnection db = new OracleConnection(_connectionString);
+
+            var query = @"SELECT 
+                            ID Id,
+                            DESCRIPCION Descripcion
+                          FROM MOTIVO_VISITA";
+
+            return (await db.QueryAsync<MotivoVisitaModel>(query)).ToList();
         }
 
         public async Task<MotivoVisitaModel?> GetByIdAsync(int id)
         {
-            return list.FirstOrDefault(x => x.Id == id);
+            using IDbConnection db = new OracleConnection(_connectionString);
+
+            var query = @"SELECT 
+                            ID Id,
+                            DESCRIPCION Descripcion
+                          FROM MOTIVO_VISITA
+                          WHERE ID = :id";
+
+            return await db.QueryFirstOrDefaultAsync<MotivoVisitaModel>(query, new { id });
         }
 
         public async Task<MotivoVisitaModel> CreateAsync(MotivoVisitaModel model)
         {
-            model.Id = list.Max(x => x.Id) + 1;
-            list.Add(model);
+            using IDbConnection db = new OracleConnection(_connectionString);
+
+            var query = @"INSERT INTO MOTIVO_VISITA (DESCRIPCION)
+                          VALUES (:Descripcion)";
+
+            await db.ExecuteAsync(query, model);
+
             return model;
         }
 
         public async Task<bool> UpdateAsync(MotivoVisitaModel model)
         {
-            var existing = list.FirstOrDefault(x => x.Id == model.Id);
+            using IDbConnection db = new OracleConnection(_connectionString);
 
-            if (existing == null)
-                return false;
+            var query = @"UPDATE MOTIVO_VISITA
+                          SET DESCRIPCION = :Descripcion
+                          WHERE ID = :Id";
 
-            existing.Descripcion = model.Descripcion;
+            var result = await db.ExecuteAsync(query, model);
 
-            return true;
+            return result > 0;
         }
 
         public async Task<bool> DeleteAsync(int id)
         {
-            var existing = list.FirstOrDefault(x => x.Id == id);
+            using IDbConnection db = new OracleConnection(_connectionString);
 
-            if (existing == null)
-                return false;
+            var query = "DELETE FROM MOTIVO_VISITA WHERE ID = :id";
 
-            list.Remove(existing);
+            var result = await db.ExecuteAsync(query, new { id });
 
-            return true;
+            return result > 0;
         }
     }
 }

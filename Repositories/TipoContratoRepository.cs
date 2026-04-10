@@ -1,53 +1,82 @@
+using System.Data;
 using Condominio.Models;
 using Condominio.Repositories.Interfaces;
+using Dapper;
+using Oracle.ManagedDataAccess.Client;
 
 namespace Condominio.Repositories
 {
     public class TipoContratoRepository : ITipoContratoRepository
     {
-        private static List<TipoContratoModel> list = new List<TipoContratoModel>();
+        private readonly IConfiguration _configuration;
+        private readonly string _stringConnection;
+
+        public TipoContratoRepository(IConfiguration configuration)
+        {
+            _configuration = configuration;
+            _stringConnection = configuration.GetConnectionString("DefaultConnection")!;
+        }
 
         public async Task<List<TipoContratoModel>> GetAllAsync()
         {
-            return list;
+            using (IDbConnection db = new OracleConnection(_stringConnection))
+            {
+                var query = "SELECT * FROM TIPOCONTRATO";
+                return (await db.QueryAsync<TipoContratoModel>(query)).ToList();
+            }
         }
 
         public async Task<TipoContratoModel?> GetByIdAsync(int id)
         {
-            return list.FirstOrDefault(x => x.Id == id);
+            using (IDbConnection db = new OracleConnection(_stringConnection))
+            {
+                var query = "SELECT * FROM TIPOCONTRATO WHERE ID = :id";
+                return await db.QueryFirstOrDefaultAsync<TipoContratoModel>(query, new { id });
+            }
         }
 
         public async Task<TipoContratoModel> CreateAsync(TipoContratoModel model)
         {
-            model.Id = list.Count == 0 ? 1 : list.Max(x => x.Id) + 1;
+            using (IDbConnection db = new OracleConnection(_stringConnection))
+            {
+                var query = "INSERT INTO TIPOCONTRATO (nombre, activo) VALUES (:nombre, :activo)";
 
-            list.Add(model);
+                await db.ExecuteAsync(query, new
+                {
+                    nombre = model.Nombre,
+                    activo = 1
+                });
 
-            return model;
+                return model;
+            }
         }
 
         public async Task<bool> UpdateAsync(TipoContratoModel model)
         {
-            var existing = list.FirstOrDefault(x => x.Id == model.Id);
+            using (IDbConnection db = new OracleConnection(_stringConnection))
+            {
+                var query = "UPDATE TIPOCONTRATO SET nombre = :nombre WHERE id = :id";
 
-            if (existing == null)
-                return false;
+                var result = await db.ExecuteAsync(query, new
+                {
+                    nombre = model.Nombre,
+                    id = model.Id
+                });
 
-            existing.Nombre = model.Nombre;
-
-            return true;
+                return result > 0;
+            }
         }
 
         public async Task<bool> DeleteAsync(int id)
         {
-            var existing = list.FirstOrDefault(x => x.Id == id);
+            using (IDbConnection db = new OracleConnection(_stringConnection))
+            {
+                var query = "DELETE FROM TIPOCONTRATO WHERE id = :id";
 
-            if (existing == null)
-                return false;
+                var result = await db.ExecuteAsync(query, new { id });
 
-            list.Remove(existing);
-
-            return true;
+                return result > 0;
+            }
         }
     }
 }
