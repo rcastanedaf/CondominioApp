@@ -18,7 +18,7 @@ namespace Condominio.Controllers
         }
 
         [HttpGet]
-        [Route("get-all")]
+        [Route("get-all-pais")]
         public async Task<IActionResult> Get()
         {
             var response = new List<PaisModel>();
@@ -36,7 +36,7 @@ namespace Condominio.Controllers
         }
 
         [HttpPost]
-        [Route("create")]
+        [Route("create-pais")]
         public async Task<IActionResult> Create([FromBody] PaisRequest request)
         {
             try
@@ -64,7 +64,7 @@ namespace Condominio.Controllers
         }*/
 
         [HttpPut]
-        [Route("update/{id}")]
+        [Route("update-pais/{id}")]
         public async Task<IActionResult> Update([FromBody] PaisModel request, int id)
         {
             try
@@ -80,7 +80,7 @@ namespace Condominio.Controllers
         }
 
         [HttpDelete]
-        [Route("delete/{id}")]
+        [Route("delete-pais/{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             try

@@ -1,13 +1,14 @@
 ﻿using Condominio.DTOs.Request;
 using Condominio.Models;
+using Condominio.Repositories.Interfaces;
 using Condominio.Services.Interfaces;
 
 namespace Condominio.Services
 {
     public class ResidenteService : IResidenteService
     {
-        private readonly IResidenteService _residenteRepository;
-        public ResidenteService(IResidenteService residenteRepository)
+        private readonly IResidenteRepository _residenteRepository;
+        public ResidenteService(IResidenteRepository residenteRepository)
         {
             _residenteRepository = residenteRepository;
         }

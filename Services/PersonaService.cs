@@ -1,13 +1,14 @@
 ﻿using Condominio.DTOs.Request;
 using Condominio.Models;
+using Condominio.Repositories.Interfaces;
 using Condominio.Services.Interfaces;
 
 namespace Condominio.Services
 {
     public class PersonaService : IPersonaService
     {
-        private readonly IPersonaService _personaRepository;
-        public PersonaService(IPersonaService personaRepository)
+        private readonly IPersonaRepository _personaRepository;
+        public PersonaService(IPersonaRepository personaRepository)
         {
             _personaRepository = personaRepository;
         }

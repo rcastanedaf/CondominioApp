@@ -1,13 +1,14 @@
 ﻿using Condominio.DTOs.Request;
 using Condominio.Models;
+using Condominio.Repositories.Interfaces;
 using Condominio.Services.Interfaces;
 
 namespace Condominio.Services
 {
     public class TipoPropiedadService : ITipoPropiedadService
     {
-        private readonly ITipoPropiedadService _tipoPropiedadRepository;
-        public TipoPropiedadService(ITipoPropiedadService tipoPropiedadRepository)
+        private readonly ITipoPropiedadRepository _tipoPropiedadRepository;
+        public TipoPropiedadService(ITipoPropiedadRepository tipoPropiedadRepository)
         {
             _tipoPropiedadRepository = tipoPropiedadRepository;
         }

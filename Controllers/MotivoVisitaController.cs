@@ -16,7 +16,7 @@ namespace Condominio.Controllers
         }
 
         [HttpGet]
-        [Route("get-all")]
+        [Route("get-all-motivo-visita")]
         public async Task<IActionResult> Get()
         {
             var result = await _service.GetAllAsync();
@@ -32,7 +32,7 @@ namespace Condominio.Controllers
         }
 
         [HttpPost]
-        [Route("create")]
+        [Route("create-motivo-visita")]
         public async Task<IActionResult> Create([FromBody] MotivoVisitaModel model)
         {
             var result = await _service.CreateAsync(model);
@@ -40,7 +40,7 @@ namespace Condominio.Controllers
         }
 
         [HttpPut]
-        [Route("update")]
+        [Route("update-motivo-visita")]
         public async Task<IActionResult> Update([FromBody] MotivoVisitaModel model)
         {
             var result = await _service.UpdateAsync(model);
@@ -48,7 +48,7 @@ namespace Condominio.Controllers
         }
 
         [HttpDelete]
-        [Route("delete/{id}")]
+        [Route("delete-motivo-visita/{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             var result = await _service.DeleteAsync(id);

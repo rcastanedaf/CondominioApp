@@ -1,13 +1,14 @@
 ﻿using Condominio.DTOs.Request;
 using Condominio.Models;
+using Condominio.Repositories.Interfaces;
 using Condominio.Services.Interfaces;
 
 namespace Condominio.Services
 {
     public class MultaService : IMultaService
     {
-        private readonly IMultaService _multaRepository;
-        public MultaService(IMultaService multaRepository)
+        private readonly IMultaRepository _multaRepository;
+        public MultaService(IMultaRepository multaRepository)
         {
             _multaRepository = multaRepository;
         }

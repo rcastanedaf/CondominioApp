@@ -8,8 +8,8 @@ namespace Condominio.Services
 {
     public class SaldoAFavorService : ISaldoAFavorService
     {
-        private readonly ISaldoAFavorService _saldoAFavorRepository;
-        public SaldoAFavorService(ISaldoAFavorService saldoAFavorRepository)
+        private readonly ISaldoAFavorRepository _saldoAFavorRepository;
+        public SaldoAFavorService(ISaldoAFavorRepository saldoAFavorRepository)
         {
             _saldoAFavorRepository = saldoAFavorRepository;
         }
