@@ -1,15 +1,14 @@
-import { HashRouter, Routes, Route } from "react-router-dom";
-import MotivoVisitaPage from "./pages/MotivoVisitaPage";
-import TipoContratoPage from "./pages/TipoContratoPage";
+import Pais from "./components/Pais";
+import Parentesco from "./components/Parentesco";
 
 function App() {
   return (
-    <HashRouter>
-      <Routes>
-        <Route path="/" element={<MotivoVisitaPage />} />
-        <Route path="/tipo-contrato" element={<TipoContratoPage />} />
-      </Routes>
-    </HashRouter>
+    <div style={{ padding: "40px" }}>
+      <h1>Paises</h1>
+      <Pais />
+      <h1>Parentesco</h1>
+      <Parentesco />
+    </div>
   );
 }
 

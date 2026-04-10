@@ -7,28 +7,26 @@ namespace Condominio.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class TipoMonedaController : ControllerBase
+    public class MetodoPagoController : ControllerBase
     {
-        private readonly ITipoMonedaService _tipoMonedaService;
+        private readonly IMetodoPagoService metodoPagoService;
 
-        public TipoMonedaController(ITipoMonedaService tipoMonedaService)
+        public MetodoPagoController(IMetodoPagoService metodoPagoService)
         {
-            _tipoMonedaService = tipoMonedaService;
+            this.metodoPagoService = metodoPagoService;
         }
 
         [HttpGet]
-        [Route("get-all")]
+        [Route("get")]
         public async Task<IActionResult> GetAll()
         {
-            var response = new List<TipoMonedaModel>();
-
             try
             {
-                response = await _tipoMonedaService.GetAllAsync();
+                var response = await metodoPagoService.GetAllAsync();
 
                 return Ok(response);
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 return BadRequest(new { success = false, message = ex.Message });
             }
@@ -36,11 +34,11 @@ namespace Condominio.Controllers
 
         [HttpPost]
         [Route("create")]
-        public async Task<IActionResult> Create([FromBody] TipoMonedaCreateRequest request)
+        public async Task<IActionResult> Create([FromBody] MetodoPagoCreateRequest request)
         {
             try
             {
-                var response = await _tipoMonedaService.CreateAsync(request);
+                var response = await metodoPagoService.CreateAsync(request);
 
                 return Ok(response);
             }
@@ -52,11 +50,11 @@ namespace Condominio.Controllers
 
         [HttpPut]
         [Route("update/{id}")]
-        public async Task<IActionResult> Update([FromBody] TipoMonedaModel request, int id)
+        public async Task<IActionResult> Update([FromBody] MetodoPagoModel request, int id)
         {
             try
             {
-                var response = await _tipoMonedaService.UpdateAsync(request, id);
+                var response = await metodoPagoService.UpdateAsync(request, id);
 
                 return Ok(response);
             }
@@ -72,7 +70,7 @@ namespace Condominio.Controllers
         {
             try
             {
-                var response = await _tipoMonedaService.DeleteAsync(id);
+                var response = await metodoPagoService.DeleteAsync(id);
 
                 return Ok(response);
             }

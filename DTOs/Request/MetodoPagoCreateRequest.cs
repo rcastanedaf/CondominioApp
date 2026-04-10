@@ -1,8 +1,7 @@
 ﻿namespace Condominio.DTOs.Request
 {
-    public class BancoCreateRequest
+    public class MetodoPagoCreateRequest
     {
         public required string Nombre { get; set; }
-        public required int Activo { get; set; }
     }
 }

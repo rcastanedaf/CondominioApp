@@ -1,7 +1,5 @@
 ﻿using Condominio.DTOs.Request;
-using Condominio.DTOs.Response;
 using Condominio.Models;
-using Condominio.Repositories;
 using Condominio.Repositories.Interfaces;
 using Condominio.Services.Interfaces;
 
@@ -25,9 +23,9 @@ namespace Condominio.Services
                 return tiposMoneda;
                 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new Exception("Error al obtener tipos de moneda", ex);
             }
         }
 
@@ -40,9 +38,9 @@ namespace Condominio.Services
                 return tipoMoneda;
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new Exception("Error al actualizar tipo de moneda", ex);
             }
         }
 
@@ -54,9 +52,9 @@ namespace Condominio.Services
 
                 return response;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new Exception("Error al crear tipo de moneda", ex);
             }
         }
 
@@ -68,9 +66,9 @@ namespace Condominio.Services
 
                 return response;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new Exception("Error al eliminar tipo de moneda", ex);
             }
         }
     }

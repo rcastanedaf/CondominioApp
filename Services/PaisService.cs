@@ -1,6 +1,7 @@
 ﻿using Condominio.DTOs.Request;
 using Condominio.DTOs.Response;
 using Condominio.Models;
+using Condominio.Repositories;
 using Condominio.Repositories.Interfaces;
 using Condominio.Services.Interfaces;
 
@@ -17,39 +18,64 @@ namespace Condominio.Services
 
         public async Task<List<PaisModel>> GetAll() 
         {
-            return await _paisRepository.GetAll();
-        }
-
-        public async Task<PaisModel> Create(PaisRequest request)
-        {
-            var model = new PaisModel
+            try
             {
-                Codigo = request.Codigo,
-                Nombre = request.Nombre
-            };
+                var pais = await _paisRepository.GetAll();
 
-            return await _paisRepository.Create(model);
+                return pais;
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
-        public async Task<PaisModel> GetById(int id)
+        public async Task<PaisRequest> Create(PaisRequest request)
+        {
+            try
+            {
+                var response = await _paisRepository.Create(request);
+                return response;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        /*public async Task<PaisModel> GetById(int id)
         {
             return await _paisRepository.GetById(id);
-        }
+        }*/
 
-        public async Task<PaisModel> Update(int id, PaisRequest request)
+        public async Task<PaisModel> Update(PaisModel request, int id)
         {
-            var model = new PaisModel
+            try
             {
-                Codigo = request.Codigo,
-                Nombre = request.Nombre
-            };
+                var tipoMoneda = await _paisRepository.Update(request, id);
 
-            return await _paisRepository.Update(id, model);
+                return tipoMoneda;
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
-        public async Task<PaisModel> Delete(int id)
+        public Task<bool> Delete(int id)
         {
-            return await _paisRepository.Delete(id);
+            try
+            {
+                var response = _paisRepository.Delete(id);
+
+                return response;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
 }

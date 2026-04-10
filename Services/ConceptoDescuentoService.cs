@@ -1,10 +1,13 @@
-﻿using Condominio.DTOs.Response;
+﻿using Condominio.DTOs.Request;
+using Condominio.DTOs.Response;
 using Condominio.Models;
+using Condominio.Repositories;
 using Condominio.Repositories.Interfaces;
+using Condominio.Services.Interfaces;
 
 namespace Condominio.Services
 {
-    public class ConceptoDescuentoService
+    public class ConceptoDescuentoService : IConceptoDescuentoService
     {
         private readonly IConceptoDescuentoRepository _conceptoDescuentoRepository;
 
@@ -13,94 +16,87 @@ namespace Condominio.Services
             _conceptoDescuentoRepository = conceptoDescuentoRepository;
         }
 
-        public async Task<ApiResponse<List<Concepto_Descuento>>> GetAllAsync()
+        public async Task<List<Concepto_Descuento>> GetAllAsync()
         {
             try
             {
-                var allConceptoDescuento = await _conceptoDescuentoRepository.GetAllAsync();
+                var allConceptoDesc = await _conceptoDescuentoRepository.GetAllAsync();
 
-                return ApiResponse<List<Concepto_Descuento>>.Ok(allConceptoDescuento);
+                return allConceptoDesc;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return ApiResponse<List<Concepto_Descuento>>.Fail(ex.Message);
+                throw;
             }
         }
 
-        public async Task<ApiResponse<List<Concepto_Descuento>>> GetId(int id)
+        public async Task<List<Concepto_Descuento>> GetId(int id)
         {
             try
             {
-                var idConceptoDescuento = await _conceptoDescuentoRepository.GetId(id);
+                var allConceptoDesc = await _conceptoDescuentoRepository.GetId(id);
 
-                return ApiResponse<List<Concepto_Descuento>>.Ok(idConceptoDescuento);
+                return allConceptoDesc;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return ApiResponse<List<Concepto_Descuento>>.Fail(ex.Message);
+                throw;
             }
         }
 
-        public async Task<ApiResponse<List<Concepto_Descuento>>> GetNombre(string nombre)
+        public async Task<List<Concepto_Descuento>> GetNombre(string nombre)
         {
             try
             {
-                var nombreConceptoDescuento = await _conceptoDescuentoRepository.GetNombre(nombre);
+                var allConceptoDesc = await _conceptoDescuentoRepository.GetNombre(nombre);
 
-                return ApiResponse<List<Concepto_Descuento>>.Ok(nombreConceptoDescuento);
+                return allConceptoDesc;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return ApiResponse<List<Concepto_Descuento>>.Fail(ex.Message);
+                throw;
             }
         }
 
-        public async Task<ApiResponse<List<Concepto_Descuento>>> UpdateConceptoDescuento(Concepto_Descuento editConceptoDescuento)
+        public async Task<ConceptoDescuentoUpdateRequest> UpdateConceptoDescuento(ConceptoDescuentoUpdateRequest editConceptoDescuento)
         {
             try
             {
-                var conceptoDescuento = await _conceptoDescuentoRepository.UpdatetConceptoDescuento(editConceptoDescuento);
+                var conceptoDesc = await _conceptoDescuentoRepository.UpdateConceptoDescuento(editConceptoDescuento);
 
-                return ApiResponse<List<Concepto_Descuento>>.Ok(conceptoDescuento);
+                return conceptoDesc;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return ApiResponse<List<Concepto_Descuento>>.Fail(ex.Message);
+                throw;
             }
         }
 
-        public async Task<ApiResponse<List<Concepto_Descuento>>> CreateConceptoDescuento(Concepto_Descuento newConceptoDescuento)
+        public async Task<ConceptoDescuentoCreateRequest> CreateConceptoDescuento(ConceptoDescuentoCreateRequest newConceptoDescuento)
         {
             try
             {
-                var bus = await _conceptoDescuentoRepository.GetNombre(newConceptoDescuento.Nombre);
-                if (bus != null)
-                {
-                    var conceptoDescuento = await _conceptoDescuentoRepository.CreateConceptoDescuento(newConceptoDescuento);
+                var conceptoDesc = await _conceptoDescuentoRepository.CreateConceptoDescuento(newConceptoDescuento);
 
-                    return ApiResponse<List<Concepto_Descuento>>.Ok(conceptoDescuento);
-                }
-                else
-                {
-                    return ApiResponse<List<Concepto_Descuento>>.Fail("Banco ya existente");
-                }
+                return conceptoDesc;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return ApiResponse<List<Concepto_Descuento>>.Fail(ex.Message);
+                throw;
             }
         }
 
-        public async Task<ApiResponse<List<Concepto_Descuento>>> DeleteConceptoDescuento(int id)
+        public Task<bool> DeleteConceptoDescuento(int id)
         {
             try
             {
-                var conceptoDescuento = await _conceptoDescuentoRepository.DeleteConceptoDescuento(id);
-                return ApiResponse<List<Concepto_Descuento>>.Ok(conceptoDescuento);
+                var response = _conceptoDescuentoRepository.DeleteConceptoDescuento(id);
+
+                return response;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return ApiResponse<List<Concepto_Descuento>>.Fail(ex.Message);
+                throw;
             }
         }
     }
