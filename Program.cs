@@ -70,6 +70,20 @@ builder.Services.AddScoped<IMetodoPagoRepository, MetodoPagoRepository>();
 builder.Services.AddScoped<IConceptoDescuentoService, ConceptoDescuentoService>();
 builder.Services.AddScoped<IConceptoDescuentoRepository, ConceptoDescuentoRepository>();
 
+builder.Services.AddScoped<IPagoService, PagoService>();
+builder.Services.AddScoped<IPagoRepository, PagoRepository>();
+
+builder.Services.AddScoped<IFacturaService, FacturaService>();
+builder.Services.AddScoped<IFacturaRepository, FacturaRepository>();
+
+builder.Services.AddScoped<IDetalleFacturaService, DetalleFacturaService>();
+builder.Services.AddScoped<IDetalleFacturaRepository, DetalleFacturaRepository>();
+
+builder.Services.AddScoped<ICicloFacturacionService, CicloFacturacionService>();
+builder.Services.AddScoped<ICicloFacturacionRepository, CicloFacturacionRepository>();
+
+builder.Services.AddScoped<ICuentaPorCobrarService, CuentaPorCobrarService>();
+builder.Services.AddScoped<ICuentaPorCobrarRepository, CuentaPorCobrarRepository>();
 
 var app = builder.Build();
 
