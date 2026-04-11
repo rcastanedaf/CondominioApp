@@ -89,12 +89,12 @@ namespace Condominio.Controllers
 
         [HttpPut]
         [Route("update-persona/{id}")]
-        public async Task<IActionResult> UpdatePersona([FromBody] PersonaUpdateRequest request)
+        public async Task<IActionResult> UpdatePersona(int id, [FromBody] PersonaUpdateRequest request)
         {
             try
             {
+                request.Id_Persona = id;  // ✅ asignar el id de la ruta al request
                 var response = await _personaService.UpdatePersona(request);
-
                 return Ok(response);
             }
             catch (Exception ex)
@@ -104,7 +104,7 @@ namespace Condominio.Controllers
         }
 
         [HttpDelete]
-        [Route("detele-persona/{id}")]
+        [Route("delete-persona/{id}")]
         public async Task<IActionResult> DeletePersona([FromRoute] int id)
         {
             try

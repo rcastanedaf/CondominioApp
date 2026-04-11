@@ -7,7 +7,7 @@
         public required string Apellidos { get; set; }
         public required string DPI { get; set; }
         public required string Pasaporte { get; set; }
-        public required DateOnly Fecha_Nacimiento { get; set; }
+        public required string Fecha_Nacimiento { get; set; }
         public required int Id_Estado_Civil { get; set; }
         public required int Nacionalidad { get; set; }
         public required string Telefono_Principal { get; set; }
@@ -16,7 +16,7 @@
         public required string NIT { get; set; }
         public required int Id_Regimen_Fiscal { get; set; }
         public required string Observaciones { get; set; }
-        public required int Estado { get; set; }
-        public required DateOnly Fecha_Registro { get; set; }
+        public required int Activo { get; set; }
+        public required string Fecha_Registro { get; set; }
     }
 }
