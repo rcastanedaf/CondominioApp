@@ -20,7 +20,7 @@ namespace Condominio.Controllers
         }
 
         [HttpGet]
-        [Route("get-all")]
+        [Route("get-all-tipo-contrato")]
         public async Task<IActionResult> Get()
         {
             try
@@ -52,7 +52,7 @@ namespace Condominio.Controllers
         }
 
         [HttpPost]
-        [Route("create")]
+        [Route("create-tipo-contrato")]
         public async Task<IActionResult> Create([FromBody] TipoContratoModel model)
         {
             try
@@ -68,7 +68,7 @@ namespace Condominio.Controllers
         }
 
         [HttpPut]
-        [Route("update")]
+        [Route("update-tipo-contrato")]
         public async Task<IActionResult> Update([FromBody] TipoContratoModel model)
         {
             try
@@ -84,7 +84,7 @@ namespace Condominio.Controllers
         }
 
         [HttpDelete]
-        [Route("delete/{id}")]
+        [Route("delete-tipo-contrato/{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             try

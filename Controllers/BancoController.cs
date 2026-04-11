@@ -106,8 +106,8 @@ namespace Condominio.Controllers
         }
 
         [HttpDelete]
-        [Route("detele/{id}")]
-        public async Task<IActionResult> DeleteBanco([FromBody] int id)
+        [Route("detele-banco/{id}")]
+        public async Task<IActionResult> DeleteBanco([FromRoute] int id)
         {
             try
             {

@@ -30,8 +30,15 @@ namespace Condominio.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al obtener todos los seguimientos de incidencia");
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Ocurrió un error interno en el servidor." });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "OcurriÃ³ un error interno en el servidor." });
             }
+        }
+
+        [HttpGet("get-by-incidencia")]
+        public async Task<IActionResult> GetByIncidencia(int idIncidencia) // âœ… antes era "id"
+        {
+            var data = await _service.GetByIncidenciaAsync(idIncidencia);
+            return Ok(data);
         }
 
         [HttpPost("create")]
@@ -45,12 +52,12 @@ namespace Condominio.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al crear el seguimiento de incidencia");
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Ocurrió un error interno en el servidor." });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "OcurriÃ³ un error interno en el servidor." });
             }
         }
 
-        [HttpPut("update")]
-        public async Task<IActionResult> Update([FromBody] SeguimientoIncidenciaModel model)
+        [HttpPut("update/{id}")]
+        public async Task<IActionResult> Update(int id, [FromBody] SeguimientoIncidenciaModel model)
         {
             try
             {
@@ -60,7 +67,7 @@ namespace Condominio.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al actualizar el seguimiento de incidencia");
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Ocurrió un error interno en el servidor." });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "OcurriÃ³ un error interno en el servidor." });
             }
         }
 
@@ -75,7 +82,7 @@ namespace Condominio.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al eliminar el seguimiento de incidencia {Id}", id);
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Ocurrió un error interno en el servidor." });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "OcurriÃ³ un error interno en el servidor." });
             }
         }
     }

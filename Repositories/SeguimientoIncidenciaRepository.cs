@@ -24,6 +24,7 @@ namespace Condominio.Repositories
             var query = @"SELECT 
                             ID_SEGUIMIENTO IdSeguimiento,
                             ID_INCIDENCIA IdIncidencia,
+                            ID_USUARIO IdUsuario,
                             COMENTARIO Comentario,
                             ESTADO_NUEVO EstadoNuevo,
                             FECHA Fecha
@@ -39,6 +40,7 @@ namespace Condominio.Repositories
             var query = @"SELECT 
                             ID_SEGUIMIENTO IdSeguimiento,
                             ID_INCIDENCIA IdIncidencia,
+                            ID_USUARIO IdUsuario,
                             COMENTARIO Comentario,
                             ESTADO_NUEVO EstadoNuevo,
                             FECHA Fecha
@@ -53,9 +55,9 @@ namespace Condominio.Repositories
             using IDbConnection db = new OracleConnection(_stringConnection);
 
             var query = @"INSERT INTO SEGUIMIENTO_INCIDENCIA
-                          (ID_INCIDENCIA, COMENTARIO, ESTADO_NUEVO, FECHA)
+                          (ID_INCIDENCIA, ID_USUARIO, COMENTARIO, ESTADO_NUEVO, FECHA)
                           VALUES
-                          (:IdIncidencia, :Comentario, :EstadoNuevo, :Fecha)";
+                          (:IdIncidencia, :IdUsuario, :Comentario, :EstadoNuevo, :Fecha)";
 
             await db.ExecuteAsync(query, model);
         }
@@ -66,6 +68,7 @@ namespace Condominio.Repositories
 
             var query = @"UPDATE SEGUIMIENTO_INCIDENCIA SET
                           ID_INCIDENCIA = :IdIncidencia,
+                          ID_USUARIO = :IdUsuario,
                           COMENTARIO = :Comentario,
                           ESTADO_NUEVO = :EstadoNuevo,
                           FECHA = :Fecha
@@ -81,6 +84,25 @@ namespace Condominio.Repositories
             var query = "DELETE FROM SEGUIMIENTO_INCIDENCIA WHERE ID_SEGUIMIENTO = :id";
 
             await db.ExecuteAsync(query, new { id });
+        }
+
+        public async Task<List<SeguimientoIncidenciaModel>> GetByIncidenciaAsync(int idIncidencia)
+        {
+            using IDbConnection db = new OracleConnection(_stringConnection);
+
+            // ✅ Alias explícitos para que Dapper mapee correctamente (antes usaba SELECT *)
+            // ✅ Parámetro nombrado en lugar de interpolación de string (evita SQL injection)
+            var query = @"SELECT 
+                            ID_SEGUIMIENTO IdSeguimiento,
+                            ID_INCIDENCIA IdIncidencia,
+                            ID_USUARIO IdUsuario,
+                            COMENTARIO Comentario,
+                            ESTADO_NUEVO EstadoNuevo,
+                            FECHA Fecha
+                          FROM SEGUIMIENTO_INCIDENCIA
+                          WHERE ID_INCIDENCIA = :idIncidencia";
+
+            return (await db.QueryAsync<SeguimientoIncidenciaModel>(query, new { idIncidencia })).ToList();
         }
     }
 }

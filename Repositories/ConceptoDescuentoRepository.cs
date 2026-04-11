@@ -115,7 +115,7 @@ namespace Condominio.Repositories
             {
                 using (IDbConnection db = new OracleConnection(_stringConnection))
                 {
-                    var query = $"UPDATE Banco SET nombre = '{editConceptoDescuento.Nombre}', tipo = '{editConceptoDescuento.Tipo}' , valor = '{editConceptoDescuento.Valor}' , autorizacion = '{editConceptoDescuento.Autorizacion}' WHERE id = {editConceptoDescuento.Id}";
+                    var query = $"UPDATE ConceptoDescuento SET nombre = '{editConceptoDescuento.Nombre}', tipo = '{editConceptoDescuento.Tipo}' , valor = '{editConceptoDescuento.Valor}' , autorizacion = '{editConceptoDescuento.Autorizacion}' WHERE id = {editConceptoDescuento.Id}";
 
                     var result = await db.ExecuteAsync(query);
 

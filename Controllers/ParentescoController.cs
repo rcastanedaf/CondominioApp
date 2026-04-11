@@ -18,7 +18,7 @@ namespace Condominio.Controllers
         }
 
         [HttpGet]
-        [Route("get-all")]
+        [Route("get-all-parentesco")]
         public async Task<IActionResult> Get()
         {
             var response = new List<ParentescoModel>();
@@ -36,7 +36,7 @@ namespace Condominio.Controllers
         }
 
         [HttpPost]
-        [Route("create")]
+        [Route("create-parentesco")]
         public async Task<IActionResult> Create([FromBody] ParentescoRequest request)
         {
             try
@@ -52,7 +52,7 @@ namespace Condominio.Controllers
         }
 
         [HttpPut]
-        [Route("update/{id}")]
+        [Route("update-parentesco/{id}")]
         public async Task<IActionResult> Update([FromBody] ParentescoModel request, int id)
         {
             try
@@ -68,7 +68,7 @@ namespace Condominio.Controllers
         }
 
         [HttpDelete]
-        [Route("delete/{id}")]
+        [Route("delete-parentesco/{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             try

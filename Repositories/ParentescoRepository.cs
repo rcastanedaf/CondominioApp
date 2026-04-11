@@ -24,7 +24,7 @@ namespace Condominio.Repositories
             {
                 using (IDbConnection db = new OracleConnection(_stringConnection))
                 {
-                    var query = "SELECT * FROM Parentesco";
+                    var query = "SELECT * FROM cat_parentesco";
 
                     Console.WriteLine(query);
 
@@ -50,7 +50,7 @@ namespace Condominio.Repositories
             {
                 using (IDbConnection db = new OracleConnection(_stringConnection))
                 {
-                    var query = $"INSERT INTO Parentesco(nombre) values('{request.Nombre}')";
+                    var query = $"INSERT INTO cat_parentesco(nombre) values('{request.Nombre}')";
 
                     var result = await db.ExecuteAsync(query);
 
@@ -69,7 +69,7 @@ namespace Condominio.Repositories
             {
                 using (IDbConnection db = new OracleConnection(_stringConnection))
                 {
-                    var query = $"UPDATE Parentesco SET nombre = '{request.Nombre}' WHERE id = {id}";
+                    var query = $"UPDATE cat_parentesco SET nombre = '{request.Nombre}' WHERE id = {id}";
 
                     var result = await db.ExecuteAsync(query);
 
@@ -88,7 +88,7 @@ namespace Condominio.Repositories
             {
                 using (IDbConnection db = new OracleConnection(_stringConnection))
                 {
-                    var query = $"DELETE FROM Parentesco WHERE id = {id}";
+                    var query = $"DELETE FROM cat_parentesco WHERE id = {id}";
 
                     var result = await db.ExecuteAsync(query);
 

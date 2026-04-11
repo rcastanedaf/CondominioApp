@@ -109,5 +109,12 @@ namespace Condominio.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Ocurrió un error interno en el servidor." });
             }
         }
+
+        [HttpGet("get-by-residente/{idResidente}")]
+        public async Task<IActionResult> GetByResidente(int idResidente)
+        {
+            var data = await _service.GetByResidenteAsync(idResidente);
+            return Ok(data);
+        }
     }
 }
