@@ -6,7 +6,7 @@
         {
 
         }
-        public Multa(int idResidente, int idPropiedad, int idTipoInfraccion, string descripcion, decimal monto, DateOnly fechaInfraccion, DateOnly fechaVencimiento, int estado, string evidencia, int idFactura, int idApelacion, int idEmitida, int idAprobada, string observaciones, DateOnly fechaRegistro)
+        public Multa(int idResidente, int idPropiedad, int idTipoInfraccion, string descripcion, decimal monto, DateTime fechaInfraccion, DateTime fechaVencimiento, string estado, string evidencia, int idFactura, int idApelacion, int idEmitida, int idAprobada, string observaciones, DateTime fechaRegistro)
         {
             Id_Residente = idResidente;
             Id_Propiedad = idPropiedad;
@@ -31,15 +31,15 @@
         public int Id_Tipo_Infraccion { get; set; }
         public string Descripcion { get; set; }
         public decimal Monto { get; set; }
-        public DateOnly Fecha_Infraccion { get; set; }
-        public DateOnly Fecha_Vencimiento { get; set; }
-        public int Estado { get; set; }
+        public DateTime Fecha_Infraccion { get; set; }
+        public DateTime Fecha_Vencimiento { get; set; }
+        public string Estado { get; set; }
         public string Evidencia { get; set; }
         public int Id_Factura { get; set; }
         public int Id_Apelacion { get; set; }
         public int Id_Emitida { get; set; }
         public int Id_Aprobada { get; set; }
         public string Observaciones { get; set; }
-        public DateOnly Fecha_Registro { get; set; }
+        public DateTime Fecha_Registro { get; set; }
     }
 }
