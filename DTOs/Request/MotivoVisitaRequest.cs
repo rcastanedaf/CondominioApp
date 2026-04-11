@@ -2,6 +2,8 @@ namespace Condominio.DTOs.Request
 {
     public class MotivoVisitaRequest
     {
-        public string Descripcion { get; set; }
+        public string Nombre { get; set; }
+
+        public bool Activo { get; set; }
     }
 }

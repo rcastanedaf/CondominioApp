@@ -23,8 +23,9 @@ namespace Condominio.Repositories
 
             var query = @"SELECT 
                             ID Id,
-                            DESCRIPCION Descripcion
-                          FROM MOTIVO_VISITA";
+                            NOMBRE Nombre,
+                            ACTIVO Activo
+                          FROM motivovisita";
 
             return (await db.QueryAsync<MotivoVisitaModel>(query)).ToList();
         }
@@ -35,8 +36,9 @@ namespace Condominio.Repositories
 
             var query = @"SELECT 
                             ID Id,
-                            DESCRIPCION Descripcion
-                          FROM MOTIVO_VISITA
+                            NOMBRE Nombre,
+                            ACTIVO Activo
+                          FROM motivovisita
                           WHERE ID = :id";
 
             return await db.QueryFirstOrDefaultAsync<MotivoVisitaModel>(query, new { id });
@@ -46,8 +48,8 @@ namespace Condominio.Repositories
         {
             using IDbConnection db = new OracleConnection(_connectionString);
 
-            var query = @"INSERT INTO MOTIVO_VISITA (DESCRIPCION)
-                          VALUES (:Descripcion)";
+            var query = @"INSERT INTO motivovisita (NOMBRE, ACTIVO)
+                          VALUES (:Nombre, :Activo)";
 
             await db.ExecuteAsync(query, model);
 
@@ -58,8 +60,9 @@ namespace Condominio.Repositories
         {
             using IDbConnection db = new OracleConnection(_connectionString);
 
-            var query = @"UPDATE MOTIVO_VISITA
-                          SET DESCRIPCION = :Descripcion
+            var query = @"UPDATE motivovisita
+                          SET NOMBRE = :Nombre,
+                            ACTIVO = :Activo
                           WHERE ID = :Id";
 
             var result = await db.ExecuteAsync(query, model);
@@ -71,7 +74,7 @@ namespace Condominio.Repositories
         {
             using IDbConnection db = new OracleConnection(_connectionString);
 
-            var query = "DELETE FROM MOTIVO_VISITA WHERE ID = :id";
+            var query = "DELETE FROM motivovisita WHERE ID = :id";
 
             var result = await db.ExecuteAsync(query, new { id });
 
