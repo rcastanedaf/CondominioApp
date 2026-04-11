@@ -89,12 +89,12 @@ namespace Condominio.Controllers
 
         [HttpPut]
         [Route("update-residente/{id}")]
-        public async Task<IActionResult> UpdateResidente([FromBody] ResidenteUpdateRequest request)
+        public async Task<IActionResult> UpdateResidente(int id, [FromBody] ResidenteUpdateRequest request)
         {
             try
             {
+                request.Id_Residente = id;
                 var response = await _residenteService.UpdateResidente(request);
-
                 return Ok(response);
             }
             catch (Exception ex)
@@ -104,18 +104,17 @@ namespace Condominio.Controllers
         }
 
         [HttpDelete]
-        [Route("detele-residente/{id}")]
+        [Route("delete-residente/{id}")]  // ✅ antes era "detele-residente"
         public async Task<IActionResult> DeleteResidente([FromRoute] int id)
         {
             try
             {
                 var response = await _residenteService.DeleteResidente(id);
-
                 return Ok(response);
             }
             catch (Exception ex)
             {
-                return BadRequest(new { message = ex.Message }); ;
+                return BadRequest(new { message = ex.Message });
             }
         }
     }

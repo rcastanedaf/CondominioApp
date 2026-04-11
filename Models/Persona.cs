@@ -6,9 +6,9 @@
         {
 
         }
-        public Persona(string tipo, string nombres, string apellidos, string dpi, string pasaporte, DateOnly fechaNacimiento,
+        public Persona(string tipo, string nombres, string apellidos, string dpi, string pasaporte, string fechaNacimiento,
             int idEstadoCivil, int nacionalidad, string telefonoPrincipal, string telefonoSecundario, string email, string nit,
-            int idRegimenFiscal, string observaciones, int estado, DateTime fechaRegistro)
+            int idRegimenFiscal, string observaciones, int activo, string fechaRegistro)
         {
             Tipo = tipo;
             Nombres = nombres;
@@ -24,7 +24,7 @@
             NIT = nit;
             Id_Regimen_Fiscal = idRegimenFiscal;
             Observaciones = observaciones;
-            Estado = estado;
+            Activo = activo;
             Fecha_Registro = fechaRegistro;
         }
 
@@ -34,7 +34,7 @@
         public string Apellidos { get; set; }
         public string DPI { get; set; }
         public string Pasaporte { get; set; }  
-        public DateOnly Fecha_Nacimiento { get; set; }
+        public string Fecha_Nacimiento { get; set; }
         public int Id_Estado_Civil { get; set; }
         public int Nacionalidad { get; set; }
         public string Telefono_Principal { get; set; }
@@ -43,8 +43,8 @@
         public string NIT { get; set; }
         public int Id_Regimen_Fiscal { get; set; }
         public string Observaciones { get; set; }
-        public int Estado { get; set; }
-        public DateTime Fecha_Registro { get; set; }
+        public int Activo { get; set; }
+        public string Fecha_Registro { get; set; }
 
     }
 }
