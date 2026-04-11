@@ -2,121 +2,66 @@
 using Condominio.Models;
 using Condominio.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Oracle.ManagedDataAccess.Client;
 
-namespace Condominio.Controllers
+[ApiController]
+[Route("api/[controller]")]
+public class tipoPropiedadController : ControllerBase
 {
-    [ApiController]
-    [Route("[controller]")]
-    public class TipoPropiedadController : ControllerBase
+    private readonly ItipoPropiedadService _service;
+
+    public tipoPropiedadController(ItipoPropiedadService service)
     {
-        private readonly ITipoPropiedadService _tipoPropiedadService;
+        _service = service;
+    }
 
-        public TipoPropiedadController(ITipoPropiedadService tipoPropiedadService)
+    [HttpGet("get-all")]
+    public async Task<IActionResult> GetAll()
+    {
+        try
         {
-            _tipoPropiedadService = tipoPropiedadService;
+            var data = await _service.GetAll();
+            return Ok(data);
         }
+        catch (OracleException ex) { return BadRequest(new { error = ex.Message, code = ex.Number }); }
+        catch (Exception ex) { return StatusCode(500, new { error = ex.Message }); }
+    }
 
-
-        [HttpGet]
-        [Route("get-all-tipo-propiedad")]
-        public async Task<IActionResult> Get()
+    [HttpPost("create")]
+    public async Task<IActionResult> Create([FromBody] tipoPropiedadRequest request)
+    {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+        try
         {
-            var response = new List<Tipo_Propiedad>();
-
-            try
-            {
-                response = await _tipoPropiedadService.GetAllAsync();
-
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
+            var result = await _service.Create(request);
+            return Ok(result);
         }
+        catch (OracleException ex) { return BadRequest(new { error = ex.Message, code = ex.Number }); }
+        catch (Exception ex) { return StatusCode(500, new { error = ex.Message }); }
+    }
 
-        [HttpGet]
-        [Route("get-id-tipo-propiedad")]
-        public async Task<IActionResult> GetId([FromBody] int id)
+    [HttpPut("update/{id}")]
+    public async Task<IActionResult> Update(int id, [FromBody] tipoPropiedadModel request)
+    {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+        try
         {
-            var response = new List<Tipo_Propiedad>();
-
-            try
-            {
-                response = await _tipoPropiedadService.GetId(id);
-
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
+            var result = await _service.Update(request, id);
+            return Ok(result);
         }
+        catch (OracleException ex) { return BadRequest(new { error = ex.Message, code = ex.Number }); }
+        catch (Exception ex) { return StatusCode(500, new { error = ex.Message }); }
+    }
 
-        [HttpGet]
-        [Route("get-nombre-tipo-propiedad")]
-        public async Task<IActionResult> GetNombre([FromBody] string nombre)
+    [HttpDelete("delete/{id}")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        try
         {
-            var response = new List<Tipo_Propiedad>();
-
-            try
-            {
-                response = await _tipoPropiedadService.GetNombre(nombre);
-
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
+            await _service.Delete(id);
+            return Ok();
         }
-
-        [HttpPost]
-        [Route("create-tipo-propiedad")]
-        public async Task<IActionResult> CreateTipoPropiedad([FromBody] TipoPropiedadCreateRequest request)
-        {
-            try
-            {
-                var response = await _tipoPropiedadService.CreateTipoPropiedad(request);
-
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
-        }
-
-        [HttpPut]
-        [Route("update-tipo-propiedad/{id}")]
-        public async Task<IActionResult> UpdateTipoPropiedad([FromBody] TipoPropiedadUpdateRequest request)
-        {
-            try
-            {
-                var response = await _tipoPropiedadService.UpdateTipoPropiedad(request);
-
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
-        }
-
-        [HttpDelete]
-        [Route("detele-tipo-propiedad/{id}")]
-        public async Task<IActionResult> DeleteTipoPropiedad([FromRoute] int id)
-        {
-            try
-            {
-                var response = await _tipoPropiedadService.DeleteTipoPropiedad(id);
-
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { message = ex.Message }); ;
-            }
-        }
+        catch (OracleException ex) { return BadRequest(new { error = ex.Message, code = ex.Number }); }
+        catch (Exception ex) { return StatusCode(500, new { error = ex.Message }); }
     }
 }

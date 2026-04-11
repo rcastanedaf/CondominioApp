@@ -7,145 +7,68 @@ using System.Data;
 
 namespace Condominio.Repositories
 {
-    public class TipoPropiedadRepository : ITipoPropiedadRepository
+    public class tipoPropiedadRepository : ItipoPropiedadRepository
     {
-        private readonly IConfiguration _configuration;
         private readonly string _stringConnection;
 
-        public TipoPropiedadRepository(IConfiguration configuration)
+        public tipoPropiedadRepository(IConfiguration configuration)
         {
-            _configuration = configuration;
             _stringConnection = configuration.GetConnectionString("DefaultConnection")!;
         }
-        public async Task<List<Tipo_Propiedad>> GetAllAsync()
+
+        public async Task<List<tipoPropiedadModel>> GetAll()
         {
-            try
+            using (IDbConnection db = new OracleConnection(_stringConnection))
             {
-                using (IDbConnection db = new OracleConnection(_stringConnection))
-                {
-                    var query = "SELECT * FROM Tipo_Propiedad";
-
-                    var result = (await db.QueryAsync<Tipo_Propiedad>(query)).ToList();
-
-                    if (result.Count > 0)
-                    {
-                        return result;
-                    }
-
-                    return new List<Tipo_Propiedad>();
-                }
-            }
-            catch (Exception)
-            {
-                throw;
+                var query = "SELECT * FROM tipo_propiedad";
+                return (await db.QueryAsync<tipoPropiedadModel>(query)).ToList();
             }
         }
 
-        public async Task<List<Tipo_Propiedad>> GetId(int id)
+        public async Task<tipoPropiedadRequest> Create(tipoPropiedadRequest request)
         {
-            try
+            using (IDbConnection db = new OracleConnection(_stringConnection))
             {
-                using (IDbConnection db = new OracleConnection(_stringConnection))
-                {
-                    var query = $"SELECT * FROM Tipo_Propiedad WHERE id_tipo_propiedad = {id}";
+                db.Open();
+                var query = @"
+                INSERT INTO tipo_propiedad (nombre, descripcion)
+                VALUES (:nombre, :descripcion)";
 
-                    var result = (await db.QueryAsync<Tipo_Propiedad>(query)).ToList();
-
-                    if (result.Count > 0)
-                    {
-                        return result;
-                    }
-
-                    return new List<Tipo_Propiedad>();
-                }
-            }
-            catch (Exception)
-            {
-                throw;
+                await db.ExecuteAsync(query, request, commandTimeout: 30);
+                return request;
             }
         }
 
-        public async Task<List<Tipo_Propiedad>> GetNombre(string nombre)
+        public async Task<tipoPropiedadModel> Update(tipoPropiedadModel request, int id)
         {
-            try
+            using (IDbConnection db = new OracleConnection(_stringConnection))
             {
-                using (IDbConnection db = new OracleConnection(_stringConnection))
+                db.Open();
+                var query = @"
+                UPDATE tipo_propiedad SET
+                    nombre      = :nombre,
+                    descripcion = :descripcion
+                WHERE id_tipo_propiedad = :id";
+
+                await db.ExecuteAsync(query, new
                 {
-                    var query = $"SELECT * FROM Tipo_Propiedad WHERE nombre = {nombre}";
+                    id,
+                    request.nombre,
+                    request.descripcion
+                }, commandTimeout: 30);
 
-                    var result = (await db.QueryAsync<Tipo_Propiedad>(query)).ToList();
-
-                    if (result.Count > 0)
-                    {
-                        return result;
-                    }
-
-                    return new List<Tipo_Propiedad>();
-                }
-            }
-            catch (Exception)
-            {
-                throw;
+                return request;
             }
         }
 
-        public async Task<TipoPropiedadCreateRequest> CreateTipoPropiedad(TipoPropiedadCreateRequest newTipoPropiedad)
+        public async Task<bool> Delete(int id)
         {
-            try
+            using (IDbConnection db = new OracleConnection(_stringConnection))
             {
-                using (IDbConnection db = new OracleConnection(_stringConnection))
-                {
-                    var query = $"INSERT INTO Tipo_Propiedad(nombre, descripcion) " +
-                        $"VALUES ('{newTipoPropiedad.Nombre}', '{newTipoPropiedad.Descripcion}')";
-
-                    var result = await db.ExecuteAsync(query);
-
-                    return newTipoPropiedad;
-                }
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
-        public async Task<TipoPropiedadUpdateRequest> UpdateTipoPropiedad(TipoPropiedadUpdateRequest editTipoPropiedad)
-        {
-            try
-            {
-                using (IDbConnection db = new OracleConnection(_stringConnection))
-                {
-                    var query = $"UPDATE Tipo_Propiedad SET nombre = '{editTipoPropiedad.Nombre}', " +
-                        $"descripcion = '{editTipoPropiedad.Descripcion}' " +
-                        $"WHERE id_persona = {editTipoPropiedad.Id_Tipo_Propiedad}";
-
-                    var result = await db.ExecuteAsync(query);
-
-                    return editTipoPropiedad;
-                }
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
-        public async Task<bool> DeleteTipoPropiedad(int id)
-        {
-            try
-            {
-                using (IDbConnection db = new OracleConnection(_stringConnection))
-                {
-                    var query = $"DELETE FROM Tipo_Propiedad WHERE id_tipo_propiedad = {id}";
-
-                    var result = await db.ExecuteAsync(query);
-
-                    return true;
-                }
-            }
-            catch (Exception)
-            {
-                throw;
+                db.Open();
+                var query = "DELETE FROM tipo_propiedad WHERE id_tipo_propiedad = :id";
+                await db.ExecuteAsync(query, new { id }, commandTimeout: 30);
+                return true;
             }
         }
     }
