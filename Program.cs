@@ -37,6 +37,21 @@ builder.Services.AddScoped<IMotivoVisitaRepository, MotivoVisitaRepository>();
 builder.Services.AddScoped<ITipoContratoService, TipoContratoService>();
 builder.Services.AddScoped<ITipoContratoRepository, TipoContratoRepository>();
 
+builder.Services.AddScoped<IIncidenciaService, IncidenciaService>();
+builder.Services.AddScoped<IIncidenciaRepository, IncidenciaRepository>();
+
+builder.Services.AddScoped<ICategoriaIncidenciaService, CategoriaIncidenciaService>();
+builder.Services.AddScoped<ICategoriaIncidenciaRepository, CategoriaIncidenciaRepository>();
+
+builder.Services.AddScoped<ISeguimientoIncidenciaService, SeguimientoIncidenciaService>();
+builder.Services.AddScoped<ISeguimientoIncidenciaRepository, SeguimientoIncidenciaRepository>();
+
+builder.Services.AddScoped<ITipoServicioService, TipoServicioService>();
+builder.Services.AddScoped<ITipoServicioRepository, TipoServicioRepository>();
+
+builder.Services.AddScoped<ICobroMoraService, CobroMoraService>();
+builder.Services.AddScoped<ICobroMoraRepository, CobroMoraRepository>();
+
 builder.Services.AddScoped<IParentescoService, ParentescoService>();
 builder.Services.AddScoped<IParentescoRepository, ParentescoRepository>();
 
@@ -73,6 +88,21 @@ builder.Services.AddScoped<IcontratoService, contratoService>();
 // renovacionContrato
 builder.Services.AddScoped<IrenovacionContratoRepository, renovacionContratoRepository>();
 builder.Services.AddScoped<IrenovacionContratoService, renovacionContratoService>();
+
+builder.Services.AddScoped<IPagoService, PagoService>();
+builder.Services.AddScoped<IPagoRepository, PagoRepository>();
+
+builder.Services.AddScoped<IFacturaService, FacturaService>();
+builder.Services.AddScoped<IFacturaRepository, FacturaRepository>();
+
+builder.Services.AddScoped<IDetalleFacturaService, DetalleFacturaService>();
+builder.Services.AddScoped<IDetalleFacturaRepository, DetalleFacturaRepository>();
+
+builder.Services.AddScoped<ICicloFacturacionService, CicloFacturacionService>();
+builder.Services.AddScoped<ICicloFacturacionRepository, CicloFacturacionRepository>();
+
+builder.Services.AddScoped<ICuentaPorCobrarService, CuentaPorCobrarService>();
+builder.Services.AddScoped<ICuentaPorCobrarRepository, CuentaPorCobrarRepository>();
 
 
 var app = builder.Build();

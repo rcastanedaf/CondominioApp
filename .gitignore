@@ -4,3 +4,5 @@ obj/
 *.user
 *.suo
 *.log
+node_modules/
+frontend/node_modules/
