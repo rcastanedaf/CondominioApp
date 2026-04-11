@@ -23,7 +23,16 @@ namespace Condominio.Repositories
             {
                 using (IDbConnection db = new OracleConnection(_stringConnection))
                 {
-                    var query = "SELECT * FROM Residente";
+                    var query = @"SELECT
+                        ID_RESIDENTE    Id_Residente,
+                        ID_PERSONA      Id_Persona,
+                        ID_PROPIEDAD    Id_Propiedad,
+                        TIPO_RESIDENTE  Tipo_Residente,
+                        FECHA_INGRESO   Fecha_Ingreso,
+                        FECHA_SALIDA    Fecha_Salida,
+                        ACTIVO          Activo,
+                        OBSERVACIONES   Observaciones
+                      FROM RESIDENTE";
 
                     var result = (await db.QueryAsync<Residente>(query)).ToList();
 
@@ -91,66 +100,47 @@ namespace Condominio.Repositories
 
         public async Task<ResidenteCreateRequest> CreateResidente(ResidenteCreateRequest newResidente)
         {
-            try
+            using (IDbConnection db = new OracleConnection(_stringConnection))
             {
-                using (IDbConnection db = new OracleConnection(_stringConnection))
-                {
-                    var query = $"INSERT INTO Residente(id_persona, id_propiedad, tipo_residente, fecha_ingreso, fecha_salida, estado, observaciones) " +
-                        $"VALUES ('{newResidente.Id_Persona}', '{newResidente.Id_Propiedad}', '{newResidente.Tipo_Residente}', '{newResidente.Fecha_Ingreso}', '{newResidente.Fecha_Salida}', '{newResidente.Estado}', '{newResidente.Observaciones}')";
-
-                    var result = await db.ExecuteAsync(query);
-
-                    return newResidente;
-                }
-            }
-            catch (Exception)
-            {
-                throw;
+                var query = @"INSERT INTO RESIDENTE
+                      (ID_PERSONA, ID_PROPIEDAD, TIPO_RESIDENTE,
+                       FECHA_INGRESO, FECHA_SALIDA, ACTIVO, OBSERVACIONES)
+                      VALUES
+                      (:Id_Persona, :Id_Propiedad, :Tipo_Residente,
+                       TO_DATE(:Fecha_Ingreso, 'YYYY-MM-DD'),
+                       CASE WHEN :Fecha_Salida IS NULL THEN NULL
+                            ELSE TO_DATE(:Fecha_Salida, 'YYYY-MM-DD') END,
+                       :Activo, :Observaciones)";
+                await db.ExecuteAsync(query, newResidente);
+                return newResidente;
             }
         }
-
         public async Task<ResidenteUpdateRequest> UpdateResidente(ResidenteUpdateRequest editResidente)
         {
-            try
+            using (IDbConnection db = new OracleConnection(_stringConnection))
             {
-                using (IDbConnection db = new OracleConnection(_stringConnection))
-                {
-                    var query = $"UPDATE Residente SET id_persona = '{editResidente.Id_Persona}', " +
-                        $"id_propiedad = '{editResidente.Id_Propiedad}' " +
-                        $"tipo_residente = '{editResidente.Tipo_Residente}' " +
-                        $"fecha_ingreso = '{editResidente.Fecha_Ingreso}' " +
-                        $"fecha_salida = '{editResidente.Fecha_Salida}' " +
-                        $"estado = '{editResidente.Estado}' " +
-                        $"observaciones = '{editResidente.Observaciones}' " +
-                        $"WHERE id_persona = {editResidente.Id_Residente}";
-
-                    var result = await db.ExecuteAsync(query);
-
-                    return editResidente;
-                }
-            }
-            catch (Exception)
-            {
-                throw;
+                var query = @"UPDATE RESIDENTE SET
+                      ID_PERSONA      = :Id_Persona,
+                      ID_PROPIEDAD    = :Id_Propiedad,
+                      TIPO_RESIDENTE  = :Tipo_Residente,
+                      FECHA_INGRESO   = TO_DATE(:Fecha_Ingreso, 'YYYY-MM-DD'),
+                      FECHA_SALIDA    = CASE WHEN :Fecha_Salida IS NULL THEN NULL
+                                             ELSE TO_DATE(:Fecha_Salida, 'YYYY-MM-DD') END,
+                      ACTIVO          = :Activo,
+                      OBSERVACIONES   = :Observaciones
+                      WHERE ID_RESIDENTE = :Id_Residente";
+                await db.ExecuteAsync(query, editResidente);
+                return editResidente;
             }
         }
 
         public async Task<bool> DeleteResidente(int id)
         {
-            try
+            using (IDbConnection db = new OracleConnection(_stringConnection))
             {
-                using (IDbConnection db = new OracleConnection(_stringConnection))
-                {
-                    var query = $"DELETE FROM Residente WHERE id_persona = {id}";
-
-                    var result = await db.ExecuteAsync(query);
-
-                    return true;
-                }
-            }
-            catch (Exception)
-            {
-                throw;
+                var query = "DELETE FROM RESIDENTE WHERE ID_RESIDENTE = :id";
+                await db.ExecuteAsync(query, new { id });
+                return true;
             }
         }
     }

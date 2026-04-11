@@ -19,25 +19,29 @@ namespace Condominio.Repositories
         }
         public async Task<List<Persona>> GetAllAsync()
         {
-            try
+            using (IDbConnection db = new OracleConnection(_stringConnection))
             {
-                using (IDbConnection db = new OracleConnection(_stringConnection))
-                {
-                    var query = "SELECT * FROM Persona";
+                var query = @"SELECT
+                        ID_PERSONA          Id_Persona,
+                        TIPO                Tipo,
+                        NOMBRES             Nombres,
+                        APELLIDOS           Apellidos,
+                        DPI                 Dpi,
+                        PASAPORTE           Pasaporte,
+                        FECHA_NACIMIENTO    Fecha_Nacimiento,
+                        ID_ESTADO_CIVIL     Id_Estado_Civil,
+                        ID_NACIONALIDAD     Nacionalidad,
+                        TELEFONO_PRINCIPAL  Telefono_Principal,
+                        TELEFONO_SECUNDARIO Telefono_Secundario,
+                        EMAIL               Email,
+                        NIT                 Nit,
+                        ID_REGIMEN_FISCAL   Id_Regimen_Fiscal,
+                        OBSERVACIONES       Observaciones,
+                        ACTIVO              Activo,
+                        FECHA_REGISTRO      Fecha_Registro
+                      FROM PERSONA";
 
-                    var result = (await db.QueryAsync<Persona>(query)).ToList();
-
-                    if (result.Count > 0)
-                    {
-                        return result;
-                    }
-
-                    return new List<Persona>();
-                }
-            }
-            catch (Exception)
-            {
-                throw;
+                return (await db.QueryAsync<Persona>(query)).ToList();
             }
         }
 
@@ -91,59 +95,49 @@ namespace Condominio.Repositories
 
         public async Task<PersonaCreateRequest> CreatePersona(PersonaCreateRequest newPersona)
         {
-            try
+            using (IDbConnection db = new OracleConnection(_stringConnection))
             {
-                using (IDbConnection db = new OracleConnection(_stringConnection))
-                {
-                    var query = $"INSERT INTO Persona(tipo, nombres, apellidos, dpi, pasaporte, fecha_nacimiento, id_estado_civil," +
-                        $" id_nacionalidad, telefono_principal, telefono_secundario, email, nit, id_regimen_fiscal, observaciones, estado, fecha_registro) " +
-                        $"VALUES ('{newPersona.Tipo}', '{newPersona.Nombres}', '{newPersona.Apellidos}', '{newPersona.DPI}', '{newPersona.Pasaporte}', '{newPersona.Fecha_Nacimiento}', " +
-                        $"'{newPersona.Id_Estado_Civil}', '{newPersona.Nacionalidad}', '{newPersona.Telefono_Principal}', '{newPersona.Telefono_Secundario}', '{newPersona.Email}', " +
-                        $"'{newPersona.NIT}', '{newPersona.Id_Regimen_Fiscal}', '{newPersona.Observaciones}', '{newPersona.Estado}', '{newPersona.Fecha_Registro}')";
+                var query = @"INSERT INTO PERSONA
+                            (TIPO, NOMBRES, APELLIDOS, DPI, PASAPORTE, FECHA_NACIMIENTO,
+                            ID_ESTADO_CIVIL, ID_NACIONALIDAD, TELEFONO_PRINCIPAL, TELEFONO_SECUNDARIO,
+                            EMAIL, NIT, ID_REGIMEN_FISCAL, OBSERVACIONES, ACTIVO, FECHA_REGISTRO)
+                            VALUES
+                            (:Tipo, :Nombres, :Apellidos, :DPI, :Pasaporte,
+                            TO_DATE(:Fecha_Nacimiento, 'YYYY-MM-DD'),
+                            :Id_Estado_Civil, :Nacionalidad, :Telefono_Principal, :Telefono_Secundario,
+                            :Email, :NIT, :Id_Regimen_Fiscal, :Observaciones, :Activo,
+                            TO_DATE(:Fecha_Registro, 'YYYY-MM-DD'))";
 
-                    var result = await db.ExecuteAsync(query);
-
-                    return newPersona;
-                }
-            }
-            catch (Exception)
-            {
-                throw;
+                await db.ExecuteAsync(query, newPersona);
+                return newPersona;
             }
         }
 
         public async Task<PersonaUpdateRequest> UpdatePersona(PersonaUpdateRequest editPersona)
         {
-            try
+            using (IDbConnection db = new OracleConnection(_stringConnection))
             {
-                using (IDbConnection db = new OracleConnection(_stringConnection))
-                {
-                    var query = $"UPDATE Persona SET tipo = '{editPersona.Tipo}', " +
-                        $"nombres = '{editPersona.Nombres}' " +
-                        $"apellidos = '{editPersona.Apellidos}' " +
-                        $"dpi = '{editPersona.DPI}' " +
-                        $"pasaporte = '{editPersona.Pasaporte}' " +
-                        $"fecha_nacimiento = '{editPersona.Fecha_Nacimiento}' " +
-                        $"id_estado_civil = '{editPersona.Id_Estado_Civil}' " +
-                        $"id_nacionalidad = '{editPersona.Nacionalidad}' " +
-                        $"telefono_principal = '{editPersona.Telefono_Principal}' " +
-                        $"telefono_secundario = '{editPersona.Telefono_Secundario}' " +
-                        $"email = '{editPersona.Email}' " +
-                        $"nit = '{editPersona.NIT}' " +
-                        $"id_regimen_fiscal = '{editPersona.Id_Regimen_Fiscal}' " +
-                        $"observaciones = '{editPersona.Observaciones}' " +
-                        $"estado = '{editPersona.Estado}' " +
-                        $"fecha_registro = '{editPersona.Fecha_Registro}' " +
-                        $"WHERE id_persona = {editPersona.Id_Persona}";
+                var query = @"UPDATE PERSONA SET
+                              TIPO                = :Tipo,
+                              NOMBRES             = :Nombres,
+                              APELLIDOS           = :Apellidos,
+                              DPI                 = :DPI,
+                              PASAPORTE           = :Pasaporte,
+                              FECHA_NACIMIENTO    = TO_DATE(:Fecha_Nacimiento, 'YYYY-MM-DD'),
+                              ID_ESTADO_CIVIL     = :Id_Estado_Civil,
+                              ID_NACIONALIDAD     = :Nacionalidad,
+                              TELEFONO_PRINCIPAL  = :Telefono_Principal,
+                              TELEFONO_SECUNDARIO = :Telefono_Secundario,
+                              EMAIL               = :Email,
+                              NIT                 = :NIT,
+                              ID_REGIMEN_FISCAL   = :Id_Regimen_Fiscal,
+                              OBSERVACIONES       = :Observaciones,
+                              ACTIVO              = :Activo,
+                              FECHA_REGISTRO      = TO_DATE(:Fecha_Registro, 'YYYY-MM-DD')
+                              WHERE ID_PERSONA    = :Id_Persona";
 
-                    var result = await db.ExecuteAsync(query);
-
-                    return editPersona;
-                }
-            }
-            catch (Exception)
-            {
-                throw;
+                await db.ExecuteAsync(query, editPersona);
+                return editPersona;
             }
         }
 
