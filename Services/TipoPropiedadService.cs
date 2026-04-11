@@ -5,96 +5,25 @@ using Condominio.Services.Interfaces;
 
 namespace Condominio.Services
 {
-    public class TipoPropiedadService : ITipoPropiedadService
+    public class tipoPropiedadService : ItipoPropiedadService
     {
-        private readonly ITipoPropiedadRepository _tipoPropiedadRepository;
-        public TipoPropiedadService(ITipoPropiedadRepository tipoPropiedadRepository)
+        private readonly ItipoPropiedadRepository _repository;
+
+        public tipoPropiedadService(ItipoPropiedadRepository repository)
         {
-            _tipoPropiedadRepository = tipoPropiedadRepository;
+            _repository = repository;
         }
 
-        public async Task<List<Tipo_Propiedad>> GetAllAsync()
-        {
-            try
-            {
-                var allTipoPropiedad = await _tipoPropiedadRepository.GetAllAsync();
+        public async Task<List<tipoPropiedadModel>> GetAll() =>
+            await _repository.GetAll();
 
-                return allTipoPropiedad;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
+        public async Task<tipoPropiedadRequest> Create(tipoPropiedadRequest request) =>
+            await _repository.Create(request);
 
-        public async Task<List<Tipo_Propiedad>> GetId(int id)
-        {
-            try
-            {
-                var idTipoPropiedad = await _tipoPropiedadRepository.GetId(id);
+        public async Task<tipoPropiedadModel> Update(tipoPropiedadModel request, int id) =>
+            await _repository.Update(request, id);
 
-                return idTipoPropiedad;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
-        public async Task<List<Tipo_Propiedad>> GetNombre(string nombre)
-        {
-            try
-            {
-                var nombreTipoPropiedad = await _tipoPropiedadRepository.GetNombre(nombre);
-
-                return nombreTipoPropiedad;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
-        public async Task<TipoPropiedadUpdateRequest> UpdateTipoPropiedad(TipoPropiedadUpdateRequest editTipoPropiedad)
-        {
-            try
-            {
-                var tipoPropiedad = await _tipoPropiedadRepository.UpdateTipoPropiedad(editTipoPropiedad);
-
-                return tipoPropiedad;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
-        public async Task<TipoPropiedadCreateRequest> CreateTipoPropiedad(TipoPropiedadCreateRequest newTipoPropiedad)
-        {
-            try
-            {
-                var tipoPropiedad = await _tipoPropiedadRepository.CreateTipoPropiedad(newTipoPropiedad);
-
-                return tipoPropiedad;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
-        public Task<bool> DeleteTipoPropiedad(int id)
-        {
-            try
-            {
-                var response = _tipoPropiedadRepository.DeleteTipoPropiedad(id);
-
-                return response;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
+        public async Task<bool> Delete(int id) =>
+            await _repository.Delete(id);
     }
 }
