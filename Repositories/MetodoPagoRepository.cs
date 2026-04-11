@@ -68,7 +68,7 @@ namespace Condominio.Repositories
             {
                 using (IDbConnection db = new OracleConnection(_stringConnection))
                 {
-                    var query = $"UPDATE MetodoPago SET nombre = '{request.Nombre}', activo = {request.Activo}";
+                    var query = $"UPDATE MetodoPago SET nombre = '{request.Nombre}', activo = {request.Activo} WHERE id = {id}";
 
                     var result = await db.ExecuteAsync(query);
 
