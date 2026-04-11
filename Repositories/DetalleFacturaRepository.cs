@@ -88,6 +88,7 @@ namespace Condominio.Repositories
                             PRECIO_UNITARIO       PrecioUnitario,
                             DESCUENTO_PORCENTAJE  DescuentoPorcentaje,
                             DESCUENTO_MONTO       DescuentoMonto,
+                            ID_CONCEPTO_DESCUENTO IdConceptoDescuento,
                             SUBTOTAL_BRUTO        SubtotalBruto,
                             SUBTOTAL_NETO         SubtotalNeto,
                             APLICA_IVA            AplicaIva,

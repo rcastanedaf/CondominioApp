@@ -24,7 +24,7 @@ namespace Condominio.Repositories
             var query = @"SELECT 
                             ID_TIPO_SERVICIO IdTipoServicio,
                             NOMBRE Nombre,
-                            ID_UNIDAD IdUnidad,
+                            ID_UNIDAD_MEDIDA IdUnidad,
                             PERIODICIDAD Periodicidad,
                             MONTO_BASE MontoBase,
                             APLICA_IVA AplicaIva,
@@ -76,7 +76,7 @@ namespace Condominio.Repositories
 
             var query = @"UPDATE TIPO_SERVICIO SET
                         NOMBRE = :Nombre,
-                        ID_UNIDAD = :IdUnidad,
+                        ID_UNIDAD_MEDIDA = :IdUnidad,
                         PERIODICIDAD = :Periodicidad,
                         MONTO_BASE = :MontoBase,
                         APLICA_IVA = :AplicaIva,
