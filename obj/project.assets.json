@@ -954,23 +954,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\grupo\\.nuget\\packages\\": {},
+    "C:\\Users\\rcast\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\grupo\\OneDrive\\Desktop\\JONATHAN CERMEÑO\\UMG JB\\ANALISIS DE SISTEMAS\\PROYECTO CONDOMINIO\\CondominioApp\\Condominio.csproj",
+      "projectUniqueName": "C:\\Users\\rcast\\Documents\\UMG TAREAS\\SEPTIMO SEMESTRE\\Analisis de sistemas\\Backend Condominio\\CondominioApp\\Condominio.csproj",
       "projectName": "Condominio",
-      "projectPath": "C:\\Users\\grupo\\OneDrive\\Desktop\\JONATHAN CERMEÑO\\UMG JB\\ANALISIS DE SISTEMAS\\PROYECTO CONDOMINIO\\CondominioApp\\Condominio.csproj",
-      "packagesPath": "C:\\Users\\grupo\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\grupo\\OneDrive\\Desktop\\JONATHAN CERMEÑO\\UMG JB\\ANALISIS DE SISTEMAS\\PROYECTO CONDOMINIO\\CondominioApp\\obj\\",
+      "projectPath": "C:\\Users\\rcast\\Documents\\UMG TAREAS\\SEPTIMO SEMESTRE\\Analisis de sistemas\\Backend Condominio\\CondominioApp\\Condominio.csproj",
+      "packagesPath": "C:\\Users\\rcast\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\rcast\\Documents\\UMG TAREAS\\SEPTIMO SEMESTRE\\Analisis de sistemas\\Backend Condominio\\CondominioApp\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\grupo\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\rcast\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -979,6 +979,7 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -997,7 +998,7 @@
         "auditLevel": "low",
         "auditMode": "direct"
       },
-      "SdkAnalysisLevel": "10.0.200"
+      "SdkAnalysisLevel": "9.0.300"
     },
     "frameworks": {
       "net9.0": {
@@ -1035,7 +1036,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.201/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.312/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
