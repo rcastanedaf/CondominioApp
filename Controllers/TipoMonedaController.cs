@@ -17,7 +17,7 @@ namespace Condominio.Controllers
         }
 
         [HttpGet]
-        [Route("get-all")]
+        [Route("get-all-tipo-moneda")]
         public async Task<IActionResult> GetAll()
         {
             var response = new List<TipoMonedaModel>();
@@ -35,7 +35,7 @@ namespace Condominio.Controllers
         }
 
         [HttpPost]
-        [Route("create")]
+        [Route("create-tipo-moneda")]
         public async Task<IActionResult> Create([FromBody] TipoMonedaCreateRequest request)
         {
             try
@@ -51,7 +51,7 @@ namespace Condominio.Controllers
         }
 
         [HttpPut]
-        [Route("update/{id}")]
+        [Route("update-tipo-moneda/{id}")]
         public async Task<IActionResult> Update([FromBody] TipoMonedaModel request, int id)
         {
             try
@@ -67,7 +67,7 @@ namespace Condominio.Controllers
         }
 
         [HttpDelete]
-        [Route("delete/{id}")]
+        [Route("delete-tipo-moneda/{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             try

@@ -1,4 +1,5 @@
 using Condominio.Models;
+using Condominio.Repositories;
 using Condominio.Repositories.Interfaces;
 using Condominio.Services.Interfaces;
 
@@ -16,6 +17,20 @@ namespace Condominio.Services
         public async Task<List<PagoModel>> GetAllAsync()
         {
             return await _repository.GetAllAsync();
+        }
+
+        public async Task<List<PagoModel>> GetByResidenteAsync(int idResidente)
+        {
+            try
+            {
+                var allPago = await _repository.GetByResidenteAsync(idResidente);
+
+                return allPago;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public async Task<PagoModel?> GetByIdAsync(int id)

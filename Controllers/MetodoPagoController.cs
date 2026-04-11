@@ -17,7 +17,7 @@ namespace Condominio.Controllers
         }
 
         [HttpGet]
-        [Route("get")]
+        [Route("get-all-metodo-pago")]
         public async Task<IActionResult> GetAll()
         {
             try
@@ -33,7 +33,7 @@ namespace Condominio.Controllers
         }
 
         [HttpPost]
-        [Route("create")]
+        [Route("create-metodo-pago")]
         public async Task<IActionResult> Create([FromBody] MetodoPagoCreateRequest request)
         {
             try
@@ -49,7 +49,7 @@ namespace Condominio.Controllers
         }
 
         [HttpPut]
-        [Route("update/{id}")]
+        [Route("update-metodo-pago/{id}")]
         public async Task<IActionResult> Update([FromBody] MetodoPagoModel request, int id)
         {
             try
@@ -65,7 +65,7 @@ namespace Condominio.Controllers
         }
 
         [HttpDelete]
-        [Route("delete/{id}")]
+        [Route("delete-metodo-pago/{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             try

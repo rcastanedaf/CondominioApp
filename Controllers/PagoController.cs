@@ -57,5 +57,12 @@ namespace Condominio.Controllers
             await _service.DeleteAsync(id);
             return Ok();
         }
+
+        [HttpGet("get-by-residente/{idResidente}")]
+        public async Task<IActionResult> GetByResidente(int idResidente)
+        {
+            var data = await _service.GetByResidenteAsync(idResidente);
+            return Ok(data);
+        }
     }
 }

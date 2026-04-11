@@ -18,6 +18,11 @@ namespace Condominio.Services
             return await _repository.GetAllAsync();
         }
 
+        public async Task<List<SeguimientoIncidenciaModel>> GetByIncidenciaAsync(int id)
+        {
+            return await _repository.GetByIncidenciaAsync(id);
+        }
+
         public async Task<SeguimientoIncidenciaModel?> GetByIdAsync(int id)
         {
             return await _repository.GetByIdAsync(id);

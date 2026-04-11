@@ -9,5 +9,6 @@ namespace Condominio.Repositories.Interfaces
         Task CreateAsync(SeguimientoIncidenciaModel model);
         Task UpdateAsync(SeguimientoIncidenciaModel model);
         Task DeleteAsync(int id);
+        Task<List<SeguimientoIncidenciaModel>> GetByIncidenciaAsync(int id);
     }
 }

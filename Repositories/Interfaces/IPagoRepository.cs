@@ -10,5 +10,7 @@ namespace Condominio.Repositories.Interfaces
         Task CreateAsync(PagoModel model);
         Task UpdateAsync(PagoModel model);
         Task DeleteAsync(int id);
+        Task<List<PagoModel>> GetByResidenteAsync(int idResidente);
+
     }
 }

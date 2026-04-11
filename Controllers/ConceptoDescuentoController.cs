@@ -38,7 +38,7 @@ namespace Condominio.Controllers
 
         [HttpGet]
         [Route("get-id-ConceptoDesc")]
-        public async Task<IActionResult> GetId([FromBody] int id)
+        public async Task<IActionResult> GetId(int id)
         {
             var response = new List<Concepto_Descuento>();
 
@@ -56,7 +56,7 @@ namespace Condominio.Controllers
 
         [HttpGet]
         [Route("get-nombre-ConceptoDesc")]
-        public async Task<IActionResult> GetNombre([FromBody] string nombre)
+        public async Task<IActionResult> GetNombre(string nombre)
         {
             var response = new List<Concepto_Descuento>();
 
@@ -105,8 +105,8 @@ namespace Condominio.Controllers
         }
 
         [HttpDelete]
-        [Route("detele-ConceptoDesc/{id}")]
-        public async Task<IActionResult> DeleteConceptoDesc([FromBody] int id)
+        [Route("delete-ConceptoDesc/{id}")]
+        public async Task<IActionResult> DeleteConceptoDesc([FromRoute] int id)
         {
             try
             {

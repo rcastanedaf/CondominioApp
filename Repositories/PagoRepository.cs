@@ -1,8 +1,9 @@
-using System.Data;
 using Condominio.Models;
 using Condominio.Repositories.Interfaces;
 using Dapper;
+using Microsoft.AspNetCore.Connections;
 using Oracle.ManagedDataAccess.Client;
+using System.Data;
 
 namespace Condominio.Repositories
 {
@@ -43,6 +44,38 @@ namespace Condominio.Repositories
                           FROM PAGO";
 
             return (await db.QueryAsync<PagoModel>(query)).ToList();
+        }
+
+        public async Task<List<PagoModel>> GetByResidenteAsync(int idResidente)
+                {
+                    using IDbConnection db = new OracleConnection(_stringConnection);
+                    var sql = @"
+                SELECT 
+                    p.id_pago          AS IdPago,
+                    p.id_factura       AS IdFactura,
+                    p.numero_recibo    AS NumeroRecibo,
+                    p.fecha_pago       AS FechaPago,
+                    p.fecha_valor      AS FechaValor,
+                    p.monto_pagado     AS MontoPagado,
+                    p.id_moneda        AS IdMoneda,
+                    p.tipo_cambio      AS TipoCambio,
+                    p.monto_en_gtq     AS MontoEnGtq,
+                    p.id_metodo_pago   AS IdMetodoPago,
+                    p.id_banco_origen  AS IdBancoOrigen,
+                    p.id_banco_destino AS IdBancoDestino,
+                    p.referencia       AS Referencia,
+                    p.imagen_voucher_url AS ImagenVoucherUrl,
+                    p.estado           AS Estado,
+                    p.registrado_por   AS RegistradoPor,
+                    p.aprobado_por     AS AprobadoPor,
+                    p.observaciones    AS Observaciones
+                FROM pago p
+                INNER JOIN factura f ON p.id_factura = f.id_factura
+                WHERE f.id_residente = :idResidente
+                ORDER BY p.fecha_pago DESC";
+
+                    var result = await db.QueryAsync<PagoModel>(sql, new { idResidente });
+                    return result.ToList();
         }
 
         public async Task<PagoModel?> GetByIdAsync(int id)
