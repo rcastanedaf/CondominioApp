@@ -85,22 +85,17 @@ builder.Services.AddScoped<IMultaRepository, MultaRepository>();
 builder.Services.AddScoped<IgravamenPropiedadService, gravamenPropiedadService>();
 builder.Services.AddScoped<IgravamenPropiedadRepository, gravamenPropiedadRepository>();
 
-// tipoPropiedad
 builder.Services.AddScoped<ItipoPropiedadRepository, tipoPropiedadRepository>();
 builder.Services.AddScoped<ItipoPropiedadService, tipoPropiedadService>();
 
-// propiedad
 builder.Services.AddScoped<IpropiedadRepository, propiedadRepository>();
 builder.Services.AddScoped<IpropiedadService, propiedadService>();
 
-// contrato
 builder.Services.AddScoped<IcontratoRepository, contratoRepository>();
 builder.Services.AddScoped<IcontratoService, contratoService>();
 
-// renovacionContrato
 builder.Services.AddScoped<IrenovacionContratoRepository, renovacionContratoRepository>();
 builder.Services.AddScoped<IrenovacionContratoService, renovacionContratoService>();
-
 
 builder.Services.AddScoped<IPagoService, PagoService>();
 builder.Services.AddScoped<IPagoRepository, PagoRepository>();
@@ -116,6 +111,45 @@ builder.Services.AddScoped<ICicloFacturacionRepository, CicloFacturacionReposito
 
 builder.Services.AddScoped<ICuentaPorCobrarService, CuentaPorCobrarService>();
 builder.Services.AddScoped<ICuentaPorCobrarRepository, CuentaPorCobrarRepository>();
+
+builder.Services.AddScoped<IVehiculoService, VehiculoService>();
+builder.Services.AddScoped<IVehiculoRepository, VehiculoRepository>();
+
+builder.Services.AddScoped<IRegistroAccesoService, RegistroAccesoService>();
+builder.Services.AddScoped<IRegistroAccesoRepository, RegistroAccesoRepository>();
+
+builder.Services.AddScoped<IListaNegraService, ListaNegraService>();
+builder.Services.AddScoped<IListaNegraRepository, ListaNegraRepository>();
+
+builder.Services.AddScoped<IEspacioComunService, EspacioComunService>();
+builder.Services.AddScoped<IEspacioComunRepository, EspacioComunRepository>();
+
+builder.Services.AddScoped<IReservaEspacioService, ReservaEspacioService>();
+builder.Services.AddScoped<IReservaEspacioRepository, ReservaEspacioRepository>();
+
+builder.Services.AddScoped<IEmpleadoService, EmpleadoService>();
+builder.Services.AddScoped<IEmpleadoRepository, EmpleadoRepository>();
+
+builder.Services.AddScoped<IProveedorService, ProveedorService>();
+builder.Services.AddScoped<IProveedorRepository, ProveedorRepository>();
+
+builder.Services.AddScoped<IUsuarioService, UsuarioService>();
+builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+
+builder.Services.AddScoped<ILogAuditoriaService, LogAuditoriaService>();
+builder.Services.AddScoped<ILogAuditoriaRepository, LogAuditoriaRepository>();
+
+builder.Services.AddScoped<IVisitaAutorizadaService, VisitaAutorizadaService>();
+builder.Services.AddScoped<IVisitaAutorizadaRepository, VisitaAutorizadaRepository>();
+
+builder.Services.AddScoped<ICargoService, CargoService>();
+builder.Services.AddScoped<ICargoRepository, CargoRepository>();
+
+builder.Services.AddScoped<IAsistenciaService, AsistenciaService>();
+builder.Services.AddScoped<IAsistenciaRepository, AsistenciaRepository>();
+
+
+
 
 
 var app = builder.Build();
