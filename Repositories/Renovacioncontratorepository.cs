@@ -32,15 +32,17 @@ namespace Condominio.Repositories
                 db.Open();
                 var query = @"
                 INSERT INTO renovacion_contrato
-                    (id_contrato, fecha_nueva_vigencia, nuevo_monto, id_moneda)
+                    (id_contrato, FECHA_INICIO, FECHA_FIN, MONTO_NUEVO, id_moneda)
                 VALUES
-                    (:id_contrato, :fecha_nueva_vigencia, :nuevo_monto, :id_moneda)";
+                    (:id_contrato, :FECHA_INICIO, :FECHA_FIN, :MONTO_NUEVO, :id_moneda)";
 
                 await db.ExecuteAsync(query, new
                 {
                     request.id_contrato,
-                    request.fecha_nueva_vigencia,
-                    request.nuevo_monto,
+                    //request.fecha_nueva_vigencia,
+                    request.FECHA_INICIO,
+                    request.FECHA_FIN,
+                    request.MONTO_NUEVO,
                     id_moneda = request.id_moneda == 0 ? (int?)null : request.id_moneda
                 }, commandTimeout: 30);
 
@@ -56,8 +58,9 @@ namespace Condominio.Repositories
                 var query = @"
                 UPDATE renovacion_contrato SET
                     id_contrato           = :id_contrato,
-                    fecha_nueva_vigencia  = :fecha_nueva_vigencia,
-                    nuevo_monto           = :nuevo_monto,
+                    FECHA_INICIO          = :FECHA_INICIO,
+                    FECHA_FIN             = :FECHA_FIN,
+                    MONTO_NUEVO           = :MONTO_NUEVO,
                     id_moneda             = :id_moneda
                 WHERE id_renovacion = :id";
 
@@ -65,8 +68,10 @@ namespace Condominio.Repositories
                 {
                     id,
                     request.id_contrato,
-                    request.fecha_nueva_vigencia,
-                    request.nuevo_monto,
+                    //request.fecha_nueva_vigencia,
+                    request.FECHA_INICIO,
+                    request.FECHA_FIN,
+                    request.MONTO_NUEVO,
                     request.id_moneda
                 }, commandTimeout: 30);
 
