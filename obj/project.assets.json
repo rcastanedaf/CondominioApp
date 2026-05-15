@@ -1,5 +1,5 @@
 {
-  "version": 3,
+  "version": 4,
   "targets": {
     "net9.0": {
       "Dapper/2.1.72": {
@@ -983,23 +983,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\erick\\.nuget\\packages\\": {},
+    "C:\\Users\\depto\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\erick\\Escritorio\\condominios\\CondominioApp\\Condominio.csproj",
+      "projectUniqueName": "C:\\Users\\depto\\Desktop\\JONATHAN CERMEÑO\\UNIVERSIDAD\\ANALISIS DE SISTEMAS\\PROYECTO CONDOMINIO\\BACKEND\\CondominioApp\\Condominio.csproj",
       "projectName": "Condominio",
-      "projectPath": "C:\\Users\\erick\\Escritorio\\condominios\\CondominioApp\\Condominio.csproj",
-      "packagesPath": "C:\\Users\\erick\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\erick\\Escritorio\\condominios\\CondominioApp\\obj\\",
+      "projectPath": "C:\\Users\\depto\\Desktop\\JONATHAN CERMEÑO\\UNIVERSIDAD\\ANALISIS DE SISTEMAS\\PROYECTO CONDOMINIO\\BACKEND\\CondominioApp\\Condominio.csproj",
+      "packagesPath": "C:\\Users\\depto\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\depto\\Desktop\\JONATHAN CERMEÑO\\UNIVERSIDAD\\ANALISIS DE SISTEMAS\\PROYECTO CONDOMINIO\\BACKEND\\CondominioApp\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\erick\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\depto\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -1027,7 +1027,7 @@
         "auditLevel": "low",
         "auditMode": "direct"
       },
-      "SdkAnalysisLevel": "10.0.200"
+      "SdkAnalysisLevel": "10.0.300"
     },
     "frameworks": {
       "net9.0": {
@@ -1070,7 +1070,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.203/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.300/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

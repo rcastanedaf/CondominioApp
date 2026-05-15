@@ -1,9 +1,22 @@
-﻿namespace Condominio.DTOs.Request
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Condominio.DTOs.Request
 {
     public class TipoPropiedadUpdateRequest
     {
+        [Required(ErrorMessage = "El ID de tipo de propiedad es requerido")]
+        [Range(1, int.MaxValue, ErrorMessage = "El ID de tipo de propiedad debe ser válido")]
         public required int Id_Tipo_Propiedad { get; set; }
+
+        [Required(ErrorMessage = "El nombre es requerido")]
+        [StringLength(100, MinimumLength = 1, ErrorMessage = "El nombre debe tener entre 1 y 100 caracteres")]
         public required string Nombre { get; set; }
-        public required string Descripcion { get; set; }
+
+        [StringLength(500, ErrorMessage = "La descripción no puede exceder 500 caracteres")]
+        public string? Descripcion { get; set; }
+
+        [Range(0, 1, ErrorMessage = "Activo debe ser 0 o 1")]
+        public int Activo { get; set; } = 1;
     }
 }
+

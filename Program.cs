@@ -2,18 +2,32 @@ using Condominio.Repositories;
 using Condominio.Repositories.Interfaces;
 using Condominio.Services;
 using Condominio.Services.Interfaces;
+using Condominio.Middleware;
+using Oracle.ManagedDataAccess.Client;
+using System.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers();
+
+builder.Services.AddLogging(config =>
+{
+    config.AddConsole();
+    config.AddDebug();
+});
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// 🔹 CONEXIÓN A ORACLE
+builder.Services.AddScoped<IDbConnection>(sp =>
+{
+    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+    return new OracleConnection(connectionString);
+});
 
-// 🔹 CORS (AGREGAR ESTO)
+// 🔹 CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend",
@@ -26,8 +40,7 @@ builder.Services.AddCors(options =>
         });
 });
 
-
-// Services
+// 🔹 SERVICES & REPOSITORIES
 builder.Services.AddScoped<ITestService, TestService>();
 builder.Services.AddScoped<ITestRepository, TestRepository>();
 
@@ -64,7 +77,7 @@ builder.Services.AddScoped<IBancoRepository, BancoRepository>();
 builder.Services.AddScoped<ITipoMonedaService, TipoMonedaService>();
 builder.Services.AddScoped<ITipoMonedaRepository, TipoMonedaRepository>();
 
-builder.Services.AddScoped<IMetodoPagoService,  MetodoPagoService>();
+builder.Services.AddScoped<IMetodoPagoService, MetodoPagoService>();
 builder.Services.AddScoped<IMetodoPagoRepository, MetodoPagoRepository>();
 
 builder.Services.AddScoped<IConceptoDescuentoService, ConceptoDescuentoService>();
@@ -84,12 +97,6 @@ builder.Services.AddScoped<IMultaRepository, MultaRepository>();
 
 builder.Services.AddScoped<IgravamenPropiedadService, gravamenPropiedadService>();
 builder.Services.AddScoped<IgravamenPropiedadRepository, gravamenPropiedadRepository>();
-
-builder.Services.AddScoped<ItipoPropiedadRepository, tipoPropiedadRepository>();
-builder.Services.AddScoped<ItipoPropiedadService, tipoPropiedadService>();
-
-builder.Services.AddScoped<IpropiedadRepository, propiedadRepository>();
-builder.Services.AddScoped<IpropiedadService, propiedadService>();
 
 builder.Services.AddScoped<IcontratoRepository, contratoRepository>();
 builder.Services.AddScoped<IcontratoService, contratoService>();
@@ -148,16 +155,40 @@ builder.Services.AddScoped<ICargoRepository, CargoRepository>();
 builder.Services.AddScoped<IAsistenciaService, AsistenciaService>();
 builder.Services.AddScoped<IAsistenciaRepository, AsistenciaRepository>();
 
+builder.Services.AddScoped<IHorarioTurnoService, HorarioTurnoService>();
+builder.Services.AddScoped<IHorarioTurnoRepository, HorarioTurnoRepository>();
 
+builder.Services.AddScoped<IFamiliarResidenteService, FamiliarResidenteService>();
+builder.Services.AddScoped<IFamiliarResidenteRepository, FamiliarResidenteRepository>();
+
+builder.Services.AddScoped<IAcuerdoPagoService, AcuerdoPagoService>();
+builder.Services.AddScoped<IAcuerdoPagoRepository, AcuerdoPagoRepository>();
+
+builder.Services.AddScoped<IRolService, RolService>();
+builder.Services.AddScoped<IRolRepository, RolRepository>();
+builder.Services.AddScoped<IPermisoRepository, PermisoRepository>();
+
+builder.Services.AddScoped<IRegionService, RegionService>();
+builder.Services.AddScoped<IRegionRepository, RegionRepository>();
+
+builder.Services.AddScoped<IServicioActivoService, ServicioActivoService>();
+builder.Services.AddScoped<IServicioActivoRepository, ServicioActivoRepository>();
+
+builder.Services.AddScoped<IDashboardService, DashboardService>();
+builder.Services.AddScoped<IDashboardRepository, DashboardRepository>();
+
+builder.Services.AddScoped<IpropiedadService, propiedadService>();
+builder.Services.AddScoped<IpropiedadRepository, propiedadRepository>();
 
 
 
 var app = builder.Build();
 
+// 🔹 MIDDLEWARE DE MANEJO DE ERRORES
+app.UseMiddleware<ErrorHandlingMiddleware>();
 
-// 🔹 ACTIVAR CORS (AGREGAR ESTO)
+// 🔹 ACTIVAR CORS
 app.UseCors("AllowFrontend");
-
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

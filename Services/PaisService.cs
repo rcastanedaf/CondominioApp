@@ -1,7 +1,5 @@
 ﻿using Condominio.DTOs.Request;
-using Condominio.DTOs.Response;
 using Condominio.Models;
-using Condominio.Repositories;
 using Condominio.Repositories.Interfaces;
 using Condominio.Services.Interfaces;
 
@@ -9,73 +7,17 @@ namespace Condominio.Services
 {
     public class PaisService : IPaisService
     {
-        private readonly IPaisRepository _paisRepository;
+        private readonly IPaisRepository _repo;
 
         public PaisService(IPaisRepository repository)
         {
-            _paisRepository = repository;
+            _repo = repository;
         }
 
-        public async Task<List<PaisModel>> GetAll() 
-        {
-            try
-            {
-                var pais = await _paisRepository.GetAll();
-
-                return pais;
-
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
-        public async Task<PaisRequest> Create(PaisRequest request)
-        {
-            try
-            {
-                var response = await _paisRepository.Create(request);
-                return response;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
-        /*public async Task<PaisModel> GetById(int id)
-        {
-            return await _paisRepository.GetById(id);
-        }*/
-
-        public async Task<PaisModel> Update(PaisModel request, int id)
-        {
-            try
-            {
-                var tipoMoneda = await _paisRepository.Update(request, id);
-
-                return tipoMoneda;
-
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
-        public Task<bool> Delete(int id)
-        {
-            try
-            {
-                var response = _paisRepository.Delete(id);
-
-                return response;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
+        public Task<List<PaisModel>> GetAll() => _repo.GetAll();
+        public Task<PaisModel?> GetById(int id) => _repo.GetById(id);
+        public Task<int> Create(PaisRequest request) => _repo.Create(request);
+        public Task<int> Update(int id, PaisRequest req) => _repo.Update(id, req);
+        public Task<bool> Delete(int id) => _repo.Delete(id);
     }
 }

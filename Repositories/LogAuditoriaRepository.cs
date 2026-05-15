@@ -15,11 +15,21 @@ namespace Condominio.Repositories
         public async Task<List<LogAuditoriaModel>> GetAllAsync(int top = 500)
         {
             using IDbConnection db = new OracleConnection(_conn);
-            return (await db.QueryAsync<LogAuditoriaModel>($@"SELECT * FROM (
-            SELECT ID_LOG Id_Log,ID_USUARIO Id_Usuario,USERNAME,MODULO,ACCION,
-            TABLA_AFECTADA Tabla_Afectada,ID_REGISTRO Id_Registro,DESCRIPCION,
-            IP_ORIGEN Ip_Origen,RESULTADO,TO_CHAR(FECHA_HORA,'YYYY-MM-DD HH24:MI:SS') Fecha_Hora
-            FROM LOG_AUDITORIA ORDER BY FECHA_HORA DESC) WHERE ROWNUM<={top}")).ToList();
+            int limite = top > 0 ? top : 500;
+            const string sql = @"
+                SELECT * FROM (
+                    SELECT ID_LOG         AS Id_Log,
+                           ID_USUARIO     AS Id_Usuario,
+                           USERNAME,
+                           MODULO,
+                           ACCION,
+                           DESCRIPCION,
+                           IP_ORIGEN      AS Ip_Origen,
+                           TO_CHAR(FECHA_HORA, 'YYYY-MM-DD HH24:MI:SS') AS Fecha_Hora
+                    FROM LOG_AUDITORIA
+                    ORDER BY FECHA_HORA DESC
+                ) WHERE ROWNUM <= :limite";
+            return (await db.QueryAsync<LogAuditoriaModel>(sql, new { limite })).ToList();
         }
 
         public async Task Registrar(LogAuditoriaCreateRequest r)

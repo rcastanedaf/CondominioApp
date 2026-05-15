@@ -5,9 +5,11 @@ namespace Condominio.Repositories.Interfaces
 {
     public interface IHorarioTurnoRepository
     {
-        Task<List<HorarioTurnoModel>> GetAllAsync();
-        Task<List<HorarioTurnoModel>> GetByEmpleado(int idEmpleado);
-        Task<HorarioTurnoRequest> Create(HorarioTurnoRequest req);
-        Task<bool> Delete(int id);
+        Task<IEnumerable<HorarioTurnoModel>> GetAllAsync();
+        Task<HorarioTurnoModel?> GetByIdAsync(int id);
+        Task<int> CreateAsync(HorarioTurnoModel model);
+        Task<int> UpdateAsync(HorarioTurnoModel model);
+        Task<int> DeleteAsync(int id);
+        Task<int> ToggleActivoAsync(int id, int activo);
     }
 }

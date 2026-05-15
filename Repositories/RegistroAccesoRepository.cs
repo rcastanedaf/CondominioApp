@@ -15,24 +15,49 @@ namespace Condominio.Repositories
         public async Task<List<RegistroAccesoModel>> GetAllAsync(int? top = 200)
         {
             using IDbConnection db = new OracleConnection(_conn);
-            var sql = $@"SELECT * FROM (
-                    SELECT ID_ACCESO Id_Acceso, TIPO_MOVIMIENTO Tipo_Movimiento,
-                    TIPO_PERSONA Tipo_Persona, ID_RESIDENTE Id_Residente,
-                    ID_VISITA Id_Visita, ID_VEHICULO Id_Vehiculo,
-                    NOMBRE_PERSONA Nombre_Persona, DPI_PERSONA Dpi_Persona,
-                    PLACA_VEHICULO Placa_Vehiculo, ID_PROPIEDAD Id_Propiedad,
-                    ID_MOTIVO_VISITA Id_Motivo_Visita, OBSERVACIONES, REGISTRADO_POR Registrado_Por,
-                    TO_CHAR(FECHA_HORA,'YYYY-MM-DD HH24:MI:SS') Fecha_Hora
-                    FROM REGISTRO_ACCESO ORDER BY FECHA_HORA DESC
-                    ) WHERE ROWNUM <= {top ?? 200}";
-            return (await db.QueryAsync<RegistroAccesoModel>(sql)).ToList();
+            int limite = top > 0 ? top.Value : 200;
+            const string sql = @"
+        SELECT * FROM (
+            SELECT ID_ACCESO           AS Id_Acceso,
+                   TIPO_MOVIMIENTO     AS Tipo_Movimiento,
+                   TIPO_PERSONA        AS Tipo_Persona,
+                   ID_RESIDENTE        AS Id_Residente,
+                   ID_VISITA           AS Id_Visita,
+                   ID_VEHICULO         AS Id_Vehiculo,
+                   NOMBRE_PERSONA      AS Nombre_Persona,
+                   DPI_PERSONA         AS Dpi_Persona,
+                   PLACA_VEHICULO      AS Placa_Vehiculo,
+                   ID_PROPIEDAD        AS Id_Propiedad,
+                   ID_MOTIVO_VISITA    AS Id_Motivo_Visita,
+                   OBSERVACIONES,
+                   REGISTRADO_POR      AS Registrado_Por,
+                   TO_CHAR(FECHA_HORA, 'YYYY-MM-DD HH24:MI:SS') AS Fecha_Hora
+            FROM REGISTRO_ACCESO
+            ORDER BY FECHA_HORA DESC
+        ) WHERE ROWNUM <= :limite";
+            return (await db.QueryAsync<RegistroAccesoModel>(sql, new { limite })).ToList();
         }
 
         public async Task<List<RegistroAccesoModel>> GetByFecha(string desde, string hasta)
         {
             using IDbConnection db = new OracleConnection(_conn);
-            var sql = @"SELECT * FROM REGISTRO_ACCESO
-                    WHERE TRUNC(FECHA_HORA) BETWEEN TO_DATE(:desde,'YYYY-MM-DD') AND TO_DATE(:hasta,'YYYY-MM-DD')
+            const string sql = @"
+                    SELECT ID_ACCESO           AS Id_Acceso,
+                           TIPO_MOVIMIENTO     AS Tipo_Movimiento,
+                           TIPO_PERSONA        AS Tipo_Persona,
+                           ID_RESIDENTE        AS Id_Residente,
+                           ID_VISITANTE        AS Id_Visitante,
+                           ID_EMPLEADO         AS Id_Empleado,
+                           NOMBRE_PERSONA      AS Nombre_Persona,
+                           DPI_PERSONA         AS Dpi_Persona,
+                           PLACA_VEHICULO      AS Placa_Vehiculo,
+                           PUNTO_ACCESO        AS Punto_Acceso,
+                           AUTORIZADO_POR      AS Autorizado_Por,
+                           OBSERVACIONES,
+                           TO_CHAR(FECHA_HORA, 'YYYY-MM-DD HH24:MI:SS') AS Fecha_Hora
+                    FROM REGISTRO_ACCESO
+                    WHERE TRUNC(FECHA_HORA) BETWEEN TO_DATE(:desde, 'YYYY-MM-DD')
+                                                AND TO_DATE(:hasta, 'YYYY-MM-DD')
                     ORDER BY FECHA_HORA DESC";
             return (await db.QueryAsync<RegistroAccesoModel>(sql, new { desde, hasta })).ToList();
         }

@@ -5,10 +5,10 @@ namespace Condominio.Services.Interfaces
 {
     public interface IPaisService
     {
-        public Task<List<PaisModel>> GetAll();
-        public Task<PaisRequest> Create(PaisRequest request);
-        //public Task<PaisModel> GetById(int id);
-        public Task<PaisModel> Update(PaisModel request, int id);
-        public Task<bool> Delete(int id);
+        Task<List<PaisModel>> GetAll();
+        Task<PaisModel?> GetById(int id);
+        Task<int> Create(PaisRequest request);
+        Task<int> Update(int id, PaisRequest request);
+        Task<bool> Delete(int id);
     }
 }

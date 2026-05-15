@@ -1,0 +1,286 @@
+================================================================================
+					LISTADO PRIORITARIO DE TAREAS
+				   DTOs y Controllers Pendientes
+================================================================================
+
+TOTAL DE TRABAJO PENDIENTE:
+  - DTOs pendientes: 32
+  - Controllers pendientes: 20+
+  - Tiempo estimado: 3-5 horas
+
+PRIORIDAD: RESOLVER EN ESTE ORDEN
+
+================================================================================
+						 🔴 CRITICOS - NIVEL 1 (10)
+						Completar en 2-3 horas máximo
+================================================================================
+
+1. MULTA (Multiples multas por residente)
+   ├─ DTOs/Request/MultaCreateRequest.cs
+   │  ├─ id_Residente: [Required] [Range(1, ...)]
+   │  ├─ Monto: [Required] [Range(0.01, ...)]
+   │  ├─ Descripcion: [Required] [StringLength(500)]
+   │  ├─ Fecha_Multa: [Required] DateOnly
+   │  └─ Activo: [Range(0, 1)]
+   ├─ DTOs/Request/MultaUpdateRequest.cs (igual que Create)
+   └─ Controllers/MultaController.cs (agregar validaciones ModelState)
+
+2. ASISTENCIA (Control de asistencia empleados)
+   ├─ DTOs/Request/AsistenciaCreateRequest.cs
+   │  ├─ id_Empleado: [Required] [Range(1, ...)]
+   │  ├─ Fecha_Asistencia: [Required] DateOnly
+   │  ├─ Hora_Entrada: [Required] TimeSpan
+   │  ├─ Hora_Salida: TimeSpan
+   │  └─ Presente: [Range(0, 1)]
+   └─ Controllers/AsistenciaController.cs
+
+3. ESPACIO COMUN (Areas comunes del condominio)
+   ├─ DTOs/Request/EspacioComunCreateRequest.cs
+   │  ├─ Nombre: [Required] [StringLength(100)]
+   │  ├─ Descripcion: [StringLength(500)]
+   │  ├─ Capacidad: [Required] [Range(1, ...)]
+   │  └─ Activo: [Range(0, 1)]
+   ├─ DTOs/Request/EspacioComunUpdateRequest.cs
+   └─ Controllers/EspacioComunController.cs
+
+4. LISTA NEGRA (Residentes/Personas en lista negra)
+   ├─ DTOs/Request/ListaNegraCreateRequest.cs
+   │  ├─ id_Persona: [Required] [Range(1, ...)]
+   │  ├─ Razon: [Required] [StringLength(500)]
+   │  ├─ Fecha_Ingreso: [Required] DateOnly
+   │  └─ Activo: [Range(0, 1)]
+   ├─ DTOs/Request/ListaNegraUpdateRequest.cs
+   └─ Controllers/ListaNegraController.cs
+
+5. REGISTRO ACCESO (Control de acceso al condominio)
+   ├─ DTOs/Request/RegistroAccesoCreateRequest.cs
+   │  ├─ id_Persona: [Required] [Range(1, ...)]
+   │  ├─ Fecha_Hora: [Required] DateTimeOffset
+   │  ├─ Tipo_Acceso: [Required] [StringLength(50)]
+   │  └─ Descripcion: [StringLength(500)]
+   └─ Controllers/RegistroAccesoController.cs
+
+6. RESERVA ESPACIO (Reservas de areas comunes)
+   ├─ DTOs/Request/ReservaEspacioCreateRequest.cs
+   │  ├─ id_Espacio_Comun: [Required] [Range(1, ...)]
+   │  ├─ id_Residente: [Required] [Range(1, ...)]
+   │  ├─ Fecha_Reserva: [Required] DateOnly
+   │  ├─ Hora_Inicio: [Required] TimeSpan
+   │  ├─ Hora_Fin: [Required] TimeSpan
+   │  └─ Observaciones: [StringLength(500)]
+   ├─ DTOs/Request/ReservaEspacioUpdateRequest.cs
+   └─ Controllers/ReservaEspacioController.cs
+
+7. SALDO A FAVOR (Creditos de residentes)
+   ├─ DTOs/Request/SaldoAFavorCreateRequest.cs
+   │  ├─ id_Residente: [Required] [Range(1, ...)]
+   │  ├─ Monto: [Required] [Range(0.01, ...)]
+   │  ├─ Descripcion: [Required] [StringLength(500)]
+   │  ├─ Fecha_Saldo: [Required] DateOnly
+   │  └─ Motivo: [StringLength(100)]
+   ├─ DTOs/Request/SaldoAFavorUpdateRequest.cs
+   └─ Controllers/SaldoAFavorController.cs
+
+8. SERVICIO ACTIVO (Servicios activos en condominio)
+   ├─ DTOs/Request/ServicioActivoCreateRequest.cs
+   │  ├─ Nombre: [Required] [StringLength(100)]
+   │  ├─ Descripcion: [StringLength(500)]
+   │  ├─ Costo_Mensual: [Required] [Range(0.01, ...)]
+   │  ├─ Fecha_Inicio: [Required] DateOnly
+   │  └─ Activo: [Range(0, 1)]
+   ├─ DTOs/Request/ServicioActivoUpdateRequest.cs
+   └─ Controllers/ServicioActivoController.cs
+
+9. TIPO MONEDA (Tipos de moneda disponibles)
+   ├─ DTOs/Request/TipoMonedaCreateRequest.cs
+   │  ├─ Codigo: [Required] [StringLength(3)]
+   │  ├─ Nombre: [Required] [StringLength(50)]
+   │  ├─ Simbolo: [Required] [StringLength(5)]
+   │  └─ Tasa_Cambio: [Required] [Range(0.01, ...)]
+   └─ Controllers/TipoMonedaController.cs
+
+10. TIPO PROPIEDAD (Tipos de propiedades: Casa, Apartamento, etc.)
+	├─ DTOs/Request/TipoPropiedadCreateRequest.cs
+	│  ├─ Nombre: [Required] [StringLength(50)]
+	│  ├─ Descripcion: [StringLength(200)]
+	│  └─ Activo: [Range(0, 1)]
+	├─ DTOs/Request/TipoPropiedadUpdateRequest.cs
+	└─ Controllers/TipoPropiedadController.cs
+
+================================================================================
+						🟡 IMPORTANTE - NIVEL 2 (8)
+						  Completar después (1-2 horas)
+================================================================================
+
+11. GRAVAMEN PROPIEDAD
+	DTOs/Request/gravamenPropiedadRequest.cs
+	Controllers/GravamenPropiedadController.cs
+
+12. HORARIO TURNO
+	DTOs/Request/HorarioTurnoRequest.cs
+	Controllers/HorarioTurnoController.cs
+
+13. LOGIN (Autenticación)
+	DTOs/Request/LoginRequest.cs
+	Controllers/LoginController.cs (parcial)
+
+14. METODO PAGO
+	DTOs/Request/MetodoPagoCreateRequest.cs
+	Controllers/MetodoPagoController.cs
+
+15. PROPIEDAD
+	DTOs/Request/Propiedadrequest.cs
+	Controllers/PropiedadController.cs
+
+16. RENOVACION CONTRATO
+	DTOs/Request/Renovacioncontratorequest.cs
+	Controllers/RenovacionContratoController.cs
+
+17. LOG AUDITORIA
+	DTOs/Request/LogAuditoriaCreateRequest.cs
+	Controllers/LogAuditoriaController.cs
+
+18. MOTIVO VISITA
+	DTOs/Request/MotivoVisitaRequest.cs
+	Controllers/MotivoVisitaController.cs
+
+================================================================================
+						 🟢 OPCIONAL - NIVEL 3 (6)
+					   Opcional (puede hacerse luego)
+================================================================================
+
+19. PAIS
+	DTOs/Request/PaisRequest.cs
+	Controllers/PaisController.cs
+
+20. PARENTESCO
+	DTOs/Request/ParentescoRequest.cs
+	Controllers/ParentescoController.cs
+
+21. CAMBIAR PASSWORD
+	DTOs/Request/CambiarPasswordRequest.cs
+	Controllers/UsuarioController.cs (metodo Update)
+
+22-32. OTROS (Legacy, no críticos)
+	- BancoRequest.cs (legacy - remover)
+	- Contratorequest.cs (legacy - remover)
+	- TestRequest.cs (TEST - remover)
+	- Tipopropiedadrequest.cs (legacy - remover)
+	- Y otros...
+
+================================================================================
+						  PLAN DE ACCION RECOMENDADO
+================================================================================
+
+DIA 1 - FASE II (2-3 horas):
+──────────────────────────────
+1. Comenzar con Críticos Nivel 1 (10 DTOs/Controllers)
+2. Abrir GUIA_RAPIDA_COPY_PASTE.txt para referencia
+3. Crear DTOs Multa, Asistencia, EspacioComun, ListaNegra, RegistroAcceso
+4. Crear DTOs ReservaEspacio, SaldoAFavor, ServicioActivo, TipoMoneda, TipoPropiedad
+5. Actualizar sus Controllers respectivos
+6. Ejecutar: dotnet build
+7. Verificar compilación exitosa
+8. Documentar completación
+
+Resultado esperado:
+  ✅ 10 DTOs creados/actualizados
+  ✅ 10 Controllers actualizados
+  ✅ ~50% del trabajo completado
+  ✅ Compilación exitosa
+
+DIA 2 - FASE II+ (1-2 horas):
+───────────────────────────────
+1. Continuar con Nivel 2 (8 DTOs)
+2. Actualizar sus Controllers
+3. Ejecutar: dotnet build
+4. Verificar compilación
+
+Resultado esperado:
+  ✅ 18 DTOs adicionales (total 36)
+  ✅ 18 Controllers adicionales (total 27)
+  ✅ ~75% del trabajo completado
+  ✅ Compilación exitosa
+
+DIA 3+ - Opcional:
+───────────────────
+Nivel 3 y limpiar legacy
+
+================================================================================
+					  CHECKLIST PARA CADA DTO+CONTROLLER
+================================================================================
+
+Para cada DTOvCreate + Controller:
+  [ ] DTO Create creado en DTOs/Request/
+  [ ] DTO Update creado en DTOs/Request/
+  [ ] Ambos tienen validaciones [Required], [StringLength], [Range]
+  [ ] Fechas usan DateOnly (no string)
+  [ ] Controller tiene ILogger<T>
+  [ ] Controller POST valida ModelState
+  [ ] Controller PUT valida ModelState
+  [ ] Controller GET valida ID > 0
+  [ ] Todas las respuestas usan ApiResponse<object>
+  [ ] try/catch con _logger.LogError
+  [ ] GETs usan [FromRoute]
+  [ ] POST/PUT usan [FromBody]
+  [ ] dotnet build compilado
+  [ ] Sin errores ni advertencias críticas
+
+================================================================================
+						ARCHIVO PARA REFERENCIA
+================================================================================
+
+Abrir: GUIA_RAPIDA_COPY_PASTE.txt
+Contiene templates listos para copiar y pegar
+
+Ejemplo:
+  1. Copiar todo el template de DTO
+  2. Reemplazar "ENTIDAD" por "Multa"
+  3. Copiar todo el template de Controller
+  4. Reemplazar "ENTIDAD" por "Multa"
+  5. Personalizar campos según modelo
+  6. Compilar
+
+================================================================================
+						  ESTIMACION FINAL
+================================================================================
+
+TRABAJO COMPLETADO (Fase I):
+  ✅ 18 DTOs con validaciones
+  ✅ 9 Controllers actualizados
+  ✅ Middleware global
+  ✅ Compilación exitosa
+  Tiempo invertido: ~4-5 horas
+
+TRABAJO PENDIENTE (Fase II):
+  Nivel 1 (Críticos): 10 DTOs + 10 Controllers = ~2-3 horas
+  Nivel 2 (Importante): 8 DTOs + 8 Controllers = ~1-2 horas
+  Nivel 3 (Opcional): 6 DTOs + 6 Controllers = ~1 hora
+
+TOTAL ESTIMADO PARA COMPLETAR TODO:
+  Fase I completada: 4-5 horas (LISTO)
+  Fase II recomendada: 3-5 horas adicionales
+  Fase III opcional: 1-2 horas
+
+Con Fase I + II = ~8-10 horas TOTAL
+  Cobertura del proyecto: ~80-90%
+
+================================================================================
+						SIGUIENTE ACCION
+================================================================================
+
+Opción 1: CONTINUAR AHORA (Recomendado)
+  Comenzar Fase II con los 10 DTOs Críticos
+  Estimado: 2-3 horas
+  Resultado: Proyecto 75% validado
+
+Opción 2: PAUSAR
+  Documentacion completada
+  Puedes continuar cuando gustes
+  Templates listos en GUIA_RAPIDA_COPY_PASTE.txt
+
+¿Cuál prefieres?
+  "continuar" -> Comenzamos Fase II ahora
+  "pausar" -> Continuamos luego
+
+================================================================================

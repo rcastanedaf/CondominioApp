@@ -1,0 +1,617 @@
+================================================================================
+					GUIA RAPIDA DE REFERENCIA - VALIDACIONES
+					  Copiar y Pegar para Nueva Entidad
+================================================================================
+
+INSTRUCCIONES:
+1. Reemplaza "ENTIDAD" por tu entidad (ej: Multa, Asistencia, etc.)
+2. Copia el código completo
+3. Ajusta los campos según tu modelo
+4. Ejecuta: dotnet build
+
+================================================================================
+					PASO 1: CREAR DTO CREATE REQUEST
+================================================================================
+
+ARCHIVO: DTOs/Request/ENTIDADCreateRequest.cs
+
+───────────────────────────────────────────────────────────────────────────────
+using System.ComponentModel.DataAnnotations;
+
+namespace Condominio.DTOs.Request
+{
+	public class ENTIDADCreateRequest
+	{
+		// EJEMPLO 1: Campo requerido de tipo texto
+		[Required(ErrorMessage = "El nombre es requerido")]
+		[StringLength(100, MinimumLength = 1, ErrorMessage = "Debe tener entre 1 y 100 caracteres")]
+		public required string Nombre { get; set; }
+
+		// EJEMPLO 2: Campo requerido de tipo número
+		[Required(ErrorMessage = "El monto es requerido")]
+		[Range(0.01, double.MaxValue, ErrorMessage = "El monto debe ser mayor a 0")]
+		public required decimal Monto { get; set; }
+
+		// EJEMPLO 3: Email
+		[Required(ErrorMessage = "El email es requerido")]
+		[EmailAddress(ErrorMessage = "El email debe ser válido")]
+		public required string Email { get; set; }
+
+		// EJEMPLO 4: Fecha (IMPORTANTE: usar DateOnly, NO string)
+		[Required(ErrorMessage = "La fecha es requerida")]
+		public required DateOnly Fecha { get; set; }
+
+		// EJEMPLO 5: Teléfono (solo números)
+		[RegularExpression(@"^\d{7,20}$", ErrorMessage = "El teléfono debe contener solo números (7-20 caracteres)")]
+		public string? Telefono { get; set; }
+
+		// EJEMPLO 6: Identificación (DPI, NIT, etc.)
+		[RegularExpression(@"^\d{1,20}$", ErrorMessage = "Debe contener solo números")]
+		public string? Identificacion { get; set; }
+
+		// EJEMPLO 7: Estado (0 o 1)
+		[Range(0, 1, ErrorMessage = "El estado debe ser 0 o 1")]
+		public int Activo { get; set; } = 1;
+
+		// EJEMPLO 8: Texto largo (descripción)
+		[StringLength(500, ErrorMessage = "Máximo 500 caracteres")]
+		public string? Descripcion { get; set; }
+
+		// EJEMPLO 9: Número entero positivo
+		[Required(ErrorMessage = "La cantidad es requerida")]
+		[Range(1, int.MaxValue, ErrorMessage = "Debe ser mayor a 0")]
+		public required int Cantidad { get; set; }
+
+		// EJEMPLO 10: Decimal con dos decimales
+		[Required(ErrorMessage = "El precio es requerido")]
+		[Range(0.01, decimal.MaxValue, ErrorMessage = "El precio debe ser mayor a 0")]
+		public required decimal Precio { get; set; }
+	}
+}
+───────────────────────────────────────────────────────────────────────────────
+
+================================================================================
+					PASO 2: CREAR DTO UPDATE REQUEST
+================================================================================
+
+ARCHIVO: DTOs/Request/ENTIDADUpdateRequest.cs
+
+───────────────────────────────────────────────────────────────────────────────
+using System.ComponentModel.DataAnnotations;
+
+namespace Condominio.DTOs.Request
+{
+	public class ENTIDADUpdateRequest
+	{
+		// TODOS LOS CAMPOS SON IGUALES AL CREATE REQUEST
+		// Simplemente cambia "required" por "nullable" si el campo es opcional
+
+		[Required(ErrorMessage = "El nombre es requerido")]
+		[StringLength(100, MinimumLength = 1, ErrorMessage = "Debe tener entre 1 y 100 caracteres")]
+		public required string Nombre { get; set; }
+
+		[Required(ErrorMessage = "El monto es requerido")]
+		[Range(0.01, double.MaxValue, ErrorMessage = "El monto debe ser mayor a 0")]
+		public required decimal Monto { get; set; }
+
+		// Campos opcionales (sin [Required])
+		[StringLength(500, ErrorMessage = "Máximo 500 caracteres")]
+		public string? Descripcion { get; set; }
+
+		[Range(0, 1, ErrorMessage = "El estado debe ser 0 o 1")]
+		public int Activo { get; set; } = 1;
+	}
+}
+───────────────────────────────────────────────────────────────────────────────
+
+================================================================================
+					PASO 3: ACTUALIZAR CONTROLLER
+================================================================================
+
+ARCHIVO: Controllers/ENTIDADController.cs
+
+───────────────────────────────────────────────────────────────────────────────
+using Condominio.DTOs.Request;
+using Condominio.DTOs.Response;
+using Condominio.Services.Interfaces;
+using Microsoft.AspNetCore.Mvc;
+
+namespace Condominio.Controllers
+{
+	[ApiController]
+	[Route("[controller]")]
+	public class ENTIDADController : ControllerBase
+	{
+		private readonly IENTIDADService _entityService;
+		private readonly ILogger<ENTIDADController> _logger;
+
+		public ENTIDADController(IENTIDADService entityService, ILogger<ENTIDADController> logger)
+		{
+			_entityService = entityService;
+			_logger = logger;
+		}
+
+		// GET ALL
+		[HttpGet]
+		[Route("get-all-entidad")]
+		public async Task<IActionResult> GetAll()
+		{
+			try
+			{
+				var response = await _entityService.GetAllAsync();
+
+				return Ok(new ApiResponse<object>
+				{
+					Success = true,
+					Message = "Registros obtenidos exitosamente",
+					Data = response
+				});
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError(ex, "Error al obtener registros");
+				return BadRequest(new ApiResponse<object>
+				{
+					Success = false,
+					Message = ex.Message,
+					Data = null
+				});
+			}
+		}
+
+		// GET BY ID
+		[HttpGet]
+		[Route("get-id-entidad/{id}")]
+		public async Task<IActionResult> GetId([FromRoute] int id)
+		{
+			if (id <= 0)
+				return BadRequest(new ApiResponse<object>
+				{
+					Success = false,
+					Message = "El ID debe ser válido",
+					Data = null
+				});
+
+			try
+			{
+				var response = await _entityService.GetByIdAsync(id);
+
+				if (response == null)
+					return NotFound(new ApiResponse<object>
+					{
+						Success = false,
+						Message = "Registro no encontrado",
+						Data = null
+					});
+
+				return Ok(new ApiResponse<object>
+				{
+					Success = true,
+					Message = "Registro obtenido exitosamente",
+					Data = response
+				});
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError(ex, "Error al obtener registro por ID");
+				return BadRequest(new ApiResponse<object>
+				{
+					Success = false,
+					Message = ex.Message,
+					Data = null
+				});
+			}
+		}
+
+		// CREATE (CON VALIDACION)
+		[HttpPost]
+		[Route("create-entidad")]
+		public async Task<IActionResult> Create([FromBody] ENTIDADCreateRequest request)
+		{
+			// PASO CRITICO: Validar ModelState
+			if (!ModelState.IsValid)
+			{
+				var errors = ModelState.Values.SelectMany(v => v.Errors)
+					.Select(e => e.ErrorMessage).ToList();
+
+				return BadRequest(new ApiResponse<object>
+				{
+					Success = false,
+					Message = "Error en los datos enviados",
+					Data = errors
+				});
+			}
+
+			try
+			{
+				var result = await _entityService.CreateAsync(request);
+
+				return Ok(new ApiResponse<object>
+				{
+					Success = true,
+					Message = "Registro creado exitosamente",
+					Data = result
+				});
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError(ex, "Error al crear registro");
+				return BadRequest(new ApiResponse<object>
+				{
+					Success = false,
+					Message = ex.Message,
+					Data = null
+				});
+			}
+		}
+
+		// UPDATE (CON VALIDACION)
+		[HttpPut]
+		[Route("update-entidad/{id}")]
+		public async Task<IActionResult> Update([FromRoute] int id, [FromBody] ENTIDADUpdateRequest request)
+		{
+			if (id <= 0)
+				return BadRequest(new ApiResponse<object>
+				{
+					Success = false,
+					Message = "El ID debe ser válido",
+					Data = null
+				});
+
+			// PASO CRITICO: Validar ModelState
+			if (!ModelState.IsValid)
+			{
+				var errors = ModelState.Values.SelectMany(v => v.Errors)
+					.Select(e => e.ErrorMessage).ToList();
+
+				return BadRequest(new ApiResponse<object>
+				{
+					Success = false,
+					Message = "Error en los datos enviados",
+					Data = errors
+				});
+			}
+
+			try
+			{
+				var result = await _entityService.UpdateAsync(id, request);
+
+				return Ok(new ApiResponse<object>
+				{
+					Success = true,
+					Message = "Registro actualizado exitosamente",
+					Data = result
+				});
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError(ex, "Error al actualizar registro");
+				return BadRequest(new ApiResponse<object>
+				{
+					Success = false,
+					Message = ex.Message,
+					Data = null
+				});
+			}
+		}
+
+		// DELETE
+		[HttpDelete]
+		[Route("delete-entidad/{id}")]
+		public async Task<IActionResult> Delete([FromRoute] int id)
+		{
+			if (id <= 0)
+				return BadRequest(new ApiResponse<object>
+				{
+					Success = false,
+					Message = "El ID debe ser válido",
+					Data = null
+				});
+
+			try
+			{
+				var result = await _entityService.DeleteAsync(id);
+
+				return Ok(new ApiResponse<object>
+				{
+					Success = true,
+					Message = "Registro eliminado exitosamente",
+					Data = result
+				});
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError(ex, "Error al eliminar registro");
+				return BadRequest(new ApiResponse<object>
+				{
+					Success = false,
+					Message = ex.Message,
+					Data = null
+				});
+			}
+		}
+	}
+}
+───────────────────────────────────────────────────────────────────────────────
+
+================================================================================
+					PASO 4: COMPILAR Y PROBAR
+================================================================================
+
+En terminal PowerShell:
+
+# Compilar
+dotnet build
+
+# Si hay errores, revisar:
+# 1. ¿El nombre de la clase coincide? (ENTIDADCreateRequest vs ENTIDADController)
+# 2. ¿Importaste System.ComponentModel.DataAnnotations?
+# 3. ¿Registraste el servicio en Program.cs?
+
+# Ejecutar
+dotnet run
+
+# En Swagger, probar el endpoint:
+# POST /ENTIDAD/create-entidad
+# Con body JSON valido e invalido
+
+================================================================================
+					TIPOS DE VALIDACION - REFERENCIA
+================================================================================
+
+1. TEXTO REQUERIDO
+───────────────────
+[Required(ErrorMessage = "El campo es requerido")]
+[StringLength(100, MinimumLength = 1, ErrorMessage = "Entre 1 y 100 caracteres")]
+public required string Campo { get; set; }
+
+2. NUMERO REQUERIDO
+───────────────────
+[Required(ErrorMessage = "El número es requerido")]
+[Range(1, int.MaxValue, ErrorMessage = "Debe ser mayor a 0")]
+public required int Cantidad { get; set; }
+
+3. DECIMAL (DINERO)
+────────────────────
+[Required(ErrorMessage = "El monto es requerido")]
+[Range(0.01, double.MaxValue, ErrorMessage = "Mayor a 0")]
+public required decimal Monto { get; set; }
+
+4. EMAIL
+─────────
+[Required(ErrorMessage = "El email es requerido")]
+[EmailAddress(ErrorMessage = "Email inválido")]
+public required string Email { get; set; }
+
+5. FECHA
+──────────
+[Required(ErrorMessage = "La fecha es requerida")]
+public required DateOnly Fecha { get; set; }
+
+6. TELEFONO
+────────────
+[RegularExpression(@"^\d{7,20}$", ErrorMessage = "Solo números, 7-20 caracteres")]
+public string? Telefono { get; set; }
+
+7. DOCUMENTO
+─────────────
+[RegularExpression(@"^\d{1,20}$", ErrorMessage = "Solo números")]
+public string? Documento { get; set; }
+
+8. ESTADO (0/1)
+────────────────
+[Range(0, 1, ErrorMessage = "Debe ser 0 o 1")]
+public int Activo { get; set; } = 1;
+
+9. TEXTO LARGO (DESCRIPCION)
+──────────────────────────────
+[StringLength(500, ErrorMessage = "Máximo 500 caracteres")]
+public string? Descripcion { get; set; }
+
+10. TEXTO OPCIONAL (SIN REQUIRED)
+──────────────────────────────────
+[StringLength(100)]
+public string? Notas { get; set; }
+
+================================================================================
+					PATRONES DE RESPUESTA JSON
+================================================================================
+
+SOLICITUD VALIDA - RESPUESTA EXITOSA (200):
+─────────────────────────────────────────────
+Request:
+POST /Multa/create-multa
+{
+  "id_Residente": 1,
+  "monto": 100.50,
+  "descripcion": "Multa por ruido",
+  "fecha_Multa": "2024-01-15",
+  "activo": 1
+}
+
+Response:
+{
+  "success": true,
+  "message": "Registro creado exitosamente",
+  "data": {
+	"id": 1,
+	"id_Residente": 1,
+	"monto": 100.50,
+	"descripcion": "Multa por ruido",
+	"fecha_Multa": "2024-01-15",
+	"activo": 1
+  },
+  "errors": null
+}
+
+SOLICITUD INVALIDA - VALIDACION FALLIDA (400):
+────────────────────────────────────────────────
+Request:
+POST /Multa/create-multa
+{
+  "id_Residente": -1,          // ERROR: Debe ser > 0
+  "monto": -50,                // ERROR: Debe ser > 0
+  "descripcion": "",           // ERROR: Requerido
+  "fecha_Multa": "invalid",    // ERROR: Formato inválido
+  "activo": 5                  // ERROR: Debe ser 0 o 1
+}
+
+Response:
+{
+  "success": false,
+  "message": "Error en los datos enviados",
+  "data": [
+	"El ID de residente debe ser un número válido",
+	"El monto debe ser mayor a 0",
+	"La descripción es requerida",
+	"Validation failed for property 'Fecha_Multa'",
+	"El estado debe ser 0 o 1"
+  ],
+  "errors": null
+}
+
+NO ENCONTRADO (404):
+─────────────────────
+Request:
+GET /Multa/get-id-multa/999999
+
+Response:
+{
+  "success": false,
+  "message": "Registro no encontrado",
+  "data": null,
+  "errors": null
+}
+
+ERROR DEL SERVIDOR (500):
+──────────────────────────
+Si ocurre excepción no capturada
+
+Response:
+{
+  "success": false,
+  "message": "Error interno del servidor",
+  "data": null,
+  "errors": null
+}
+
+================================================================================
+					CHECKLIST - ANTES DE COMPILAR
+================================================================================
+
+DTO Create Request:
+  [ ] Nombre de archivo: ENTIDADCreateRequest.cs
+  [ ] Ubicación: DTOs/Request/
+  [ ] Namespace correcto: Condominio.DTOs.Request
+  [ ] Using: System.ComponentModel.DataAnnotations
+  [ ] Todos los campos tienen atributos [Required] o [StringLength]
+  [ ] Fechas son DateOnly, NO string
+  [ ] Nombres de propiedades en PascalCase
+
+DTO Update Request:
+  [ ] Nombre de archivo: ENTIDADUpdateRequest.cs
+  [ ] Ubicación: DTOs/Request/
+  [ ] Namespace correcto
+  [ ] Validaciones igual a Create
+
+Controller:
+  [ ] Nombre: ENTIDADController.cs
+  [ ] Ubicación: Controllers/
+  [ ] Namespace correcto: Condominio.Controllers
+  [ ] ILogger inyectado en constructor
+  [ ] ModelState validado en POST/PUT
+  [ ] GETs usan [FromRoute] (no [FromBody])
+  [ ] POST/PUT usan [FromBody]
+  [ ] Todos los endpoints retornan ApiResponse<object>
+  [ ] try/catch con logging en todos
+
+Compilación:
+  [ ] dotnet build sin errores
+  [ ] dotnet run sin errores
+  [ ] Swagger carga correctamente
+  [ ] Endpoints visibles en Swagger
+
+================================================================================
+					EJEMPLO COMPLETO - COPIA Y PEGA
+================================================================================
+
+Para crear validación de la entidad "Multa", copia esto:
+
+DTOs/Request/MultaCreateRequest.cs:
+───────────────────────────────────────
+using System.ComponentModel.DataAnnotations;
+
+namespace Condominio.DTOs.Request
+{
+	public class MultaCreateRequest
+	{
+		[Required(ErrorMessage = "El ID de residente es requerido")]
+		[Range(1, int.MaxValue, ErrorMessage = "Debe ser un número válido")]
+		public required int Id_Residente { get; set; }
+
+		[Required(ErrorMessage = "El monto es requerido")]
+		[Range(0.01, double.MaxValue, ErrorMessage = "Mayor a 0")]
+		public required decimal Monto { get; set; }
+
+		[Required(ErrorMessage = "La descripción es requerida")]
+		[StringLength(500, MinimumLength = 1, ErrorMessage = "Entre 1 y 500 caracteres")]
+		public required string Descripcion { get; set; }
+
+		[Required(ErrorMessage = "La fecha es requerida")]
+		public required DateOnly Fecha_Multa { get; set; }
+
+		[Range(0, 1, ErrorMessage = "Debe ser 0 o 1")]
+		public int Activo { get; set; } = 1;
+	}
+}
+
+Controllers/MultaController.cs (fragmento POST):
+──────────────────────────────────────────────────
+[HttpPost]
+[Route("create-multa")]
+public async Task<IActionResult> Create([FromBody] MultaCreateRequest request)
+{
+	if (!ModelState.IsValid)
+	{
+		var errors = ModelState.Values.SelectMany(v => v.Errors)
+			.Select(e => e.ErrorMessage).ToList();
+		return BadRequest(new ApiResponse<object>
+		{
+			Success = false,
+			Message = "Error en los datos enviados",
+			Data = errors
+		});
+	}
+
+	try
+	{
+		var result = await _multaService.CreateAsync(request);
+		return Ok(new ApiResponse<object>
+		{
+			Success = true,
+			Message = "Multa creada exitosamente",
+			Data = result
+		});
+	}
+	catch (Exception ex)
+	{
+		_logger.LogError(ex, "Error al crear multa");
+		return BadRequest(new ApiResponse<object>
+		{
+			Success = false,
+			Message = ex.Message,
+			Data = null
+		});
+	}
+}
+
+Luego:
+  dotnet build
+  dotnet run
+
+Y prueba en Swagger o Postman:
+  POST http://localhost:5000/Multa/create-multa
+
+================================================================================
+							FIN GUIA RAPIDA
+================================================================================

@@ -1,4 +1,5 @@
 ﻿using Condominio.DTOs.Request;
+using Condominio.DTOs.Response;
 using Condominio.Models;
 using Condominio.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -9,11 +10,13 @@ namespace Condominio.Controllers
     [Route("[controller]")]
     public class MetodoPagoController : ControllerBase
     {
-        private readonly IMetodoPagoService metodoPagoService;
+        private readonly IMetodoPagoService _metodoPagoService;
+        private readonly ILogger<MetodoPagoController> _logger;
 
-        public MetodoPagoController(IMetodoPagoService metodoPagoService)
+        public MetodoPagoController(IMetodoPagoService metodoPagoService, ILogger<MetodoPagoController> logger)
         {
-            this.metodoPagoService = metodoPagoService;
+            _metodoPagoService = metodoPagoService;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -22,13 +25,24 @@ namespace Condominio.Controllers
         {
             try
             {
-                var response = await metodoPagoService.GetAllAsync();
+                var response = await _metodoPagoService.GetAllAsync();
 
-                return Ok(response);
+                return Ok(new ApiResponse<object>
+                {
+                    Success = true,
+                    Message = "Métodos de pago obtenidos exitosamente",
+                    Data = response
+                });
             }
             catch(Exception ex)
             {
-                return BadRequest(new { success = false, message = ex.Message });
+                _logger.LogError(ex, "Error al obtener métodos de pago");
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = ex.Message,
+                    Data = null
+                });
             }
         }
 
@@ -36,48 +50,122 @@ namespace Condominio.Controllers
         [Route("create-metodo-pago")]
         public async Task<IActionResult> Create([FromBody] MetodoPagoCreateRequest request)
         {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values.SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage).ToList();
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "Error en los datos enviados",
+                    Data = errors
+                });
+            }
+
             try
             {
-                var response = await metodoPagoService.CreateAsync(request);
+                var response = await _metodoPagoService.CreateAsync(request);
 
-                return Ok(response);
+                return Ok(new ApiResponse<object>
+                {
+                    Success = true,
+                    Message = "Método de pago creado exitosamente",
+                    Data = response
+                });
             }
             catch (Exception ex)
             {
-                return BadRequest(new { success = false, message = ex.Message });
+                _logger.LogError(ex, "Error al crear método de pago");
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = ex.Message,
+                    Data = null
+                });
             }
         }
 
         [HttpPut]
         [Route("update-metodo-pago/{id}")]
-        public async Task<IActionResult> Update([FromBody] MetodoPagoModel request, int id)
+        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] MetodoPagoModel request)
         {
+            if (id <= 0)
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "El ID debe ser válido",
+                    Data = null
+                });
+
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values.SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage).ToList();
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "Error en los datos enviados",
+                    Data = errors
+                });
+            }
+
             try
             {
-                var response = await metodoPagoService.UpdateAsync(request, id);
+                var response = await _metodoPagoService.UpdateAsync(request, id);
 
-                return Ok(response);
+                return Ok(new ApiResponse<object>
+                {
+                    Success = true,
+                    Message = "Método de pago actualizado exitosamente",
+                    Data = response
+                });
             }
             catch (Exception ex)
             {
-                return BadRequest(new { success = false, message = ex.Message });
+                _logger.LogError(ex, "Error al actualizar método de pago");
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = ex.Message,
+                    Data = null
+                });
             }
         }
 
         [HttpDelete]
         [Route("delete-metodo-pago/{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete([FromRoute] int id)
         {
+            if (id <= 0)
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "El ID debe ser válido",
+                    Data = null
+                });
+
             try
             {
-                var response = await metodoPagoService.DeleteAsync(id);
+                var response = await _metodoPagoService.DeleteAsync(id);
 
-                return Ok(response);
+                return Ok(new ApiResponse<object>
+                {
+                    Success = true,
+                    Message = "Método de pago eliminado exitosamente",
+                    Data = response
+                });
             }
             catch (Exception ex)
             {
-                return BadRequest(new { success = false, message = ex.Message });
+                _logger.LogError(ex, "Error al eliminar método de pago");
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = ex.Message,
+                    Data = null
+                });
             }
         }
     }
 }
+

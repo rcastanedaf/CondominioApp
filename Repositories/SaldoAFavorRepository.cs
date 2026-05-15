@@ -96,8 +96,8 @@ namespace Condominio.Repositories
                 using (IDbConnection db = new OracleConnection(_stringConnection))
                 {
                     var query = $"INSERT INTO Saldo_A_Favor(id_residente, id_pago_origen, monto_original, monto_disponible, motivo, estado, fecha_generacion," +
-                        $" fecha_vencimiento, aplicado, fecha_aplicacion, generado, observaciones) " +
-                        $"VALUES ('{newSaldoAFavor.Id_residente}', '{newSaldoAFavor.Id_Pago_Origen}', '{newSaldoAFavor.Monto_Original}', '{newSaldoAFavor.Monto_Disponible}', '{newSaldoAFavor.Motivo}', '{newSaldoAFavor.Estado}', '{newSaldoAFavor.Fecha_Generacion}', '{newSaldoAFavor.Fecha_Vencimiento}', '{newSaldoAFavor.Aplicado}', '{newSaldoAFavor.Fecha_Aplicacion}', '{newSaldoAFavor.Generado}', '{newSaldoAFavor.Observaciones}')";
+                        $" fecha_vencimiento, fecha_aplicacion, observaciones) " +
+                        $"VALUES ('{newSaldoAFavor.Id_residente}', '{newSaldoAFavor.Id_Pago_Origen}', '{newSaldoAFavor.Monto_Original}', '{newSaldoAFavor.Monto_Disponible}', '{newSaldoAFavor.Motivo}', '{newSaldoAFavor.Estado}', '{newSaldoAFavor.Fecha_Generacion}', '{newSaldoAFavor.Fecha_Vencimiento}', '{newSaldoAFavor.Fecha_Aplicacion}', '{newSaldoAFavor.Observaciones}')";
 
                     var result = await db.ExecuteAsync(query);
 
@@ -124,9 +124,7 @@ namespace Condominio.Repositories
                         $"estado = '{editSaldoAFavor.Estado}' " +
                         $"fecha_generacion = '{editSaldoAFavor.Fecha_Generacion}' " +
                         $"fecha_vencimiento = '{editSaldoAFavor.Fecha_Vencimiento}' " +
-                        $"aplicado = '{editSaldoAFavor.Aplicado}' " +
                         $"fecha_aplicacion = '{editSaldoAFavor.Fecha_Aplicacion}' " +
-                        $"generado = '{editSaldoAFavor.Generado}' " +
                         $"observaciones = '{editSaldoAFavor.Observaciones}' " +
                         $"WHERE id_saldo = {editSaldoAFavor.Id_Saldo}";
 

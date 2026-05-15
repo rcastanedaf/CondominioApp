@@ -1,4 +1,5 @@
 ﻿using Condominio.DTOs.Request;
+using Condominio.DTOs.Response;
 using Condominio.Models;
 using Condominio.Services;
 using Condominio.Services.Interfaces;
@@ -11,64 +12,132 @@ namespace Condominio.Controllers
     public class ConceptoDescuentoController : ControllerBase
     {
         private readonly IConceptoDescuentoService _conceptoDescuentoService;
+        private readonly ILogger<ConceptoDescuentoController> _logger;
 
-        public ConceptoDescuentoController(IConceptoDescuentoService conceptoDescuentoService)
+        public ConceptoDescuentoController(IConceptoDescuentoService conceptoDescuentoService, ILogger<ConceptoDescuentoController> logger)
         {
             _conceptoDescuentoService = conceptoDescuentoService;
+            _logger = logger;
         }
-
 
         [HttpGet]
         [Route("get-all-ConceptoDesc")]
         public async Task<IActionResult> Get()
         {
-            var response = new List<Concepto_Descuento>();
-
             try
             {
-                response = await _conceptoDescuentoService.GetAllAsync();
+                var response = await _conceptoDescuentoService.GetAllAsync();
 
-                return Ok(response);
+                return Ok(new ApiResponse<object>
+                {
+                    Success = true,
+                    Message = "Conceptos de descuento obtenidos exitosamente",
+                    Data = response
+                });
             }
             catch (Exception ex)
             {
-                return BadRequest(new { message = ex.Message });
+                _logger.LogError(ex, "Error al obtener conceptos de descuento");
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = ex.Message,
+                    Data = null
+                });
             }
         }
 
         [HttpGet]
-        [Route("get-id-ConceptoDesc")]
-        public async Task<IActionResult> GetId(int id)
+        [Route("get-id-ConceptoDesc/{id}")]
+        public async Task<IActionResult> GetId([FromRoute] int id)
         {
-            var response = new List<Concepto_Descuento>();
+            if (id <= 0)
+            {
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "El ID debe ser un número válido mayor a 0",
+                    Data = null
+                });
+            }
 
             try
             {
-                response = await _conceptoDescuentoService.GetId(id);
+                var response = await _conceptoDescuentoService.GetId(id);
 
-                return Ok(response);
+                if (response == null || response.Count == 0)
+                {
+                    return NotFound(new ApiResponse<object>
+                    {
+                        Success = false,
+                        Message = "Concepto de descuento no encontrado",
+                        Data = null
+                    });
+                }
+
+                return Ok(new ApiResponse<object>
+                {
+                    Success = true,
+                    Message = "Concepto de descuento obtenido exitosamente",
+                    Data = response
+                });
             }
             catch (Exception ex)
             {
-                return BadRequest(new { message = ex.Message });
+                _logger.LogError(ex, $"Error al obtener concepto de descuento con ID: {id}");
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = ex.Message,
+                    Data = null
+                });
             }
         }
 
         [HttpGet]
-        [Route("get-nombre-ConceptoDesc")]
-        public async Task<IActionResult> GetNombre(string nombre)
+        [Route("get-nombre-ConceptoDesc/{nombre}")]
+        public async Task<IActionResult> GetNombre([FromRoute] string nombre)
         {
-            var response = new List<Concepto_Descuento>();
+            if (string.IsNullOrWhiteSpace(nombre))
+            {
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "El nombre no puede estar vacío",
+                    Data = null
+                });
+            }
 
             try
             {
-                response = await _conceptoDescuentoService.GetNombre(nombre);
+                var response = await _conceptoDescuentoService.GetNombre(nombre);
 
-                return Ok(response);
+                if (response == null || response.Count == 0)
+                {
+                    return NotFound(new ApiResponse<object>
+                    {
+                        Success = false,
+                        Message = "No se encontraron conceptos de descuento con ese nombre",
+                        Data = null
+                    });
+                }
+
+                return Ok(new ApiResponse<object>
+                {
+                    Success = true,
+                    Message = "Conceptos de descuento obtenidos exitosamente",
+                    Data = response
+                });
             }
             catch (Exception ex)
             {
-                return BadRequest(new { message = ex.Message });
+                _logger.LogError(ex, $"Error al obtener conceptos de descuento por nombre: {nombre}");
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = ex.Message,
+                    Data = null
+                });
             }
         }
 
@@ -76,31 +145,91 @@ namespace Condominio.Controllers
         [Route("create-ConceptoDesc")]
         public async Task<IActionResult> CreateConceptoDesc([FromBody] ConceptoDescuentoCreateRequest request)
         {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values.SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage)
+                    .ToList();
+
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "Error en los datos enviados",
+                    Data = errors
+                });
+            }
+
             try
             {
                 var response = await _conceptoDescuentoService.CreateConceptoDescuento(request);
 
-                return Ok(response);
+                return Ok(new ApiResponse<object>
+                {
+                    Success = true,
+                    Message = "Concepto de descuento creado exitosamente",
+                    Data = response
+                });
             }
             catch (Exception ex)
             {
-                return BadRequest(new { message = ex.Message });
+                _logger.LogError(ex, "Error al crear concepto de descuento");
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = ex.Message,
+                    Data = null
+                });
             }
         }
 
         [HttpPut]
         [Route("update-ConceptoDesc/{id}")]
-        public async Task<IActionResult> UpdateConceptoDes([FromBody] ConceptoDescuentoUpdateRequest request)
+        public async Task<IActionResult> UpdateConceptoDes(int id, [FromBody] ConceptoDescuentoUpdateRequest request)
         {
+            if (id <= 0)
+            {
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "El ID debe ser un número válido mayor a 0",
+                    Data = null
+                });
+            }
+
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values.SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage)
+                    .ToList();
+
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "Error en los datos enviados",
+                    Data = errors
+                });
+            }
+
             try
             {
                 var response = await _conceptoDescuentoService.UpdateConceptoDescuento(request);
 
-                return Ok(response);
+                return Ok(new ApiResponse<object>
+                {
+                    Success = true,
+                    Message = "Concepto de descuento actualizado exitosamente",
+                    Data = response
+                });
             }
             catch (Exception ex)
             {
-                return BadRequest(new { message = ex.Message });
+                _logger.LogError(ex, $"Error al actualizar concepto de descuento con ID: {id}");
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = ex.Message,
+                    Data = null
+                });
             }
         }
 
@@ -108,17 +237,37 @@ namespace Condominio.Controllers
         [Route("delete-ConceptoDesc/{id}")]
         public async Task<IActionResult> DeleteConceptoDesc([FromRoute] int id)
         {
+            if (id <= 0)
+            {
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "El ID debe ser un número válido mayor a 0",
+                    Data = null
+                });
+            }
+
             try
             {
                 var response = await _conceptoDescuentoService.DeleteConceptoDescuento(id);
 
-                return Ok(response);
+                return Ok(new ApiResponse<object>
+                {
+                    Success = true,
+                    Message = "Concepto de descuento eliminado exitosamente",
+                    Data = response
+                });
             }
             catch (Exception ex)
             {
-                return BadRequest(new { message = ex.Message }); ;
+                _logger.LogError(ex, $"Error al eliminar concepto de descuento con ID: {id}");
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = ex.Message,
+                    Data = null
+                });
             }
         }
-
     }
 }

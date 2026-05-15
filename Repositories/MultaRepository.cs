@@ -112,17 +112,16 @@ VALUES(
                         newMulta.Id_Propiedad,
                         newMulta.Id_Tipo_Infraccion,
                         newMulta.Descripcion,
-                        newMulta.Monto,
+                        newMulta.Monto_Multa,
                         newMulta.Fecha_Infraccion,
                         newMulta.Fecha_Vencimiento,
                         newMulta.Estado,
-                        newMulta.Evidencia,
+                        newMulta.Evidencia_Url,
                         newMulta.Id_Factura,
                         newMulta.Id_Apelacion,
-                        newMulta.Id_Emitida,
-                        newMulta.Id_Aprobada, // CORREGIDO: "aprobada" con 'b'
-                        newMulta.Observaciones,
-                        newMulta.Fecha_Registro
+                        newMulta.Id_Emitida_Por,
+                        newMulta.Id_Aprobada_Por, // CORREGIDO: "aprobada" con 'b'
+                        newMulta.Observaciones
                     };
 
                     await db.ExecuteAsync(query, parameters);
@@ -164,15 +163,15 @@ WHERE id_multa = :Id_Multa";
                         Id_Residente = editMulta.Id_Residente,
                         Id_Propiedad = editMulta.Id_Propiedad,
                         Descripcion = editMulta.Descripcion,
-                        Monto = editMulta.Monto,
+                        Monto = editMulta.Monto_Multa,
                         Fecha_Infraccion = editMulta.Fecha_Infraccion,
                         Fecha_Vencimiento = editMulta.Fecha_Vencimiento,
                         Estado = editMulta.Estado,
-                        Evidencia = editMulta.Evidencia,
+                        Evidencia = editMulta.Evidencia_Url,
                         Id_Factura = editMulta.Id_Factura,
                         Id_Apelacion = editMulta.Id_Apelacion,
                         Id_Emitida = 1,
-                        Id_Aprobada = editMulta.Id_Aprobada,
+                        Id_Aprobada = editMulta.Id_Aprobada_Por,
                         Observaciones = editMulta.Observaciones,
                         Id_Multa = editMulta.Id_Multa
                     };

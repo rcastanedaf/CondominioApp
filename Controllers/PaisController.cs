@@ -1,8 +1,8 @@
 ﻿using Condominio.DTOs.Request;
+using Condominio.DTOs.Response;
 using Condominio.Models;
-using Condominio.Services;
 using Condominio.Services.Interfaces;
-using Microsoft.AspNetCore.Mvc; 
+using Microsoft.AspNetCore.Mvc;
 
 namespace Condominio.Controllers
 {
@@ -10,88 +10,219 @@ namespace Condominio.Controllers
     [Route("[controller]")]
     public class PaisController : ControllerBase
     {
-        private readonly IPaisService _paisService;
+        private readonly IPaisService _service;
+        private readonly ILogger<PaisController> _logger;
 
-        public PaisController(IPaisService paisService)
+        public PaisController(IPaisService service, ILogger<PaisController> logger)
         {
-            _paisService = paisService;
+            _service = service;
+            _logger = logger;
         }
 
-        [HttpGet]
-        [Route("get-all-pais")]
-        public async Task<IActionResult> Get()
+        [HttpGet("get-all-pais")]
+        public async Task<IActionResult> GetAll()
         {
-            var response = new List<PaisModel>();
-
             try
             {
-                response = await _paisService.GetAll();
-
-                return Ok(response);
+                var data = await _service.GetAll();
+                return Ok(new ApiResponse<object>
+                {
+                    Success = true,
+                    Message = "Países obtenidos exitosamente",
+                    Data = data
+                });
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new {message = ex.Message});
+                _logger.LogError(ex, "Error al obtener países");
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = ex.Message,
+                    Data = null
+                });
             }
         }
 
-        [HttpPost]
-        [Route("create-pais")]
+        [HttpGet("get-by-id/{id}")]
+        public async Task<IActionResult> GetById([FromRoute] int id)
+        {
+            if (id <= 0)
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "El ID debe ser un número válido mayor a 0",
+                    Data = null
+                });
+
+            try
+            {
+                var data = await _service.GetById(id);
+                if (data == null)
+                    return NotFound(new ApiResponse<object>
+                    {
+                        Success = false,
+                        Message = "País no encontrado",
+                        Data = null
+                    });
+
+                return Ok(new ApiResponse<object>
+                {
+                    Success = true,
+                    Message = "País obtenido exitosamente",
+                    Data = data
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al obtener país con ID {Id}", id);
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = ex.Message,
+                    Data = null
+                });
+            }
+        }
+
+        [HttpPost("create-pais")]
         public async Task<IActionResult> Create([FromBody] PaisRequest request)
         {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values
+                    .SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage)
+                    .ToList();
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "Error en los datos enviados",
+                    Data = errors
+                });
+            }
+
+            // Normalizar código a mayúsculas
+            var codigoNorm = request.Codigo.Trim().ToUpper();
+
             try
             {
-                var response = await _paisService.Create(request);
-
-                return Ok(response);
+                var rows = await _service.Create(request);
+                return Ok(new ApiResponse<object>
+                {
+                    Success = true,
+                    Message = "País creado exitosamente",
+                    Data = rows
+                });
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new {message = ex.Message});
+                _logger.LogError(ex, "Error al crear país");
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = ex.Message,
+                    Data = null
+                });
             }
         }
 
-        /*[HttpGet]
-        [Route("{id}")]
-        public async Task<IActionResult> GetById(int id)
+        [HttpPut("update-pais/{id}")]
+        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] PaisRequest request)
         {
-            var result = await _paisService.GetById(id);
+            if (id <= 0)
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "El ID debe ser un número válido mayor a 0",
+                    Data = null
+                });
 
-            if (result == null)
-                return NotFound();
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values
+                    .SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage)
+                    .ToList();
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "Error en los datos enviados",
+                    Data = errors
+                });
+            }
 
-            return Ok(result);
-        }*/
+            // Normalizar código a mayúsculas
+            var codigoNorm = request.Codigo.Trim().ToUpper();
 
-        [HttpPut]
-        [Route("update-pais/{id}")]
-        public async Task<IActionResult> Update([FromBody] PaisModel request, int id)
-        {
             try
             {
-                var response = await _paisService.Update(request, id);
+                var rows = await _service.Update(id, request);
+                if (rows == 0)
+                    return NotFound(new ApiResponse<object>
+                    {
+                        Success = false,
+                        Message = "País no encontrado",
+                        Data = null
+                    });
 
-                return Ok(response);
+                return Ok(new ApiResponse<object>
+                {
+                    Success = true,
+                    Message = "País actualizado exitosamente",
+                    Data = rows
+                });
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new {message = ex.Message});
+                _logger.LogError(ex, "Error al actualizar país con ID {Id}", id);
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = ex.Message,
+                    Data = null
+                });
             }
         }
 
-        [HttpDelete]
-        [Route("delete-pais/{id}")]
-        public async Task<IActionResult> Delete(int id)
+        [HttpDelete("delete-pais/{id}")]
+        public async Task<IActionResult> Delete([FromRoute] int id)
         {
+            if (id <= 0)
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "El ID debe ser un número válido mayor a 0",
+                    Data = null
+                });
+
             try
             {
-                var response = await _paisService.Delete(id);
+                var result = await _service.Delete(id);
+                if (!result)
+                    return NotFound(new ApiResponse<object>
+                    {
+                        Success = false,
+                        Message = "País no encontrado",
+                        Data = null
+                    });
 
-                return Ok(response);
+                return Ok(new ApiResponse<object>
+                {
+                    Success = true,
+                    Message = "País eliminado exitosamente",
+                    Data = null
+                });
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new {message = ex.Message});
+                _logger.LogError(ex, "Error al eliminar país con ID {Id}", id);
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = ex.Message,
+                    Data = null
+                });
             }
         }
     }

@@ -1,10 +1,20 @@
-﻿namespace Condominio.DTOs.Request
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Condominio.DTOs.Request
 {
     public class CargoCreateRequest
     {
+        [Required(ErrorMessage = "El nombre del cargo es requerido")]
+        [StringLength(100, MinimumLength = 1, ErrorMessage = "El nombre debe tener entre 1 y 100 caracteres")]
         public string Nombre { get; set; }
+
+        [StringLength(500, ErrorMessage = "La descripción no puede exceder 500 caracteres")]
         public string Descripcion { get; set; }
+
+        [Range(0, double.MaxValue, ErrorMessage = "El salario base debe ser mayor o igual a 0")]
         public decimal? Salario_Base { get; set; }
+
+        [Range(0, 1, ErrorMessage = "El estado activo debe ser 0 o 1")]
         public int Activo { get; set; } = 1;
     }
 }

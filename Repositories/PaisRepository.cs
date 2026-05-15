@@ -9,103 +9,63 @@ namespace Condominio.Repositories
 {
     public class PaisRepository : IPaisRepository
     {
-        private readonly IConfiguration _configuration;
-        private readonly string _stringConnection;
+        private readonly string _conn;
 
         public PaisRepository(IConfiguration configuration)
         {
-            _configuration = configuration;
-            _stringConnection = configuration.GetConnectionString("DefaultConnection")!;
+            _conn = configuration.GetConnectionString("DefaultConnection")!;
         }
-
 
         public async Task<List<PaisModel>> GetAll()
         {
-            try
-            {
-                using (IDbConnection db = new OracleConnection(_stringConnection))
-                {
-                    var query = "SELECT * FROM Pais";
-
-                    Console.WriteLine(query);
-
-                    var result = (await db.QueryAsync<PaisModel>(query)).ToList();
-
-                    if (result.Count > 0)
-                    {
-                        return result;
-                    }
-
-                    return new List<PaisModel>();
-                }
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            using IDbConnection db = new OracleConnection(_conn);
+            const string sql = @"
+                SELECT ID     AS id,
+                       CODIGO AS codigo,
+                       NOMBRE AS nombre
+                FROM PAIS
+                ORDER BY NOMBRE";
+            return (await db.QueryAsync<PaisModel>(sql)).ToList();
         }
 
-        public async Task<PaisRequest> Create(PaisRequest request)
+        public async Task<PaisModel?> GetById(int id)
         {
-            try
-            {
-                using (IDbConnection db = new OracleConnection(_stringConnection))
-                {
-                    var query = $"INSERT INTO PAIS(CODIGO, NOMBRE) VALUES('{request.Codigo}','{request.Nombre}')";
-
-                    var result = await db.ExecuteAsync(query);
-
-                    return request;
-                }
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            using IDbConnection db = new OracleConnection(_conn);
+            const string sql = @"
+                SELECT ID     AS id,
+                       CODIGO AS codigo,
+                       NOMBRE AS nombre
+                FROM PAIS
+                WHERE ID = :id";
+            return await db.QueryFirstOrDefaultAsync<PaisModel>(sql, new { id });
         }
 
-        /*public async Task<PaisModel> GetById(int id)
+        public async Task<int> Create(PaisRequest request)
         {
-            var pais = paises.FirstOrDefault(x => x.Id == id);
-            return await Task.FromResult(pais);
-        }*/
+            using IDbConnection db = new OracleConnection(_conn);
+            const string sql = @"
+                INSERT INTO PAIS (CODIGO, NOMBRE)
+                VALUES (:Codigo, :Nombre)";
+            return await db.ExecuteAsync(sql, request);
+        }
 
-        public async Task<PaisModel> Update(PaisModel request, int id)
+        public async Task<int> Update(int id, PaisRequest request)
         {
-            try
-            {
-                using (IDbConnection db = new OracleConnection(_stringConnection))
-                {
-                    var query = $"UPDATE PAIS SET CODIGO = '{request.codigo}', NOMBRE = '{request.nombre}' WHERE ID = {id}";
-
-                    var result = await db.ExecuteAsync(query);
-
-                    return request;
-                }
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            using IDbConnection db = new OracleConnection(_conn);
+            const string sql = @"
+                UPDATE PAIS
+                SET CODIGO = :Codigo,
+                    NOMBRE = :Nombre
+                WHERE ID = :id";
+            return await db.ExecuteAsync(sql, new { request.Codigo, request.Nombre, id });
         }
 
         public async Task<bool> Delete(int id)
         {
-            try
-            {
-                using (IDbConnection db = new OracleConnection(_stringConnection))
-                {
-                    var query = $"DELETE FROM PAIS WHERE id = {id}";
-
-                    var result = await db.ExecuteAsync(query);
-
-                    return true;
-                }
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            using IDbConnection db = new OracleConnection(_conn);
+            const string sql = "DELETE FROM PAIS WHERE ID = :id";
+            var rows = await db.ExecuteAsync(sql, new { id });
+            return rows > 0;
         }
     }
 }

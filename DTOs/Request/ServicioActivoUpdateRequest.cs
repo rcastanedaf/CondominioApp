@@ -1,7 +1,15 @@
-﻿namespace Condominio.DTOs.Request
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Condominio.DTOs.Request
 {
-    public class ServicioActivoUpdateRequest : ServicioActivoCreateRequest
+    public class ServicioActivoUpdateRequest
     {
-        public int Id_Servicio_Activo { get; set; }
+        public DateOnly? FechaFin { get; set; }
+
+        // Property para compatibilidad con repository (snake_case)
+        public DateOnly? Fecha_Fin => FechaFin;
+
+        [Range(0, 1, ErrorMessage = "Activo debe ser 0 o 1")]
+        public int Activo { get; set; } = 1;
     }
 }

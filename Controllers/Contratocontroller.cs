@@ -1,4 +1,5 @@
 ﻿using Condominio.DTOs.Request;
+using Condominio.DTOs.Response;
 using Condominio.Models;
 using Condominio.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -31,6 +32,16 @@ public class contratoController : ControllerBase
     public async Task<IActionResult> Create([FromBody] contratoRequest request)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
+        if (request.fecha_inicio.HasValue && request.fecha_fin.HasValue
+            && request.fecha_fin <= request.fecha_inicio)
+        {
+            return BadRequest(new ApiResponse<object>
+            {
+                Success = false,
+                Message = "La fecha de fin del contrato debe ser posterior a la fecha de inicio",
+                Data = null
+            });
+        }
         try
         {
             var result = await _service.Create(request);

@@ -5,11 +5,11 @@ namespace Condominio.Repositories.Interfaces
 {
     public interface IServicioActivoRepository
     {
-        Task<List<ServicioActivoModel>> GetAllAsync();
-        Task<List<ServicioActivoModel>> GetByPropiedad(int idPropiedad);
-        Task<List<ServicioActivoModel>> GetByResidente(int idResidente);
-        Task<ServicioActivoCreateRequest> Create(ServicioActivoCreateRequest req);
-        Task<ServicioActivoUpdateRequest> Update(ServicioActivoUpdateRequest req);
-        Task<bool> Delete(int id);
+        Task<IEnumerable<ServicioActivoModel>> GetAllAsync();
+        Task<IEnumerable<ServicioActivoModel>> GetByPropiedadAsync(int idPropiedad);
+        Task<ServicioActivoModel?> GetByIdAsync(int id);
+        Task<int> CreateAsync(ServicioActivoCreateRequest request);
+        Task<int> UpdateAsync(int id, ServicioActivoUpdateRequest request);
+        Task<int> DeleteAsync(int id);
     }
 }

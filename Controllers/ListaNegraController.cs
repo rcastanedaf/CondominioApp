@@ -1,4 +1,5 @@
 ﻿using Condominio.DTOs.Request;
+using Condominio.DTOs.Response;
 using Condominio.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,35 +10,153 @@ namespace Condominio.Controllers
     public class ListaNegraController : ControllerBase
     {
         private readonly IListaNegraService _svc;
-        public ListaNegraController(IListaNegraService svc) => _svc = svc;
+        private readonly ILogger<ListaNegraController> _logger;
+
+        public ListaNegraController(IListaNegraService svc, ILogger<ListaNegraController> logger)
+        {
+            _svc = svc;
+            _logger = logger;
+        }
 
         [HttpGet("get-all")]
         public async Task<IActionResult> GetAll()
         {
-            try { return Ok(await _svc.GetAllAsync()); }
-            catch (Exception ex) { return BadRequest(new { message = ex.Message }); }
+            try
+            {
+                var response = await _svc.GetAllAsync();
+                return Ok(new ApiResponse<object>
+                {
+                    Success = true,
+                    Message = "Lista negra obtenida exitosamente",
+                    Data = response
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al obtener lista negra");
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = ex.Message,
+                    Data = null
+                });
+            }
         }
 
         [HttpPost("create")]
         public async Task<IActionResult> Create([FromBody] ListaNegraCreateRequest req)
         {
-            try { return Ok(await _svc.Create(req)); }
-            catch (Exception ex) { return BadRequest(new { message = ex.Message }); }
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values.SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage).ToList();
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "Error en los datos enviados",
+                    Data = errors
+                });
+            }
+
+            try
+            {
+                var response = await _svc.Create(req);
+                return Ok(new ApiResponse<object>
+                {
+                    Success = true,
+                    Message = "Registro en lista negra creado exitosamente",
+                    Data = response
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al crear lista negra");
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = ex.Message,
+                    Data = null
+                });
+            }
         }
 
         [HttpPut("update/{id}")]
-        public async Task<IActionResult> Update([FromBody] ListaNegraUpdateRequest req)
+        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] ListaNegraUpdateRequest req)
         {
-            try { return Ok(await _svc.Update(req)); }
-            catch (Exception ex) { return BadRequest(new { message = ex.Message }); }
+            if (id <= 0)
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "El ID debe ser válido",
+                    Data = null
+                });
+
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values.SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage).ToList();
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "Error en los datos enviados",
+                    Data = errors
+                });
+            }
+
+            try
+            {
+                var response = await _svc.Update(req);
+                return Ok(new ApiResponse<object>
+                {
+                    Success = true,
+                    Message = "Registro en lista negra actualizado exitosamente",
+                    Data = response
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al actualizar lista negra");
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = ex.Message,
+                    Data = null
+                });
+            }
         }
 
         [HttpDelete("desactivar/{id}")]
-        public async Task<IActionResult> Desactivar(int id)
+        public async Task<IActionResult> Desactivar([FromRoute] int id)
         {
-            try { return Ok(await _svc.Desactivar(id)); }
-            catch (Exception ex) { return BadRequest(new { message = ex.Message }); }
+            if (id <= 0)
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "El ID debe ser válido",
+                    Data = null
+                });
+
+            try
+            {
+                var response = await _svc.Desactivar(id);
+                return Ok(new ApiResponse<object>
+                {
+                    Success = true,
+                    Message = "Registro en lista negra desactivado exitosamente",
+                    Data = response
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al desactivar registro en lista negra");
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = ex.Message,
+                    Data = null
+                });
+            }
         }
     }
-
 }
+

@@ -1,7 +1,8 @@
+using Condominio.DTOs.Response;
 using Condominio.Models;
 using Condominio.Services.Interfaces;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 namespace Condominio.Controllers
@@ -68,9 +69,12 @@ namespace Condominio.Controllers
         }
 
         [HttpPut]
-        [Route("update-motivo-visita")]
-        public async Task<IActionResult> Update([FromBody] MotivoVisitaModel model)
+        [Route("update-motivo-visita/{id}")]
+        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] MotivoVisitaModel model)
         {
+            model.Id = id;
+            if (id <= 0)
+                return BadRequest(new ApiResponse<object> { Success = false, Message = "El ID debe ser mayor a 0", Data = null });
             try
             {
                 var result = await _service.UpdateAsync(model);
