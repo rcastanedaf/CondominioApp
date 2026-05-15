@@ -351,23 +351,25 @@ namespace Condominio.Repositories
             return d;
         }
 
-        // ── INCIDENCIAS ──────────────────────────────────────
+        // ── INCIDENCIAS ──────────────────────────────────────────────
         public async Task<DashboardIncidenciasModel> GetDashboardIncidenciasAsync()
         {
             var d = new DashboardIncidenciasModel();
 
             var kpi = await _db.QueryFirstOrDefaultAsync<dynamic>(@"
-                SELECT SUM(CASE WHEN ESTADO='ABIERTA'    THEN 1 ELSE 0 END) AS AB,
-                       SUM(CASE WHEN ESTADO='EN_PROCESO' THEN 1 ELSE 0 END) AS EP,
-                       SUM(CASE WHEN ESTADO IN ('RESUELTA','CERRADA') THEN 1 ELSE 0 END) AS RE,
-                       SUM(CASE WHEN PRIORIDAD='ALTA'  THEN 1 ELSE 0 END) AS AL,
-                       SUM(CASE WHEN PRIORIDAD='MEDIA' THEN 1 ELSE 0 END) AS ME,
-                       SUM(CASE WHEN PRIORIDAD='BAJA'  THEN 1 ELSE 0 END) AS BA,
-                       NVL(SUM(COSTO_ESTIMADO),0) AS CEST,
-                       NVL(SUM(COSTO_REAL),0) AS CREAL,
-                       NVL(AVG(CASE WHEN FECHA_RESOLUCION IS NOT NULL
-                                    THEN (FECHA_RESOLUCION-FECHA_APERTURA)*24 END),0) AS HPROM
-                FROM INCIDENCIA");
+        SELECT SUM(CASE WHEN ESTADO='ABIERTA'    THEN 1 ELSE 0 END) AS AB,
+               SUM(CASE WHEN ESTADO='EN_PROCESO' THEN 1 ELSE 0 END) AS EP,
+               SUM(CASE WHEN ESTADO IN ('RESUELTA','CERRADA') THEN 1 ELSE 0 END) AS RE,
+               SUM(CASE WHEN PRIORIDAD='ALTA'  THEN 1 ELSE 0 END) AS AL,
+               SUM(CASE WHEN PRIORIDAD='MEDIA' THEN 1 ELSE 0 END) AS ME,
+               SUM(CASE WHEN PRIORIDAD='BAJA'  THEN 1 ELSE 0 END) AS BA,
+               NVL(SUM(COSTO_ESTIMADO),0) AS CEST,
+               NVL(SUM(COSTO_REAL),0)     AS CREAL,
+               NVL(AVG(CASE WHEN FECHA_RESOLUCION IS NOT NULL
+                            THEN (TRUNC(FECHA_RESOLUCION) - TRUNC(FECHA_APERTURA)) * 24
+                       END), 0) AS HPROM
+        FROM INCIDENCIA");
+
             d.TotalAbiertas = Convert.ToInt32(kpi?.AB ?? 0);
             d.TotalEnProceso = Convert.ToInt32(kpi?.EP ?? 0);
             d.TotalResueltas = Convert.ToInt32(kpi?.RE ?? 0);
@@ -379,16 +381,18 @@ namespace Condominio.Repositories
             d.PromedioHorasResolucion = Convert.ToDouble(kpi?.HPROM ?? 0);
 
             var cat = await _db.QueryAsync<dynamic>(@"
-                SELECT NVL(ci.NOMBRE,'Sin categoría') AS CAT,
-                       SUM(CASE WHEN i.ESTADO='ABIERTA'    THEN 1 ELSE 0 END) AS AB,
-                       SUM(CASE WHEN i.ESTADO='EN_PROCESO' THEN 1 ELSE 0 END) AS EP,
-                       SUM(CASE WHEN i.ESTADO IN ('RESUELTA','CERRADA') THEN 1 ELSE 0 END) AS RE,
-                       SUM(CASE WHEN i.PRIORIDAD='ALTA'  THEN 1 ELSE 0 END) AS AL,
-                       SUM(CASE WHEN i.PRIORIDAD='MEDIA' THEN 1 ELSE 0 END) AS ME,
-                       SUM(CASE WHEN i.PRIORIDAD='BAJA'  THEN 1 ELSE 0 END) AS BA
-                FROM INCIDENCIA i
-                LEFT JOIN CATEGORIA_INCIDENCIA ci ON ci.ID_CATEGORIA=i.ID_CATEGORIA
-                GROUP BY ci.NOMBRE ORDER BY COUNT(*) DESC");
+        SELECT NVL(ci.NOMBRE,'Sin categoría') AS CAT,
+               SUM(CASE WHEN i.ESTADO='ABIERTA'    THEN 1 ELSE 0 END) AS AB,
+               SUM(CASE WHEN i.ESTADO='EN_PROCESO' THEN 1 ELSE 0 END) AS EP,
+               SUM(CASE WHEN i.ESTADO IN ('RESUELTA','CERRADA') THEN 1 ELSE 0 END) AS RE,
+               SUM(CASE WHEN i.PRIORIDAD='ALTA'  THEN 1 ELSE 0 END) AS AL,
+               SUM(CASE WHEN i.PRIORIDAD='MEDIA' THEN 1 ELSE 0 END) AS ME,
+               SUM(CASE WHEN i.PRIORIDAD='BAJA'  THEN 1 ELSE 0 END) AS BA
+        FROM INCIDENCIA i
+        LEFT JOIN CATEGORIA_INCIDENCIA ci ON ci.ID_CATEGORIA = i.ID_CATEGORIA
+        GROUP BY ci.NOMBRE
+        ORDER BY COUNT(*) DESC");
+
             d.PorCategoria = cat.Select(r => new IncidenciaCategoriaDetalle
             {
                 Categoria = (string)r.CAT,
@@ -401,27 +405,42 @@ namespace Condominio.Repositories
             }).ToList();
 
             var tend = await _db.QueryAsync<dynamic>(@"
-                SELECT TO_CHAR(TRUNC(FECHA_APERTURA,'MM'),'MON-YY') AS MES,
-                       TRUNC(FECHA_APERTURA,'MM') AS FORD, COUNT(*) AS AB,
-                       SUM(CASE WHEN ESTADO IN ('RESUELTA','CERRADA') THEN 1 ELSE 0 END) AS RE
-                FROM INCIDENCIA WHERE FECHA_APERTURA>=ADD_MONTHS(SYSDATE,-6)
-                GROUP BY TO_CHAR(TRUNC(FECHA_APERTURA,'MM'),'MON-YY'),TRUNC(FECHA_APERTURA,'MM')
-                ORDER BY TRUNC(FECHA_APERTURA,'MM')");
+        SELECT TO_CHAR(TRUNC(FECHA_APERTURA,'MM'),'MON-YY') AS MES,
+               TRUNC(FECHA_APERTURA,'MM') AS FORD,
+               COUNT(*) AS AB,
+               SUM(CASE WHEN ESTADO IN ('RESUELTA','CERRADA') THEN 1 ELSE 0 END) AS RE
+        FROM INCIDENCIA
+        WHERE FECHA_APERTURA >= ADD_MONTHS(TRUNC(SYSDATE,'MM'),-6)
+        GROUP BY TO_CHAR(TRUNC(FECHA_APERTURA,'MM'),'MON-YY'), TRUNC(FECHA_APERTURA,'MM')
+        ORDER BY TRUNC(FECHA_APERTURA,'MM')");
+
             d.TendenciaMensual = tend.Select(r => new IncidenciaTendenciaItem
-            { Mes = (string)r.MES, Abiertas = Convert.ToInt32(r.AB), Resueltas = Convert.ToInt32(r.RE) }).ToList();
+            {
+                Mes = (string)r.MES,
+                Abiertas = Convert.ToInt32(r.AB),
+                Resueltas = Convert.ToInt32(r.RE)
+            }).ToList();
 
             var rec = await _db.QueryAsync<dynamic>(@"
-                SELECT * FROM (
-                    SELECT i.TITULO, NVL(ci.NOMBRE,'Sin categoría') AS CAT,
-                           i.PRIORIDAD, i.ESTADO, i.FECHA_APERTURA,
-                           NVL(p.CODIGO,'Área común') AS PROP
-                    FROM INCIDENCIA i
-                    LEFT JOIN CATEGORIA_INCIDENCIA ci ON ci.ID_CATEGORIA=i.ID_CATEGORIA
-                    LEFT JOIN PROPIEDAD p ON p.ID_PROPIEDAD=i.ID_PROPIEDAD
-                    WHERE i.ESTADO NOT IN ('CERRADA','RESUELTA')
-                    ORDER BY CASE i.PRIORIDAD WHEN 'ALTA' THEN 1 WHEN 'MEDIA' THEN 2 ELSE 3 END,
-                             i.FECHA_APERTURA DESC
-                ) WHERE ROWNUM<=15");
+        SELECT * FROM (
+            SELECT i.TITULO,
+                   NVL(ci.NOMBRE,'Sin categoría') AS CAT,
+                   i.PRIORIDAD,
+                   i.ESTADO,
+                   TRUNC(i.FECHA_APERTURA) AS FECHA_APERTURA,
+                   NVL(p.CODIGO,'Área común') AS PROP
+            FROM INCIDENCIA i
+            LEFT JOIN CATEGORIA_INCIDENCIA ci ON ci.ID_CATEGORIA = i.ID_CATEGORIA
+            LEFT JOIN PROPIEDAD p             ON p.ID_PROPIEDAD  = i.ID_PROPIEDAD
+            WHERE i.ESTADO NOT IN ('CERRADA','RESUELTA')
+            ORDER BY CASE i.PRIORIDAD
+                         WHEN 'ALTA'  THEN 1
+                         WHEN 'MEDIA' THEN 2
+                         ELSE 3
+                     END,
+                     i.FECHA_APERTURA DESC
+        ) WHERE ROWNUM <= 15");
+
             d.IncidenciasRecientes = rec.Select(r => new IncidenciaDetalleItem
             {
                 Titulo = (string)r.TITULO,
