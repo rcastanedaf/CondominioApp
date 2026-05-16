@@ -2,8 +2,8 @@
 {
     public class RolPermisoModel
     {
-        public int Id_Rol_Permiso { get; set; }
-        public int Id_Rol { get; set; }
-        public int Id_Permiso { get; set; }
+        public int IdRolPermiso { get; set; }
+        public int IdRol { get; set; }
+        public int IdPermiso { get; set; }
     }
 }
