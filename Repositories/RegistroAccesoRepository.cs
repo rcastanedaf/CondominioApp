@@ -18,19 +18,18 @@ namespace Condominio.Repositories
             int limite = top > 0 ? top.Value : 200;
             const string sql = @"
         SELECT * FROM (
-            SELECT ID_ACCESO           AS Id_Acceso,
+            SELECT ID_REGISTRO           AS Id_Acceso,
                    TIPO_MOVIMIENTO     AS Tipo_Movimiento,
                    TIPO_PERSONA        AS Tipo_Persona,
                    ID_RESIDENTE        AS Id_Residente,
-                   ID_VISITA           AS Id_Visita,
-                   ID_VEHICULO         AS Id_Vehiculo,
+                   ID_VISITANTE           AS Id_Visita,
+                   ID_EMPLEADO         AS Id_Empleado,
                    NOMBRE_PERSONA      AS Nombre_Persona,
                    DPI_PERSONA         AS Dpi_Persona,
                    PLACA_VEHICULO      AS Placa_Vehiculo,
-                   ID_PROPIEDAD        AS Id_Propiedad,
-                   ID_MOTIVO_VISITA    AS Id_Motivo_Visita,
+                   PUNTO_ACCESO        AS Punto_Acceso,
+                   AUTORIZADO_POR      AS Autorizado_Por,
                    OBSERVACIONES,
-                   REGISTRADO_POR      AS Registrado_Por,
                    TO_CHAR(FECHA_HORA, 'YYYY-MM-DD HH24:MI:SS') AS Fecha_Hora
             FROM REGISTRO_ACCESO
             ORDER BY FECHA_HORA DESC
@@ -65,10 +64,10 @@ namespace Condominio.Repositories
         public async Task<RegistroAccesoCreateRequest> Create(RegistroAccesoCreateRequest r)
         {
             using IDbConnection db = new OracleConnection(_conn);
-            var sql = @"INSERT INTO REGISTRO_ACCESO(TIPO_MOVIMIENTO,TIPO_PERSONA,ID_RESIDENTE,ID_VISITA,ID_VEHICULO,
-                    NOMBRE_PERSONA,DPI_PERSONA,PLACA_VEHICULO,ID_PROPIEDAD,ID_MOTIVO_VISITA,OBSERVACIONES,REGISTRADO_POR)
-                    VALUES(:Tipo_Movimiento,:Tipo_Persona,:Id_Residente,:Id_Visita,:Id_Vehiculo,
-                    :Nombre_Persona,:Dpi_Persona,:Placa_Vehiculo,:Id_Propiedad,:Id_Motivo_Visita,:Observaciones,:Registrado_Por)";
+            var sql = @"INSERT INTO REGISTRO_ACCESO(TIPO_MOVIMIENTO,TIPO_PERSONA,ID_RESIDENTE,ID_VISITANTE,ID_EMPLEADO,
+                    NOMBRE_PERSONA,DPI_PERSONA,PLACA_VEHICULO,PUNTO_ACCESO,AUTORIZADO_POR,OBSERVACIONES)
+                    VALUES(:Tipo_Movimiento,:Tipo_Persona,:Id_Residente,:Id_Visitante,:Id_Empleado,
+                    :Nombre_Persona,:Dpi_Persona,:Placa_Vehiculo,:Punto_Accedo,:Autorizado_Por,:Observaciones)";
             await db.ExecuteAsync(sql, r);
             return r;
         }
