@@ -705,9 +705,20 @@ namespace Condominio.Repositories
                        SUM(CASE WHEN ESTADO='ANULADA'   THEN 1 ELSE 0 END) AS AN,
                        SUM(CASE WHEN ESTADO='EN_MORA'   THEN 1 ELSE 0 END) AS MO,
                        NVL(SUM(CASE WHEN ESTADO IN ('PENDIENTE','EN_MORA') THEN MONTO ELSE 0 END),0) AS MPEND,
-                       NVL(SUM(CASE WHEN ESTADO='PAGADA'
-                                     AND TRUNC(FECHA_VENCIMIENTO,'MM')=TRUNC(SYSDATE,'MM')
-                                    THEN MONTO ELSE 0 END),0) AS MMES
+                        NVL(
+                            SUM(
+                                CASE 
+                                    WHEN ESTADO='PAGADA'
+                                    AND TRUNC(FECHA_VENCIMIENTO,'MM') = (
+                                        SELECT TRUNC(MAX(FECHA_VENCIMIENTO),'MM')
+                                        FROM MULTA
+                                        WHERE ESTADO='PAGADA'
+                                    )
+                                    THEN MONTO 
+                                    ELSE 0 
+                                END
+                            ),
+                        0) AS MMES
                 FROM MULTA");
             d.TotalMultas = Convert.ToInt32(kpi?.TOT ?? 0);
             d.MultasPendientes = Convert.ToInt32(kpi?.PE ?? 0);
@@ -722,7 +733,11 @@ namespace Condominio.Repositories
                 SELECT TO_CHAR(TRUNC(FECHA_INFRACCION,'MM'),'MON-YY') AS MES,
                        TRUNC(FECHA_INFRACCION,'MM') AS FORD,
                        COUNT(*) AS CANT, NVL(SUM(MONTO),0) AS MONT
-                FROM MULTA WHERE FECHA_INFRACCION>=ADD_MONTHS(SYSDATE,-6)
+                FROM MULTA 
+                    WHERE FECHA_INFRACCION >= ADD_MONTHS(
+                        (SELECT MAX(FECHA_INFRACCION) FROM MULTA),
+                        -6
+                    )
                 GROUP BY TO_CHAR(TRUNC(FECHA_INFRACCION,'MM'),'MON-YY'),TRUNC(FECHA_INFRACCION,'MM')
                 ORDER BY TRUNC(FECHA_INFRACCION,'MM')");
             d.TendenciaMensual = tend.Select(r => new MultaMensualItem
