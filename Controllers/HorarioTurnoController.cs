@@ -79,7 +79,7 @@ namespace Condominio.Controllers
                 return BadRequest(new ApiResponse<object>{ Success = false, Message = "Datos inválidos", Data = ModelState });
             try
             {
-                model.Id_Turno = id;
+                model.IdTurno = id;
                 var rows = await _service.UpdateAsync(model);
                 if (rows == 0)
                     return NotFound(new ApiResponse<string>{ Success = false, Message = "Horario no encontrado", Data = null });

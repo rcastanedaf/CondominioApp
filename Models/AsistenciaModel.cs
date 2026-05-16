@@ -10,6 +10,5 @@
         public string Estado { get; set; } 
         public int Minutos_Extra { get; set; }
         public int Minutos_Tardanza { get; set; }
-        public string Observaciones { get; set; } 
     }
 }
