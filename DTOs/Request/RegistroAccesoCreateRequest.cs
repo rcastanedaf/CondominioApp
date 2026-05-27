@@ -18,8 +18,13 @@ namespace Condominio.DTOs.Request
         [Range(1, int.MaxValue, ErrorMessage = "El ID de visita debe ser válido")]
         public int? Id_Visita { get; set; }
 
+        /// <summary>ID del vehículo registrado en la tabla VEHICULOS.</summary>
         [Range(1, int.MaxValue, ErrorMessage = "El ID del vehículo debe ser válido")]
         public int? Id_Vehiculo { get; set; }
+
+        /// <summary>ID del empleado (para tipo EMPLEADO).</summary>
+        [Range(1, int.MaxValue, ErrorMessage = "El ID del empleado debe ser válido")]
+        public int? Id_Empleado { get; set; }
 
         [StringLength(200, MinimumLength = 1, ErrorMessage = "El nombre de la persona debe tener entre 1 y 200 caracteres")]
         public string? Nombre_Persona { get; set; }
@@ -39,9 +44,14 @@ namespace Condominio.DTOs.Request
         [StringLength(500, ErrorMessage = "Las observaciones no pueden exceder 500 caracteres")]
         public string? Observaciones { get; set; }
 
+        // Punto de acceso (puede venir del frontend en versiones futuras)
+        public string? Punto_Acceso { get; set; }
+
+        // Autorizado_Por se mapea desde Registrado_Por
+        public int? Autorizado_Por => Registrado_Por;
+
         [Required(ErrorMessage = "El ID de quien registra es requerido")]
         [Range(1, int.MaxValue, ErrorMessage = "El ID de quien registra debe ser válido")]
         public required int Registrado_Por { get; set; }
     }
 }
-

@@ -103,10 +103,10 @@ namespace Condominio.Repositories
                             EMAIL, NIT, ID_REGIMEN_FISCAL, OBSERVACIONES, ACTIVO, FECHA_REGISTRO)
                             VALUES
                             (:Tipo, :Nombres, :Apellidos, :DPI, :Pasaporte,
-                            TO_DATE(:Fecha_Nacimiento, 'YYYY-MM-DD'),
+                            :Fecha_Nacimiento,
                             :Id_Estado_Civil, :Nacionalidad, :Telefono_Principal, :Telefono_Secundario,
                             :Email, :NIT, :Id_Regimen_Fiscal, :Observaciones, :Activo,
-                            TO_DATE(:Fecha_Registro, 'YYYY-MM-DD'))";
+                            SYSDATE)";
 
                 await db.ExecuteAsync(query, newPersona);
                 return newPersona;
@@ -123,7 +123,7 @@ namespace Condominio.Repositories
                               APELLIDOS           = :Apellidos,
                               DPI                 = :DPI,
                               PASAPORTE           = :Pasaporte,
-                              FECHA_NACIMIENTO    = TO_DATE(:Fecha_Nacimiento, 'YYYY-MM-DD'),
+                              FECHA_NACIMIENTO    = :Fecha_Nacimiento,
                               ID_ESTADO_CIVIL     = :Id_Estado_Civil,
                               ID_NACIONALIDAD     = :Nacionalidad,
                               TELEFONO_PRINCIPAL  = :Telefono_Principal,
@@ -133,7 +133,7 @@ namespace Condominio.Repositories
                               ID_REGIMEN_FISCAL   = :Id_Regimen_Fiscal,
                               OBSERVACIONES       = :Observaciones,
                               ACTIVO              = :Activo,
-                              FECHA_REGISTRO      = TO_DATE(:Fecha_Registro, 'YYYY-MM-DD')
+                              FECHA_REGISTRO      = SYSDATE
                               WHERE ID_PERSONA    = :Id_Persona";
 
                 await db.ExecuteAsync(query, editPersona);

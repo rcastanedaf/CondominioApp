@@ -103,15 +103,31 @@ namespace Condominio.Repositories
             using (IDbConnection db = new OracleConnection(_stringConnection))
             {
                 var query = @"INSERT INTO RESIDENTE
-                      (ID_PERSONA, ID_PROPIEDAD, TIPO_RESIDENTE,
-                       FECHA_INGRESO, FECHA_SALIDA, ACTIVO, OBSERVACIONES)
-                      VALUES
-                      (:Id_Persona, :Id_Propiedad, :Tipo_Residente,
-                       TO_DATE(:Fecha_Ingreso, 'YYYY-MM-DD'),
-                       CASE WHEN :Fecha_Salida IS NULL THEN NULL
-                            ELSE TO_DATE(:Fecha_Salida, 'YYYY-MM-DD') END,
-                       :Activo, :Observaciones)";
-                await db.ExecuteAsync(query, newResidente);
+              (ID_PERSONA, ID_PROPIEDAD, TIPO_RESIDENTE,
+               FECHA_INGRESO, FECHA_SALIDA, ACTIVO, OBSERVACIONES)
+              VALUES
+              (:Id_Persona, :Id_Propiedad, :Tipo_Residente,
+               TO_DATE(:Fecha_Ingreso, 'YYYY-MM-DD'),
+               CASE WHEN :Fecha_Salida IS NULL THEN NULL
+                    ELSE TO_DATE(:Fecha_Salida, 'YYYY-MM-DD') END,
+               :Activo, :Observaciones)";
+
+                var parametros = new
+                {
+                    newResidente.Id_Persona,
+                    newResidente.Id_Propiedad,
+                    newResidente.Tipo_Residente,
+
+                    Fecha_Ingreso = newResidente.Fecha_Ingreso.ToString("yyyy-MM-dd"),
+
+                    Fecha_Salida = newResidente.Fecha_Salida?.ToString("yyyy-MM-dd"),
+
+                    newResidente.Activo,
+                    newResidente.Observaciones
+                };
+
+                await db.ExecuteAsync(query, parametros);
+
                 return newResidente;
             }
         }
@@ -120,16 +136,35 @@ namespace Condominio.Repositories
             using (IDbConnection db = new OracleConnection(_stringConnection))
             {
                 var query = @"UPDATE RESIDENTE SET
-                      ID_PERSONA      = :Id_Persona,
-                      ID_PROPIEDAD    = :Id_Propiedad,
-                      TIPO_RESIDENTE  = :Tipo_Residente,
-                      FECHA_INGRESO   = TO_DATE(:Fecha_Ingreso, 'YYYY-MM-DD'),
-                      FECHA_SALIDA    = CASE WHEN :Fecha_Salida IS NULL THEN NULL
-                                             ELSE TO_DATE(:Fecha_Salida, 'YYYY-MM-DD') END,
-                      ACTIVO          = :Activo,
-                      OBSERVACIONES   = :Observaciones
-                      WHERE ID_RESIDENTE = :Id_Residente";
-                await db.ExecuteAsync(query, editResidente);
+              ID_PERSONA      = :Id_Persona,
+              ID_PROPIEDAD    = :Id_Propiedad,
+              TIPO_RESIDENTE  = :Tipo_Residente,
+              FECHA_INGRESO   = TO_DATE(:Fecha_Ingreso, 'YYYY-MM-DD'),
+              FECHA_SALIDA    = CASE WHEN :Fecha_Salida IS NULL THEN NULL
+                                     ELSE TO_DATE(:Fecha_Salida, 'YYYY-MM-DD') END,
+              ACTIVO          = :Activo,
+              OBSERVACIONES   = :Observaciones
+              WHERE ID_RESIDENTE = :Id_Residente";
+
+                var parametros = new
+                {
+                    editResidente.Id_Residente,
+                    editResidente.Id_Persona,
+                    editResidente.Id_Propiedad,
+                    editResidente.Tipo_Residente,
+
+                    Fecha_Ingreso = editResidente.Fecha_Ingreso
+                        .ToString("yyyy-MM-dd"),
+
+                    Fecha_Salida = editResidente.Fecha_Salida?
+                        .ToString("yyyy-MM-dd"),
+
+                    editResidente.Activo,
+                    editResidente.Observaciones
+                };
+
+                await db.ExecuteAsync(query, parametros);
+
                 return editResidente;
             }
         }

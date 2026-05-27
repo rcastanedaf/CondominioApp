@@ -194,6 +194,7 @@ namespace Condominio.Controllers
                     .SelectMany(v => v.Errors)
                     .Select(e => e.ErrorMessage)
                     .ToList();
+
                 return BadRequest(new ApiResponse<object>
                 {
                     Success = false,
@@ -202,10 +203,6 @@ namespace Condominio.Controllers
                 });
             }
 
-            // Asignar el id de la ruta al request
-            request.Id_Visita = id;
-
-            // Validar que Fecha_Hasta >= Fecha_Desde
             if (!string.IsNullOrEmpty(request.Fecha_Desde) && !string.IsNullOrEmpty(request.Fecha_Hasta))
             {
                 if (DateTime.TryParse(request.Fecha_Desde, out var desde) &&
@@ -224,6 +221,7 @@ namespace Condominio.Controllers
             try
             {
                 var rows = await _service.Update(id, request);
+
                 if (rows == 0)
                     return NotFound(new ApiResponse<object>
                     {
@@ -242,6 +240,7 @@ namespace Condominio.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al actualizar visita con ID {Id}", id);
+
                 return BadRequest(new ApiResponse<object>
                 {
                     Success = false,

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿// ListaNegraCreateRequest.cs
+using System.ComponentModel.DataAnnotations;
 
 namespace Condominio.DTOs.Request
 {
@@ -33,12 +34,11 @@ namespace Condominio.DTOs.Request
         public required int Registrado_Por { get; set; }
 
         [Required(ErrorMessage = "La fecha de inicio es requerida")]
-        public required DateOnly Fecha_Inicio { get; set; }
+        public required string Fecha_Inicio { get; set; }  // Cambiado a string
 
-        public DateOnly? Fecha_Fin { get; set; }
+        public string? Fecha_Fin { get; set; }  // Cambiado a string
 
         [StringLength(500, ErrorMessage = "Las observaciones no pueden exceder 500 caracteres")]
         public string? Observaciones { get; set; }
     }
 }
-

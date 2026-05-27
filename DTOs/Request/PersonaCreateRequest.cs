@@ -26,7 +26,7 @@ namespace Condominio.DTOs.Request
         public required string Pasaporte { get; set; }
 
         [Required(ErrorMessage = "La fecha de nacimiento es requerida")]
-        public required DateOnly Fecha_Nacimiento { get; set; }
+        public required DateTime Fecha_Nacimiento { get; set; }
 
         [Required(ErrorMessage = "El estado civil es requerido")]
         [Range(1, int.MaxValue, ErrorMessage = "El estado civil debe ser un número válido")]

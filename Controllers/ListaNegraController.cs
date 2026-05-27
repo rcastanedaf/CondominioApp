@@ -91,6 +91,9 @@ namespace Condominio.Controllers
                     Data = null
                 });
 
+            // ⭐ IMPORTANTE: Asignar el ID de la ruta al DTO
+            req.Id_Lista = id;
+
             if (!ModelState.IsValid)
             {
                 var errors = ModelState.Values.SelectMany(v => v.Errors)
