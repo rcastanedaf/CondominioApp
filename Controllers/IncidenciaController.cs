@@ -1,8 +1,9 @@
 using Condominio.Models;
 using Condominio.Services.Interfaces;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Oracle.ManagedDataAccess.Client;
 
 namespace Condominio.Controllers
 {
@@ -39,13 +40,46 @@ namespace Condominio.Controllers
         {
             try
             {
+                // Validación manual
+                if (model == null)
+                    return BadRequest(new { message = "El modelo está vacío" });
+
+                if (string.IsNullOrWhiteSpace(model.Titulo))
+                    return BadRequest(new { message = "El título es requerido" });
+
+                if (model.IdReportadoPor <= 0)
+                    return BadRequest(new { message = "ID Reportado Por es requerido" });
+
+                // Log detallado
+                _logger.LogInformation("=== INTENTANDO CREAR INCIDENCIA ===");
+                _logger.LogInformation($"Título: {model.Titulo}");
+                _logger.LogInformation($"IdReportadoPor: {model.IdReportadoPor}");
+                _logger.LogInformation($"IdPropiedad: {model.IdPropiedad}");
+                _logger.LogInformation($"Prioridad: {model.Prioridad}");
+
                 await _service.CreateAsync(model);
-                return Ok();
+                return Ok(new { success = true, message = "Incidencia creada exitosamente" });
+            }
+            catch (OracleException ex)
+            {
+                _logger.LogError(ex, "Error de Oracle al crear incidencia");
+                return StatusCode(500, new
+                {
+                    message = "Error de base de datos",
+                    oracleError = ex.Message,
+                    oracleCode = ex.ErrorCode
+                });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al crear la incidencia");
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Ocurrió un error interno en el servidor." });
+                _logger.LogError(ex, "Error general al crear incidencia");
+                return StatusCode(500, new
+                {
+                    message = "Error interno",
+                    error = ex.Message,
+                    innerError = ex.InnerException?.Message,
+                    stackTrace = ex.StackTrace?.Substring(0, 500) // Primeros 500 caracteres
+                });
             }
         }
 
