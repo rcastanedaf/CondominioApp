@@ -125,37 +125,35 @@ namespace Condominio.Controllers
             }
         }
 
-        [HttpDelete("delete/{id}")]
-        public async Task<IActionResult> Delete([FromRoute] int id)
-        {
-            if (id <= 0)
-                return BadRequest(new ApiResponse<object>
-                {
-                    Success = false,
-                    Message = "El ID debe ser válido",
-                    Data = null
-                });
+            [HttpDelete("delete/{id}")]
+            public async Task<IActionResult> Delete([FromRoute] int id)
+            {
+                Console.WriteLine($"ID RECIBIDO: {id}");
 
-            try
-            {
-                var response = await _svc.Delete(id);
-                return Ok(new ApiResponse<object>
+                try
                 {
-                    Success = true,
-                    Message = "Espacio común eliminado exitosamente",
-                    Data = response
-                });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error al eliminar espacio común");
-                return BadRequest(new ApiResponse<object>
+                    var response = await _svc.Delete(id);
+
+                    Console.WriteLine($"RESULTADO DELETE: {response}");
+
+                    return Ok(new ApiResponse<object>
+                    {
+                        Success = true,
+                        Message = "Espacio común eliminado exitosamente",
+                        Data = response
+                    });
+                }
+                catch (Exception ex)
                 {
-                    Success = false,
-                    Message = ex.Message,
-                    Data = null
-                });
+                    Console.WriteLine($"ERROR DELETE: {ex}");
+
+                    return BadRequest(new ApiResponse<object>
+                    {
+                        Success = false,
+                        Message = ex.Message,
+                        Data = null
+                    });
+                }
             }
-        }
     }
 }
