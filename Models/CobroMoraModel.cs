@@ -10,5 +10,6 @@ namespace Condominio.Models
         public decimal? PorcentajeAplicado { get; set; }
         public decimal? MontoMora { get; set; }
         public decimal? AcumuladoTotal { get; set; }
+        public string? Observaciones { get; set; }
     }
 }

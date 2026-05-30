@@ -10,6 +10,13 @@ namespace Condominio.Repositories
         private readonly IDbConnection _db;
         public DashboardRepository(IDbConnection db) { _db = db; }
 
+        // Ejecuta una consulta de forma segura; devuelve el valor por defecto si falla
+        private async Task<T> Safe<T>(Func<Task<T>> fn, T def = default!)
+        {
+            try { return await fn(); }
+            catch { return def; }
+        }
+
         // ── GENERAL (sin cambios) ────────────────────────────
         public async Task<DashboardModel> GetDashboardAsync()
         {
@@ -99,7 +106,7 @@ namespace Condominio.Repositories
             dashboard.IncidenciasPorCategoria = incPorCat.Select(r => new IncidenciaPorCategoriaItem
             { Categoria = (string)r.CATEGORIA, Total = Convert.ToInt32(r.TOTAL) }).ToList();
 
-            var morosos = await _db.QueryAsync<dynamic>(@"
+            var morosos = await Safe(async () => await _db.QueryAsync<dynamic>(@"
                 SELECT * FROM (
                     SELECT p.NOMBRES||' '||p.APELLIDOS AS RESIDENTE,
                            cpc.MONTO_PENDIENTE, cpc.DIAS_ATRASO
@@ -107,7 +114,8 @@ namespace Condominio.Repositories
                     JOIN RESIDENTE r ON r.ID_RESIDENTE=cpc.ID_RESIDENTE
                     JOIN PERSONA p   ON p.ID_PERSONA=r.ID_PERSONA
                     WHERE cpc.ESTADO IN ('PENDIENTE','PARCIAL') AND cpc.MONTO_PENDIENTE>0
-                    ORDER BY cpc.MONTO_PENDIENTE DESC) WHERE ROWNUM<=5");
+                    ORDER BY cpc.MONTO_PENDIENTE DESC) WHERE ROWNUM<=5"),
+                Enumerable.Empty<dynamic>());
             dashboard.TopMorosos = morosos.Select(r => new MorososItem
             {
                 Residente = (string)r.RESIDENTE,
@@ -145,12 +153,14 @@ namespace Condominio.Repositories
             d.FacturasVencidas = Convert.ToInt32(cart?.FV ?? 0);
             d.PromedioMoraDias = Convert.ToDecimal(cart?.PROMDIA ?? 0);
 
-            var saf = await _db.QueryFirstOrDefaultAsync<dynamic>(@"
-                SELECT NVL(SUM(MONTO_DISPONIBLE),0) AS T FROM SALDO_A_FAVOR WHERE ESTADO='DISPONIBLE'");
+            var saf = await Safe(async () =>
+                await _db.QueryFirstOrDefaultAsync<dynamic>(@"
+                SELECT NVL(SUM(MONTO_DISPONIBLE),0) AS T FROM SALDO_A_FAVOR WHERE ESTADO='DISPONIBLE'"));
             d.TotalSaldosAFavor = Convert.ToDecimal(saf?.T ?? 0);
 
-            var acu = await _db.QueryFirstOrDefaultAsync<dynamic>(@"
-                SELECT COUNT(*) AS T FROM ACUERDO_PAGO WHERE ESTADO='ACTIVO'");
+            var acu = await Safe(async () =>
+                await _db.QueryFirstOrDefaultAsync<dynamic>(@"
+                SELECT COUNT(*) AS T FROM ACUERDO_PAGO WHERE ESTADO='ACTIVO'"));
             d.AcuerdosPagoActivos = Convert.ToInt32(acu?.T ?? 0);
 
             var ingresos = await _db.QueryAsync<dynamic>(@"
@@ -170,16 +180,17 @@ namespace Condominio.Repositories
             d.DistribucionCartera = distCart.Select(r => new CarteraItem
             { Estado = (string)r.ESTADO, Cantidad = Convert.ToInt32(r.CANT), Monto = Convert.ToDecimal(r.MONTO) }).ToList();
 
-            var metodos = await _db.QueryAsync<dynamic>(@"
+            var metodos = await Safe(async () => await _db.QueryAsync<dynamic>(@"
                 SELECT NVL(mp.NOMBRE,'Sin especificar') AS METODO,
                        COUNT(p.ID_PAGO) AS CANT, NVL(SUM(p.MONTO_PAGADO),0) AS TOTAL
-                FROM PAGO p LEFT JOIN METODOPAGO mp ON mp.ID=p.ID_METODO_PAGO
+                FROM PAGO p LEFT JOIN MetodoPago mp ON mp.ID=p.ID_METODO_PAGO
                 WHERE p.ESTADO='CONFIRMADO' AND p.FECHA_PAGO>=ADD_MONTHS(SYSDATE,-3)
-                GROUP BY mp.NOMBRE ORDER BY TOTAL DESC");
+                GROUP BY mp.NOMBRE ORDER BY TOTAL DESC"),
+                Enumerable.Empty<dynamic>());
             d.PagosPorMetodo = metodos.Select(r => new MetodoPagoItem
             { Metodo = (string)r.METODO, Cantidad = Convert.ToInt32(r.CANT), Total = Convert.ToDecimal(r.TOTAL) }).ToList();
 
-            var morosos = await _db.QueryAsync<dynamic>(@"
+            var morosos = await Safe(async () => await _db.QueryAsync<dynamic>(@"
                 SELECT * FROM (
                     SELECT p.NOMBRES||' '||p.APELLIDOS AS RESIDENTE,
                            cpc.MONTO_PENDIENTE, cpc.DIAS_ATRASO
@@ -187,18 +198,20 @@ namespace Condominio.Repositories
                     JOIN RESIDENTE r ON r.ID_RESIDENTE=cpc.ID_RESIDENTE
                     JOIN PERSONA p   ON p.ID_PERSONA=r.ID_PERSONA
                     WHERE cpc.ESTADO IN ('PENDIENTE','PARCIAL') AND cpc.MONTO_PENDIENTE>0
-                    ORDER BY cpc.MONTO_PENDIENTE DESC) WHERE ROWNUM<=10");
+                    ORDER BY cpc.MONTO_PENDIENTE DESC) WHERE ROWNUM<=10"),
+                Enumerable.Empty<dynamic>());
             d.TopMorosos = morosos.Select(r => new MorososItem
             { Residente = (string)r.RESIDENTE, MontoPendiente = Convert.ToDecimal(r.MONTO_PENDIENTE), DiasAtraso = Convert.ToInt32(r.DIAS_ATRASO) }).ToList();
 
-            var svcs = await _db.QueryAsync<dynamic>(@"
+            var svcs = await Safe(async () => await _db.QueryAsync<dynamic>(@"
                 SELECT NVL(ts.NOMBRE,'Otros') AS SVC, NVL(SUM(df.TOTAL_LINEA),0) AS TOTAL
                 FROM DETALLE_FACTURA df
                 LEFT JOIN TIPO_SERVICIO ts ON ts.ID_TIPO_SERVICIO=df.ID_TIPO_SERVICIO
                 JOIN FACTURA f ON f.ID_FACTURA=df.ID_FACTURA
                 WHERE f.ESTADO IN ('PAGADA','PARCIALMENTE_PAGADA')
                   AND TRUNC(f.FECHA_EMISION,'MM')=TRUNC(SYSDATE,'MM')
-                GROUP BY ts.NOMBRE ORDER BY TOTAL DESC");
+                GROUP BY ts.NOMBRE ORDER BY TOTAL DESC"),
+                Enumerable.Empty<dynamic>());
             d.IngresosPorServicio = svcs.Select(r => new ServicioIngresosItem
             { Servicio = (string)r.SVC, Total = Convert.ToDecimal(r.TOTAL) }).ToList();
 
@@ -254,7 +267,7 @@ namespace Condominio.Repositories
             d.OcupacionHistorica = hist.Select(r => new OcupacionMensualItem
             { Mes = (string)r.MES, Ingresos = Convert.ToInt32(r.INGRESOS) }).ToList();
 
-            var det = await _db.QueryAsync<dynamic>(@"
+            var det = await Safe(async () => await _db.QueryAsync<dynamic>(@"
                 SELECT * FROM (
                     SELECT p.NOMBRES||' '||p.APELLIDOS AS NOM, pr.CODIGO AS PROP,
                            r.TIPO_RESIDENTE, r.FECHA_INGRESO,
@@ -264,7 +277,8 @@ namespace Condominio.Repositories
                     JOIN PERSONA p    ON p.ID_PERSONA=r.ID_PERSONA
                     JOIN PROPIEDAD pr ON pr.ID_PROPIEDAD=r.ID_PROPIEDAD
                     WHERE r.ACTIVO=1 ORDER BY r.FECHA_INGRESO DESC
-                ) WHERE ROWNUM<=25");
+                ) WHERE ROWNUM<=25"),
+                Enumerable.Empty<dynamic>());
             d.ResidentesDetalle = det.Select(r => new ResidenteDetalleItem
             {
                 Nombre = r.NOM != null ? (string)r.NOM : "",

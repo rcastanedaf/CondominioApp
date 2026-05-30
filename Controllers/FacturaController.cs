@@ -30,7 +30,7 @@ namespace Condominio.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al obtener todas las facturas");
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Ocurrió un error interno en el servidor." });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Ocurriï¿½ un error interno en el servidor." });
             }
         }
 
@@ -46,7 +46,7 @@ namespace Condominio.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al obtener la factura por id {Id}", id);
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Ocurrió un error interno en el servidor." });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Ocurriï¿½ un error interno en el servidor." });
             }
         }
 
@@ -61,7 +61,22 @@ namespace Condominio.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al obtener facturas por propiedad {IdPropiedad}", idPropiedad);
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Ocurrió un error interno en el servidor." });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Ocurriï¿½ un error interno en el servidor." });
+            }
+        }
+
+        [HttpGet("get-next-correlative")]
+        public async Task<IActionResult> GetNextCorrelative()
+        {
+            try
+            {
+                var nextCorrelative = await _service.GetNextCorrelativeAsync();
+                return Ok(new { nextCorrelative });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al obtener el siguiente correlativo");
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Ocurriï¿½ un error interno en el servidor." });
             }
         }
 
@@ -70,13 +85,43 @@ namespace Condominio.Controllers
         {
             try
             {
-                await _service.CreateAsync(model);
-                return Ok();
+                // Validaciones bÃ¡sicas
+                if (string.IsNullOrWhiteSpace(model.NumeroFactura))
+                    return BadRequest(new { message = "El nÃºmero de factura es requerido" });
+                if (string.IsNullOrWhiteSpace(model.ReceptorNombre))
+                    return BadRequest(new { message = "El nombre del receptor es requerido" });
+                if (string.IsNullOrWhiteSpace(model.ReceptorNit))
+                    return BadRequest(new { message = "El NIT del receptor es requerido" });
+                if (!model.IdPropiedad.HasValue || model.IdPropiedad <= 0)
+                    return BadRequest(new { message = "La propiedad es requerida" });
+                if (!model.IdCorrelativo.HasValue || model.IdCorrelativo <= 0)
+                    return BadRequest(new { message = "El correlativo es requerido" });
+
+                _logger.LogInformation($"Creando factura: {System.Text.Json.JsonSerializer.Serialize(model)}");
+                var idFactura = await _service.CreateAsync(model);
+                return Ok(new { message = "Factura creada exitosamente", idFactura });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al crear la factura");
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Ocurrió un error interno en el servidor." });
+                _logger.LogError(ex, "Error al crear la factura: {Message}\n{StackTrace}", ex.Message, ex.StackTrace);
+                
+                // Mensajes mÃ¡s especÃ­ficos segÃºn el tipo de error (Oracle ORA- codes)
+                string errorMessage = "Error al crear la factura";
+                string msgLower = ex.Message.ToLower();
+                if (msgLower.Contains("unique constraint") || msgLower.Contains("ora-00001"))
+                    errorMessage = "El nÃºmero de factura ya existe en el sistema";
+                else if (msgLower.Contains("integrity constraint") || msgLower.Contains("ora-02291") || msgLower.Contains("parent key not found"))
+                    errorMessage = "Una o mÃ¡s referencias (propiedad, residente, moneda, etc.) no son vÃ¡lidas";
+                else if (msgLower.Contains("cannot insert null") || msgLower.Contains("ora-01400"))
+                    errorMessage = "Faltan campos obligatorios en la factura";
+                else if (msgLower.Contains("check constraint") || msgLower.Contains("ora-02290"))
+                    errorMessage = "Un valor no cumple las restricciones del sistema";
+
+                return StatusCode(StatusCodes.Status500InternalServerError, new { 
+                    message = errorMessage,
+                    error = ex.Message,
+                    details = ex.InnerException?.Message
+                });
             }
         }
 
@@ -91,7 +136,7 @@ namespace Condominio.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al actualizar la factura");
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Ocurrió un error interno en el servidor." });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Ocurriï¿½ un error interno en el servidor." });
             }
         }
 
@@ -106,7 +151,7 @@ namespace Condominio.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al eliminar la factura {Id}", id);
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Ocurrió un error interno en el servidor." });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Ocurriï¿½ un error interno en el servidor." });
             }
         }
     }

@@ -30,7 +30,7 @@ namespace Condominio.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al obtener todos los pagos");
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Ocurrió un error interno en el servidor." });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Ocurriï¿½ un error interno en el servidor." });
             }
         }
 
@@ -46,7 +46,7 @@ namespace Condominio.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al obtener el pago por id {Id}", id);
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Ocurrió un error interno en el servidor." });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Ocurriï¿½ un error interno en el servidor." });
             }
         }
 
@@ -61,7 +61,7 @@ namespace Condominio.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al obtener pagos por factura {IdFactura}", idFactura);
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Ocurrió un error interno en el servidor." });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Ocurriï¿½ un error interno en el servidor." });
             }
         }
 
@@ -76,7 +76,7 @@ namespace Condominio.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al crear el pago");
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Ocurrió un error interno en el servidor." });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
             }
         }
 
@@ -91,7 +91,7 @@ namespace Condominio.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al actualizar el pago");
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Ocurrió un error interno en el servidor." });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Ocurriï¿½ un error interno en el servidor." });
             }
         }
 
@@ -106,7 +106,7 @@ namespace Condominio.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al eliminar el pago {Id}", id);
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Ocurrió un error interno en el servidor." });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Ocurriï¿½ un error interno en el servidor." });
             }
         }
 

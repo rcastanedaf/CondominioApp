@@ -4,7 +4,7 @@ namespace Condominio.Models
     {
         public int IdTipoServicio { get; set; }
         public string? Nombre { get; set; }
-        public int? IdUnidad { get; set; }
+        public int? IdUnidadMedida { get; set; }
         public string? Periodicidad { get; set; }
         public decimal? MontoBase { get; set; }
         public int? AplicaIva { get; set; }

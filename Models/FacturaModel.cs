@@ -4,6 +4,7 @@ namespace Condominio.Models
     {
         public int IdFactura { get; set; }
         public int? IdTipoDocFiscal { get; set; }
+        public int? IdCorrelativo { get; set; }
         public string? Serie { get; set; }
         public string? NumeroFactura { get; set; }
         public string? NumeroAutorizacionSat { get; set; }
@@ -11,6 +12,7 @@ namespace Condominio.Models
         public int? IdResidente { get; set; }
         public string? ReceptorNombre { get; set; }
         public string? ReceptorNit { get; set; }
+        public string? ReceptorDireccion { get; set; }
         public DateTime? FechaEmision { get; set; }
         public DateTime? FechaVencimiento { get; set; }
         public DateTime? PeriodoInicio { get; set; }
@@ -21,13 +23,18 @@ namespace Condominio.Models
         public decimal? TotalDescuentos { get; set; }
         public decimal? BaseImponible { get; set; }
         public decimal? TotalIva { get; set; }
+        public decimal? TotalOtrosImpuestos { get; set; }
         public decimal? Total { get; set; }
+        public string? TotalEnLetras { get; set; }
         public decimal? SaldoPendiente { get; set; }
         public string? Estado { get; set; }
         public int? IdCicloOrigen { get; set; }
         public int? IdContratoOrigen { get; set; }
+        public int? IdReservaOrigen { get; set; }
+        public int? IdFacturaOrigen { get; set; }
         public string? MotivoAnulacion { get; set; }
         public int? GeneradoPor { get; set; }
+        public int? AprobadoPor { get; set; }
         public string? Observaciones { get; set; }
     }
 }

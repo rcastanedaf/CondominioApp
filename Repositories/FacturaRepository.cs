@@ -24,6 +24,7 @@ namespace Condominio.Repositories
             var query = @"SELECT
                             ID_FACTURA              IdFactura,
                             ID_TIPO_DOC_FISCAL      IdTipoDocFiscal,
+                            ID_CORRELATIVO          IdCorrelativo,
                             SERIE                   Serie,
                             NUMERO_FACTURA          NumeroFactura,
                             NUMERO_AUTORIZACION_SAT NumeroAutorizacionSat,
@@ -31,6 +32,7 @@ namespace Condominio.Repositories
                             ID_RESIDENTE            IdResidente,
                             RECEPTOR_NOMBRE         ReceptorNombre,
                             RECEPTOR_NIT            ReceptorNit,
+                            RECEPTOR_DIRECCION      ReceptorDireccion,
                             FECHA_EMISION           FechaEmision,
                             FECHA_VENCIMIENTO       FechaVencimiento,
                             PERIODO_INICIO          PeriodoInicio,
@@ -41,13 +43,18 @@ namespace Condominio.Repositories
                             TOTAL_DESCUENTOS        TotalDescuentos,
                             BASE_IMPONIBLE          BaseImponible,
                             TOTAL_IVA               TotalIva,
+                            TOTAL_OTROS_IMPUESTOS   TotalOtrosImpuestos,
                             TOTAL                   Total,
+                            TOTAL_EN_LETRAS         TotalEnLetras,
                             SALDO_PENDIENTE         SaldoPendiente,
                             ESTADO                  Estado,
                             ID_CICLO_ORIGEN         IdCicloOrigen,
                             ID_CONTRATO_ORIGEN      IdContratoOrigen,
+                            ID_RESERVA_ORIGEN       IdReservaOrigen,
+                            ID_FACTURA_ORIGEN       IdFacturaOrigen,
                             MOTIVO_ANULACION        MotivoAnulacion,
                             GENERADO_POR            GeneradoPor,
+                            APROBADO_POR            AprobadoPor,
                             OBSERVACIONES           Observaciones
                           FROM FACTURA";
 
@@ -61,6 +68,7 @@ namespace Condominio.Repositories
             var query = @"SELECT
                             ID_FACTURA              IdFactura,
                             ID_TIPO_DOC_FISCAL      IdTipoDocFiscal,
+                            ID_CORRELATIVO          IdCorrelativo,
                             SERIE                   Serie,
                             NUMERO_FACTURA          NumeroFactura,
                             NUMERO_AUTORIZACION_SAT NumeroAutorizacionSat,
@@ -68,6 +76,7 @@ namespace Condominio.Repositories
                             ID_RESIDENTE            IdResidente,
                             RECEPTOR_NOMBRE         ReceptorNombre,
                             RECEPTOR_NIT            ReceptorNit,
+                            RECEPTOR_DIRECCION      ReceptorDireccion,
                             FECHA_EMISION           FechaEmision,
                             FECHA_VENCIMIENTO       FechaVencimiento,
                             PERIODO_INICIO          PeriodoInicio,
@@ -78,13 +87,18 @@ namespace Condominio.Repositories
                             TOTAL_DESCUENTOS        TotalDescuentos,
                             BASE_IMPONIBLE          BaseImponible,
                             TOTAL_IVA               TotalIva,
+                            TOTAL_OTROS_IMPUESTOS   TotalOtrosImpuestos,
                             TOTAL                   Total,
+                            TOTAL_EN_LETRAS         TotalEnLetras,
                             SALDO_PENDIENTE         SaldoPendiente,
                             ESTADO                  Estado,
                             ID_CICLO_ORIGEN         IdCicloOrigen,
                             ID_CONTRATO_ORIGEN      IdContratoOrigen,
+                            ID_RESERVA_ORIGEN       IdReservaOrigen,
+                            ID_FACTURA_ORIGEN       IdFacturaOrigen,
                             MOTIVO_ANULACION        MotivoAnulacion,
                             GENERADO_POR            GeneradoPor,
+                            APROBADO_POR            AprobadoPor,
                             OBSERVACIONES           Observaciones
                           FROM FACTURA
                           WHERE ID_FACTURA = :id";
@@ -99,6 +113,7 @@ namespace Condominio.Repositories
             var query = @"SELECT
                             ID_FACTURA              IdFactura,
                             ID_TIPO_DOC_FISCAL      IdTipoDocFiscal,
+                            ID_CORRELATIVO          IdCorrelativo,
                             SERIE                   Serie,
                             NUMERO_FACTURA          NumeroFactura,
                             NUMERO_AUTORIZACION_SAT NumeroAutorizacionSat,
@@ -106,6 +121,7 @@ namespace Condominio.Repositories
                             ID_RESIDENTE            IdResidente,
                             RECEPTOR_NOMBRE         ReceptorNombre,
                             RECEPTOR_NIT            ReceptorNit,
+                            RECEPTOR_DIRECCION      ReceptorDireccion,
                             FECHA_EMISION           FechaEmision,
                             FECHA_VENCIMIENTO       FechaVencimiento,
                             PERIODO_INICIO          PeriodoInicio,
@@ -116,13 +132,18 @@ namespace Condominio.Repositories
                             TOTAL_DESCUENTOS        TotalDescuentos,
                             BASE_IMPONIBLE          BaseImponible,
                             TOTAL_IVA               TotalIva,
+                            TOTAL_OTROS_IMPUESTOS   TotalOtrosImpuestos,
                             TOTAL                   Total,
+                            TOTAL_EN_LETRAS         TotalEnLetras,
                             SALDO_PENDIENTE         SaldoPendiente,
                             ESTADO                  Estado,
                             ID_CICLO_ORIGEN         IdCicloOrigen,
                             ID_CONTRATO_ORIGEN      IdContratoOrigen,
+                            ID_RESERVA_ORIGEN       IdReservaOrigen,
+                            ID_FACTURA_ORIGEN       IdFacturaOrigen,
                             MOTIVO_ANULACION        MotivoAnulacion,
                             GENERADO_POR            GeneradoPor,
+                            APROBADO_POR            AprobadoPor,
                             OBSERVACIONES           Observaciones
                           FROM FACTURA
                           WHERE ID_PROPIEDAD = :idPropiedad";
@@ -130,28 +151,35 @@ namespace Condominio.Repositories
             return (await db.QueryAsync<FacturaModel>(query, new { idPropiedad })).ToList();
         }
 
-        public async Task CreateAsync(FacturaModel model)
+        public async Task<int> CreateAsync(FacturaModel model)
         {
             using IDbConnection db = new OracleConnection(_stringConnection);
 
             var query = @"INSERT INTO FACTURA
-                          (ID_TIPO_DOC_FISCAL, SERIE, NUMERO_FACTURA, NUMERO_AUTORIZACION_SAT,
-                           ID_PROPIEDAD, ID_RESIDENTE, RECEPTOR_NOMBRE, RECEPTOR_NIT,
+                          (ID_TIPO_DOC_FISCAL, ID_CORRELATIVO, SERIE, NUMERO_FACTURA, NUMERO_AUTORIZACION_SAT,
+                           ID_PROPIEDAD, ID_RESIDENTE, RECEPTOR_NOMBRE, RECEPTOR_NIT, RECEPTOR_DIRECCION,
                            FECHA_EMISION, FECHA_VENCIMIENTO, PERIODO_INICIO, PERIODO_FIN,
                            ID_MONEDA, TIPO_CAMBIO, SUBTOTAL, TOTAL_DESCUENTOS,
-                           BASE_IMPONIBLE, TOTAL_IVA, TOTAL, SALDO_PENDIENTE,
-                           ESTADO, ID_CICLO_ORIGEN, ID_CONTRATO_ORIGEN,
-                           MOTIVO_ANULACION, GENERADO_POR, OBSERVACIONES)
+                           BASE_IMPONIBLE, TOTAL_IVA, TOTAL_OTROS_IMPUESTOS, TOTAL, TOTAL_EN_LETRAS, SALDO_PENDIENTE,
+                           ESTADO, ID_CICLO_ORIGEN, ID_CONTRATO_ORIGEN, ID_RESERVA_ORIGEN, ID_FACTURA_ORIGEN,
+                           MOTIVO_ANULACION, GENERADO_POR, APROBADO_POR, OBSERVACIONES)
                           VALUES
-                          (:IdTipoDocFiscal, :Serie, :NumeroFactura, :NumeroAutorizacionSat,
-                           :IdPropiedad, :IdResidente, :ReceptorNombre, :ReceptorNit,
+                          (:IdTipoDocFiscal, :IdCorrelativo, :Serie, :NumeroFactura, :NumeroAutorizacionSat,
+                           :IdPropiedad, :IdResidente, :ReceptorNombre, :ReceptorNit, :ReceptorDireccion,
                            :FechaEmision, :FechaVencimiento, :PeriodoInicio, :PeriodoFin,
                            :IdMoneda, :TipoCambio, :Subtotal, :TotalDescuentos,
-                           :BaseImponible, :TotalIva, :Total, :SaldoPendiente,
-                           :Estado, :IdCicloOrigen, :IdContratoOrigen,
-                           :MotivoAnulacion, :GeneradoPor, :Observaciones)";
+                           :BaseImponible, :TotalIva, :TotalOtrosImpuestos, :Total, :TotalEnLetras, :SaldoPendiente,
+                           :Estado, :IdCicloOrigen, :IdContratoOrigen, :IdReservaOrigen, :IdFacturaOrigen,
+                           :MotivoAnulacion, :GeneradoPor, :AprobadoPor, :Observaciones)";
 
             await db.ExecuteAsync(query, model);
+
+            // Obtener el ID generado usando el número de factura (único)
+            var newId = await db.ExecuteScalarAsync<int>(
+                "SELECT ID_FACTURA FROM FACTURA WHERE NUMERO_FACTURA = :NumeroFactura AND ID_CORRELATIVO = :IdCorrelativo",
+                new { model.NumeroFactura, model.IdCorrelativo });
+
+            return newId;
         }
 
         public async Task UpdateAsync(FacturaModel model)
@@ -160,6 +188,7 @@ namespace Condominio.Repositories
 
             var query = @"UPDATE FACTURA SET
                           ID_TIPO_DOC_FISCAL      = :IdTipoDocFiscal,
+                          ID_CORRELATIVO          = :IdCorrelativo,
                           SERIE                   = :Serie,
                           NUMERO_FACTURA          = :NumeroFactura,
                           NUMERO_AUTORIZACION_SAT = :NumeroAutorizacionSat,
@@ -167,6 +196,7 @@ namespace Condominio.Repositories
                           ID_RESIDENTE            = :IdResidente,
                           RECEPTOR_NOMBRE         = :ReceptorNombre,
                           RECEPTOR_NIT            = :ReceptorNit,
+                          RECEPTOR_DIRECCION      = :ReceptorDireccion,
                           FECHA_EMISION           = :FechaEmision,
                           FECHA_VENCIMIENTO       = :FechaVencimiento,
                           PERIODO_INICIO          = :PeriodoInicio,
@@ -177,13 +207,18 @@ namespace Condominio.Repositories
                           TOTAL_DESCUENTOS        = :TotalDescuentos,
                           BASE_IMPONIBLE          = :BaseImponible,
                           TOTAL_IVA               = :TotalIva,
+                          TOTAL_OTROS_IMPUESTOS   = :TotalOtrosImpuestos,
                           TOTAL                   = :Total,
+                          TOTAL_EN_LETRAS         = :TotalEnLetras,
                           SALDO_PENDIENTE         = :SaldoPendiente,
                           ESTADO                  = :Estado,
                           ID_CICLO_ORIGEN         = :IdCicloOrigen,
                           ID_CONTRATO_ORIGEN      = :IdContratoOrigen,
+                          ID_RESERVA_ORIGEN       = :IdReservaOrigen,
+                          ID_FACTURA_ORIGEN       = :IdFacturaOrigen,
                           MOTIVO_ANULACION        = :MotivoAnulacion,
                           GENERADO_POR            = :GeneradoPor,
+                          APROBADO_POR            = :AprobadoPor,
                           OBSERVACIONES           = :Observaciones
                           WHERE ID_FACTURA = :IdFactura";
 
@@ -197,6 +232,17 @@ namespace Condominio.Repositories
             var query = "DELETE FROM FACTURA WHERE ID_FACTURA = :id";
 
             await db.ExecuteAsync(query, new { id });
+        }
+
+        public async Task<int> GetNextCorrelativeAsync()
+        {
+            using IDbConnection db = new OracleConnection(_stringConnection);
+
+            var query = @"SELECT COALESCE(MAX(ID_CORRELATIVO), 0) + 1 as NextCorrelative 
+                         FROM FACTURA";
+
+            var result = await db.QueryFirstOrDefaultAsync<int>(query);
+            return result;
         }
     }
 }

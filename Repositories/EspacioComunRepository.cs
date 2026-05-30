@@ -20,7 +20,7 @@ namespace Condominio.Repositories
             TIENE_COSTO Tiene_Costo,COSTO_POR_HORA Costo_Por_Hora,
             COSTO_POR_DIA Costo_Por_Dia,DEPOSITO_GARANTIA Deposito_Garantia,
             HORARIO_APERTURA Horario_Apertura,HORARIO_CIERRE Horario_Cierre,
-            REGLAS,ESTADO,ACTIVO FROM ESPACIO_COMUN ORDER BY NOMBRE")).ToList();
+            REGLAS,ESTADO,ACTIVO FROM ESPACIO_COMUN WHERE ACTIVO = 1 ORDER BY NOMBRE")).ToList();
         }
 
         public async Task<EspacioComunCreateRequest> Create(EspacioComunCreateRequest r)

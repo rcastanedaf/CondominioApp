@@ -11,6 +11,6 @@ namespace Condominio.Repositories.Interfaces
         Task<ReservaEspacioCreateRequest> Create(ReservaEspacioCreateRequest req);
         Task<ReservaEspacioUpdateRequest> Update(ReservaEspacioUpdateRequest req);
         Task<bool> CambiarEstado(int id, string estado, int? aprobadoPor);
-
+        Task<bool> HasOverlap(int idEspacio, string fecha, string horaInicio, string horaFin, int? excludeId = null);
     }
 }

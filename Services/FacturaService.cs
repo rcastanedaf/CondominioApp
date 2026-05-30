@@ -28,9 +28,14 @@ namespace Condominio.Services
             return await _repository.GetByPropiedadAsync(idPropiedad);
         }
 
-        public async Task CreateAsync(FacturaModel model)
+        public async Task<int> GetNextCorrelativeAsync()
         {
-            await _repository.CreateAsync(model);
+            return await _repository.GetNextCorrelativeAsync();
+        }
+
+        public async Task<int> CreateAsync(FacturaModel model)
+        {
+            return await _repository.CreateAsync(model);
         }
 
         public async Task UpdateAsync(FacturaModel model)

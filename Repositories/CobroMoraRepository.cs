@@ -29,7 +29,8 @@ namespace Condominio.Repositories
                         SALDO_BASE SaldoBase,
                         PORCENTAJE_APLICADO PorcentajeAplicado,
                         MONTO_MORA MontoMora,
-                        ACUMULADO_TOTAL AcumuladoTotal
+                        ACUMULADO_TOTAL AcumuladoTotal,
+                        OBSERVACIONES Observaciones
                         FROM COBRO_MORA";
 
             return (await db.QueryAsync<CobroMoraModel>(query)).ToList();
@@ -47,7 +48,8 @@ namespace Condominio.Repositories
                         SALDO_BASE SaldoBase,
                         PORCENTAJE_APLICADO PorcentajeAplicado,
                         MONTO_MORA MontoMora,
-                        ACUMULADO_TOTAL AcumuladoTotal
+                        ACUMULADO_TOTAL AcumuladoTotal,
+                        OBSERVACIONES Observaciones
                         FROM COBRO_MORA
                         WHERE ID_MORA = :id";
 
@@ -60,10 +62,10 @@ namespace Condominio.Repositories
 
             var query = @"INSERT INTO COBRO_MORA
                         (ID_CUENTA, FECHA_CALCULO, DIAS_ATRASO, SALDO_BASE,
-                         PORCENTAJE_APLICADO, MONTO_MORA, ACUMULADO_TOTAL)
+                         PORCENTAJE_APLICADO, MONTO_MORA, ACUMULADO_TOTAL, OBSERVACIONES)
                         VALUES
                         (:IdCuenta, :FechaCalculo, :DiasAtraso, :SaldoBase,
-                         :PorcentajeAplicado, :MontoMora, :AcumuladoTotal)";
+                         :PorcentajeAplicado, :MontoMora, :AcumuladoTotal, :Observaciones)";
 
             await db.ExecuteAsync(query, model);
         }
@@ -79,10 +81,13 @@ namespace Condominio.Repositories
                         SALDO_BASE = :SaldoBase,
                         PORCENTAJE_APLICADO = :PorcentajeAplicado,
                         MONTO_MORA = :MontoMora,
-                        ACUMULADO_TOTAL = :AcumuladoTotal
+                        ACUMULADO_TOTAL = :AcumuladoTotal,
+                        OBSERVACIONES = :Observaciones
                         WHERE ID_MORA = :IdMora";
 
-            await db.ExecuteAsync(query, model);
+            int affected = await db.ExecuteAsync(query, model);
+            if (affected == 0)
+                throw new Exception($"No se encontró el cobro con ID_MORA = {model.IdMora}. Verifica que el ID sea correcto.");
         }
 
         public async Task DeleteAsync(int id)

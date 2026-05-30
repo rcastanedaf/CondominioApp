@@ -1,4 +1,4 @@
-@Condominio_HostAddress = http://localhost:5002
+@Condominio_HostAddress = https://localhost:44352
 
 GET {{Condominio_HostAddress}}/weatherforecast/
 Accept: application/json

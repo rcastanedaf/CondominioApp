@@ -24,7 +24,7 @@ namespace Condominio.Repositories
             var query = @"SELECT 
                             ID_TIPO_SERVICIO IdTipoServicio,
                             NOMBRE Nombre,
-                            ID_UNIDAD_MEDIDA IdUnidad,
+                            ID_UNIDAD_MEDIDA IdUnidadMedida,
                             PERIODICIDAD Periodicidad,
                             MONTO_BASE MontoBase,
                             APLICA_IVA AplicaIva,
@@ -43,7 +43,7 @@ namespace Condominio.Repositories
             var query = @"SELECT 
                             ID_TIPO_SERVICIO IdTipoServicio,
                             NOMBRE Nombre,
-                            ID_UNIDAD IdUnidad,
+                            ID_UNIDAD_MEDIDA IdUnidadMedida,
                             PERIODICIDAD Periodicidad,
                             MONTO_BASE MontoBase,
                             APLICA_IVA AplicaIva,
@@ -61,10 +61,10 @@ namespace Condominio.Repositories
             using IDbConnection db = new OracleConnection(_stringConnection);
 
             var query = @"INSERT INTO TIPO_SERVICIO
-                        (NOMBRE, ID_UNIDAD, PERIODICIDAD, MONTO_BASE, 
+                        (NOMBRE, ID_UNIDAD_MEDIDA, PERIODICIDAD, MONTO_BASE,
                          APLICA_IVA, APLICA_MORA, PORCENTAJE_MORA, DIAS_GRACIA)
                         VALUES
-                        (:Nombre, :IdUnidad, :Periodicidad, :MontoBase,
+                        (:Nombre, :IdUnidadMedida, :Periodicidad, :MontoBase,
                          :AplicaIva, :AplicaMora, :PorcentajeMora, :DiasGracia)";
 
             await db.ExecuteAsync(query, model);
@@ -76,7 +76,7 @@ namespace Condominio.Repositories
 
             var query = @"UPDATE TIPO_SERVICIO SET
                         NOMBRE = :Nombre,
-                        ID_UNIDAD_MEDIDA = :IdUnidad,
+                        ID_UNIDAD_MEDIDA = :IdUnidadMedida,
                         PERIODICIDAD = :Periodicidad,
                         MONTO_BASE = :MontoBase,
                         APLICA_IVA = :AplicaIva,

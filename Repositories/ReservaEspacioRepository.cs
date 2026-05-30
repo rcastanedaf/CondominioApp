@@ -44,7 +44,20 @@ namespace Condominio.Repositories
             await db.ExecuteAsync(@"INSERT INTO RESERVA_ESPACIO(ID_ESPACIO,ID_RESIDENTE,ID_PROPIEDAD,FECHA_RESERVA,
             HORA_INICIO,HORA_FIN,NUM_PERSONAS,MOTIVO,MONTO_COBRO,DEPOSITO_COBRADO,OBSERVACIONES)
             VALUES(:Id_Espacio,:Id_Residente,:Id_Propiedad,TO_DATE(:Fecha_Reserva,'YYYY-MM-DD'),
-            :Hora_Inicio,:Hora_Fin,:Num_Personas,:Motivo,:Monto_Cobro,:Deposito_Cobrado,:Observaciones)", r);
+            :Hora_Inicio,:Hora_Fin,:Num_Personas,:Motivo,:Monto_Cobro,:Deposito_Cobrado,:Observaciones)", new
+            {
+                r.Id_Espacio,
+                r.Id_Residente,
+                r.Id_Propiedad,
+                Fecha_Reserva = r.Fecha_Reserva.ToString("yyyy-MM-dd"),
+                Hora_Inicio   = r.Hora_Inicio.ToString(@"hh\:mm\:ss"),
+                Hora_Fin      = r.Hora_Fin.ToString(@"hh\:mm\:ss"),
+                r.Num_Personas,
+                r.Motivo,
+                r.Monto_Cobro,
+                r.Deposito_Cobrado,
+                r.Observaciones,
+            });
             return r;
         }
 
@@ -63,6 +76,21 @@ namespace Condominio.Repositories
             using IDbConnection db = new OracleConnection(_conn);
             await db.ExecuteAsync("UPDATE RESERVA_ESPACIO SET ESTADO=:estado,APROBADO_POR=:aprobadoPor WHERE ID_RESERVA=:id", new { estado, aprobadoPor, id });
             return true;
+        }
+
+        public async Task<bool> HasOverlap(int idEspacio, string fecha, string horaInicio, string horaFin, int? excludeId = null)
+        {
+            using IDbConnection db = new OracleConnection(_conn);
+            var count = await db.ExecuteScalarAsync<int>(@"
+                SELECT COUNT(*) FROM RESERVA_ESPACIO
+                WHERE ID_ESPACIO   = :idEspacio
+                AND   FECHA_RESERVA = TO_DATE(:fecha, 'YYYY-MM-DD')
+                AND   ESTADO       NOT IN ('CANCELADA', 'RECHAZADA')
+                AND   :horaInicio  < HORA_FIN
+                AND   :horaFin     > HORA_INICIO
+                AND   (:excludeId IS NULL OR ID_RESERVA != :excludeId)",
+                new { idEspacio, fecha, horaInicio, horaFin, excludeId });
+            return count > 0;
         }
 
     }

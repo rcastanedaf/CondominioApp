@@ -7,7 +7,8 @@ namespace Condominio.Repositories.Interfaces
         Task<List<FacturaModel>> GetAllAsync();
         Task<FacturaModel?> GetByIdAsync(int id);
         Task<List<FacturaModel>> GetByPropiedadAsync(int idPropiedad);
-        Task CreateAsync(FacturaModel model);
+        Task<int> GetNextCorrelativeAsync();
+        Task<int> CreateAsync(FacturaModel model);
         Task UpdateAsync(FacturaModel model);
         Task DeleteAsync(int id);
     }

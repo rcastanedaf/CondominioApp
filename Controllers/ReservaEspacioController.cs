@@ -38,7 +38,7 @@ namespace Condominio.Controllers
                 return BadRequest(new ApiResponse<object>
                 {
                     Success = false,
-                    Message = ex.Message,
+                    Message = "Ocurrió un error interno en el servidor.",
                     Data = null
                 });
             }
@@ -71,7 +71,7 @@ namespace Condominio.Controllers
                 return BadRequest(new ApiResponse<object>
                 {
                     Success = false,
-                    Message = ex.Message,
+                    Message = "Ocurrió un error interno en el servidor.",
                     Data = null
                 });
             }
@@ -104,7 +104,7 @@ namespace Condominio.Controllers
                 return BadRequest(new ApiResponse<object>
                 {
                     Success = false,
-                    Message = ex.Message,
+                    Message = "Ocurrió un error interno en el servidor.",
                     Data = null
                 });
             }
@@ -161,9 +161,30 @@ namespace Condominio.Controllers
                 return BadRequest(new ApiResponse<object>
                 {
                     Success = false,
-                    Message = ex.Message,
+                    Message = "Ocurrió un error interno en el servidor.",
                     Data = null
                 });
+            }
+        }
+
+        [HttpPatch("estado/{id}")]
+        public async Task<IActionResult> CambiarEstado([FromRoute] int id, [FromQuery] string estado, [FromQuery] int? aprobadoPor = null)
+        {
+            if (id <= 0)
+                return BadRequest(new ApiResponse<object> { Success = false, Message = "El ID debe ser válido", Data = null });
+
+            if (string.IsNullOrWhiteSpace(estado))
+                return BadRequest(new ApiResponse<object> { Success = false, Message = "El estado es requerido", Data = null });
+
+            try
+            {
+                await _svc.CambiarEstado(id, estado, aprobadoPor);
+                return Ok(new ApiResponse<object> { Success = true, Message = $"Estado actualizado a {estado}", Data = null });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al cambiar estado de reserva");
+                return BadRequest(new ApiResponse<object> { Success = false, Message = "Ocurrió un error interno en el servidor.", Data = null });
             }
         }
 
@@ -206,7 +227,7 @@ namespace Condominio.Controllers
                 return BadRequest(new ApiResponse<object>
                 {
                     Success = false,
-                    Message = ex.Message,
+                    Message = "Ocurrió un error interno en el servidor.",
                     Data = null
                 });
             }

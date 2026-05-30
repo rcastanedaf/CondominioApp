@@ -30,7 +30,7 @@ namespace Condominio.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al obtener todos los cobros por mora");
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Ocurrió un error interno en el servidor." });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Ocurriï¿½ un error interno en el servidor." });
             }
         }
 
@@ -45,7 +45,7 @@ namespace Condominio.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al crear el cobro por mora");
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Ocurrió un error interno en el servidor." });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Ocurrio un error interno en el servidor." });
             }
         }
 
@@ -60,7 +60,7 @@ namespace Condominio.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al actualizar el cobro por mora");
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Ocurrió un error interno en el servidor." });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Ocurrio un error interno en el servidor." });
             }
         }
 
@@ -75,7 +75,7 @@ namespace Condominio.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al eliminar el cobro por mora {Id}", id);
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Ocurrió un error interno en el servidor." });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Ocurriï¿½ un error interno en el servidor." });
             }
         }
     }
