@@ -22,14 +22,24 @@ namespace Condominio.Repositories
             using IDbConnection db = new OracleConnection(_stringConnection);
 
             var query = @"SELECT 
-                            ID_INCIDENCIA IdIncidencia,
-                            ID_PROPIEDAD IdPropiedad,
-                            ID_ESPACIO IdEspacio,
-                            ID_CATEGORIA IdCategoria,
-                            TITULO Titulo,
-                            PRIORIDAD Prioridad,
-                            ESTADO Estado
-                          FROM INCIDENCIA";
+                ID_INCIDENCIA IdIncidencia,
+                ID_PROPIEDAD IdPropiedad,
+                ID_ESPACIO IdEspacio,
+                ID_CATEGORIA IdCategoria,
+                ID_REPORTADO_POR IdReportadoPor,
+                TITULO Titulo,
+                DESCRIPCION Descripcion,
+                PRIORIDAD Prioridad,
+                ESTADO Estado,
+                ID_ASIGNADO_A IdAsignadoA,
+                ID_PROVEEDOR IdProveedor,
+                COSTO_ESTIMADO CostoEstimado,
+                COSTO_REAL CostoReal,
+                ID_FACTURA_CARGO IdFacturaCargo,
+                FECHA_APERTURA FechaApertura,
+                FECHA_RESOLUCION FechaResolucion,
+                OBSERVACIONES Observaciones
+              FROM INCIDENCIA";
 
             return (await db.QueryAsync<IncidenciaModel>(query)).ToList();
         }
@@ -43,9 +53,19 @@ namespace Condominio.Repositories
                             ID_PROPIEDAD IdPropiedad,
                             ID_ESPACIO IdEspacio,
                             ID_CATEGORIA IdCategoria,
+                            ID_REPORTADO_POR IdReportadoPor,
                             TITULO Titulo,
+                            DESCRIPCION Descripcion,
                             PRIORIDAD Prioridad,
-                            ESTADO Estado
+                            ESTADO Estado,
+                            ID_ASIGNADO_A IdAsignadoA,
+                            ID_PROVEEDOR IdProveedor,
+                            COSTO_ESTIMADO CostoEstimado,
+                            COSTO_REAL CostoReal,
+                            ID_FACTURA_CARGO IdFacturaCargo,
+                            FECHA_APERTURA FechaApertura,
+                            FECHA_RESOLUCION FechaResolucion,
+                            OBSERVACIONES Observaciones
                           FROM INCIDENCIA
                           WHERE ID_INCIDENCIA = :id";
 
@@ -57,9 +77,15 @@ namespace Condominio.Repositories
             using IDbConnection db = new OracleConnection(_stringConnection);
 
             var query = @"INSERT INTO INCIDENCIA
-                          (ID_PROPIEDAD, ID_ESPACIO, ID_CATEGORIA, TITULO, PRIORIDAD, ESTADO)
-                          VALUES
-                          (:IdPropiedad, :IdEspacio, :IdCategoria, :Titulo, :Prioridad, :Estado)";
+                  (ID_PROPIEDAD, ID_ESPACIO, ID_CATEGORIA, ID_REPORTADO_POR, 
+                   TITULO, DESCRIPCION, PRIORIDAD, ESTADO, ID_ASIGNADO_A, 
+                   ID_PROVEEDOR, COSTO_ESTIMADO, COSTO_REAL, ID_FACTURA_CARGO, 
+                   FECHA_APERTURA, FECHA_RESOLUCION, OBSERVACIONES)
+                  VALUES
+                  (:IdPropiedad, :IdEspacio, :IdCategoria, :IdReportadoPor,
+                   :Titulo, :Descripcion, :Prioridad, :Estado, :IdAsignadoA,
+                   :IdProveedor, :CostoEstimado, :CostoReal, :IdFacturaCargo,
+                   :FechaApertura, :FechaResolucion, :Observaciones)";
 
             await db.ExecuteAsync(query, model);
         }
@@ -69,13 +95,23 @@ namespace Condominio.Repositories
             using IDbConnection db = new OracleConnection(_stringConnection);
 
             var query = @"UPDATE INCIDENCIA SET
-                          ID_PROPIEDAD = :IdPropiedad,
-                          ID_ESPACIO = :IdEspacio,
-                          ID_CATEGORIA = :IdCategoria,
-                          TITULO = :Titulo,
-                          PRIORIDAD = :Prioridad,
-                          ESTADO = :Estado
-                          WHERE ID_INCIDENCIA = :IdIncidencia";
+                  ID_PROPIEDAD = :IdPropiedad,
+                  ID_ESPACIO = :IdEspacio,
+                  ID_CATEGORIA = :IdCategoria,
+                  ID_REPORTADO_POR = :IdReportadoPor,
+                  TITULO = :Titulo,
+                  DESCRIPCION = :Descripcion,
+                  PRIORIDAD = :Prioridad,
+                  ESTADO = :Estado,
+                  ID_ASIGNADO_A = :IdAsignadoA,
+                  ID_PROVEEDOR = :IdProveedor,
+                  COSTO_ESTIMADO = :CostoEstimado,
+                  COSTO_REAL = :CostoReal,
+                  ID_FACTURA_CARGO = :IdFacturaCargo,
+                  FECHA_APERTURA = :FechaApertura,
+                  FECHA_RESOLUCION = :FechaResolucion,
+                  OBSERVACIONES = :Observaciones
+                  WHERE ID_INCIDENCIA = :IdIncidencia";
 
             await db.ExecuteAsync(query, model);
         }

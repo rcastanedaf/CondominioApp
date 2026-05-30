@@ -4,8 +4,8 @@ namespace Condominio.DTOs.Request
 {
     public class EspacioComunCreateRequest
     {
-        [Required(ErrorMessage = "El nombre del espacio es requerido")]
-        [StringLength(100, MinimumLength = 1, ErrorMessage = "El nombre debe tener entre 1 y 100 caracteres")]
+        [Required]
+        [StringLength(100)]
         public string Nombre { get; set; } = string.Empty;
 
         public string? Descripcion { get; set; }
