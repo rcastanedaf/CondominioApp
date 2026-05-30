@@ -23,8 +23,8 @@ public class tipoPropiedadController : ControllerBase
             var data = await _service.GetAll();
             return Ok(data);
         }
-        catch (OracleException ex) { return BadRequest(new { error = ex.Message, code = ex.Number }); }
-        catch (Exception ex) { return StatusCode(500, new { error = ex.Message }); }
+        catch (OracleException ex) { return BadRequest(new { error = "ocurrió un error con la base de datos", code = ex.Number }); }
+        catch (Exception ex) { return StatusCode(500, new { error = "ocurrió un error interno en el servidor" }); }
     }
 
     [HttpPost("create")]
@@ -36,8 +36,8 @@ public class tipoPropiedadController : ControllerBase
             var result = await _service.Create(request);
             return Ok(result);
         }
-        catch (OracleException ex) { return BadRequest(new { error = ex.Message, code = ex.Number }); }
-        catch (Exception ex) { return StatusCode(500, new { error = ex.Message }); }
+        catch (OracleException ex) { return BadRequest(new { error = "ocurrió un error con la base de datos", code = ex.Number }); }
+        catch (Exception ex) { return StatusCode(500, new { error = "ocurrió un error interno en el servidor" }); }
     }
 
     [HttpPut("update/{id}")]
@@ -49,8 +49,8 @@ public class tipoPropiedadController : ControllerBase
             var result = await _service.Update(request, id);
             return Ok(result);
         }
-        catch (OracleException ex) { return BadRequest(new { error = ex.Message, code = ex.Number }); }
-        catch (Exception ex) { return StatusCode(500, new { error = ex.Message }); }
+        catch (OracleException ex) { return BadRequest(new { error = "ocurrió un error con la base de datos", code = ex.Number }); }
+        catch (Exception ex) { return StatusCode(500, new { error = "ocurrió un error interno en el servidor" }); }
     }
 
     [HttpDelete("delete/{id}")]
@@ -61,7 +61,7 @@ public class tipoPropiedadController : ControllerBase
             await _service.Delete(id);
             return Ok();
         }
-        catch (OracleException ex) { return BadRequest(new { error = ex.Message, code = ex.Number }); }
-        catch (Exception ex) { return StatusCode(500, new { error = ex.Message }); }
+        catch (OracleException ex) { return BadRequest(new { error = "ocurrió un error con la base de datos", code = ex.Number }); }
+        catch (Exception ex) { return StatusCode(500, new { error = "ocurrió un error interno en el servidor" }); }
     }
 }
